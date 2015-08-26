@@ -19,10 +19,16 @@ namespace Outer_Space
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Level level;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            // Screen size
+            graphics.PreferredBackBufferWidth = Globals.ScreenSize.X;
+            graphics.PreferredBackBufferHeight = Globals.ScreenSize.Y;
         }
 
         /// <summary>
@@ -34,6 +40,18 @@ namespace Outer_Space
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            // Mouse
+            IsMouseVisible = true;
+
+            // Globals
+            Globals.Initialize();
+
+            // TextureManager
+            TextureManager.Initialize(Content);
+
+            level = new Level();
+            level.InitializeTiles();
 
             base.Initialize();
         }
@@ -84,6 +102,11 @@ namespace Outer_Space
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            level.Draw(spriteBatch);
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

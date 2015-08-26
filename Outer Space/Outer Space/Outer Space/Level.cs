@@ -1,0 +1,84 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.GamerServices;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
+
+namespace Outer_Space
+{
+    class Level
+    {
+        // Public properties
+        public List<List<Tile>> Tiles { get; set; }
+
+        // Constructor(s)
+        public Level()
+        {
+            this.Tiles = new List<List<Tile>>();
+        }
+
+        // Method(s)
+        public void InitializeTiles()
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                Tiles.Add(new List<Tile>()); 
+                for (int j = 0; j < 7; j++)
+                {
+                    // List with avalible tileTypes
+                    List<int> avalibleTileType = new List<int>();
+                    for (int k = 0; k < Enum.GetNames(typeof(TileType)).Length; k++)
+                    {
+                        avalibleTileType.Add(k);
+                    }
+
+                    // Check if 2 left is same
+                    if (j > 1)
+                    {
+                        if (Tiles[i][j - 1].Type == Tiles[i][j - 2].Type)
+                        {
+                            avalibleTileType.Remove((int)Tiles[i][j - 1].Type);
+                        }
+                    }
+
+                    // Check if 2 up is same
+                    if (i > 1)
+                    {
+                        if (Tiles[i - 1][j].Type == Tiles[i - 1][j].Type)
+                        {
+                            if (avalibleTileType.Contains((int)Tiles[i - 1][j].Type))
+                            {
+                                avalibleTileType.Remove((int)Tiles[i - 1][j].Type);
+                            }
+                        }
+                    }
+
+                    // Add tile
+                    Tiles[i].Add(new Tile(new Vector2(100 + j * 64, 100 + i * 64), (TileType)avalibleTileType[Globals.Randomizer.Next(0, avalibleTileType.Count)]));
+                }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            // Draw Tiles
+            for (int i = 0; i < Tiles.Count; i++)
+            {
+                for (int j = 0; j < Tiles[i].Count; j++)
+                {
+                    Tiles[i][j].Draw(spriteBatch);
+                }
+            }
+        }
+
+        public void Update()
+        {
+
+        }
+    }
+}
