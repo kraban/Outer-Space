@@ -21,8 +21,6 @@ namespace Outer_Space
         // Initialize
         public static void Initialize(ContentManager content)
         {
-
-
             // Tiles
             tiles = new List<Texture2D>();
             tiles.Add(content.Load<Texture2D>("Tiles/Shield"));

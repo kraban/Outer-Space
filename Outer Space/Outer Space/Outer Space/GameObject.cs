@@ -14,8 +14,9 @@ namespace Outer_Space
     public abstract class GameObject
     {
         // Public properties
-        public Vector2 Position { get; set; }
+        public virtual Vector2 Position { get; set; }
         public Texture2D Texture { get; set; }
+        public Rectangle Box { get { return new Rectangle((int)Position.X - Texture.Width / 2, (int)Position.Y - Texture.Height / 2, Texture.Width, Texture.Height); } }
         public Color color;
 
         // Constructor(s)

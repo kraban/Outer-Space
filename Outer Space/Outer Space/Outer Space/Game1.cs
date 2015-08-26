@@ -90,6 +90,11 @@ namespace Outer_Space
 
             // TODO: Add your update logic here
 
+            // Globals
+            Globals.Update();
+
+            level.Update();
+
             base.Update(gameTime);
         }
 

@@ -15,6 +15,7 @@ namespace Outer_Space
     {
         // Public properties
         public List<List<Tile>> Tiles { get; set; }
+        public Tile Selected { get; set; }
 
         // Constructor(s)
         public Level()
@@ -49,7 +50,7 @@ namespace Outer_Space
                     // Check if 2 up is same
                     if (i > 1)
                     {
-                        if (Tiles[i - 1][j].Type == Tiles[i - 1][j].Type)
+                        if (Tiles[i - 1][j].Type == Tiles[i - 2][j].Type)
                         {
                             if (avalibleTileType.Contains((int)Tiles[i - 1][j].Type))
                             {
@@ -59,7 +60,7 @@ namespace Outer_Space
                     }
 
                     // Add tile
-                    Tiles[i].Add(new Tile(new Vector2(100 + j * 64, 100 + i * 64), (TileType)avalibleTileType[Globals.Randomizer.Next(0, avalibleTileType.Count)]));
+                    Tiles[i].Add(new Tile(new Point(i, j), (TileType)avalibleTileType[Globals.Randomizer.Next(0, avalibleTileType.Count)]));
                 }
             }
         }
@@ -78,7 +79,45 @@ namespace Outer_Space
 
         public void Update()
         {
+            // Update tiles
+            for (int i = 0; i < Tiles.Count; i++)
+            {
+                for (int j = 0; j < Tiles[i].Count; j++)
+                {
+                    Tiles[i][j].Update();
+                    Tiles[i][j].TilePosition = new Point(i, j);
 
+                    // Select
+                    if (Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box))
+                    {
+                        if (Selected == null)
+                        {
+                            Selected = Tiles[i][j];
+                            Tiles[i][j].color = Color.Red;
+                        }
+                        else if (Selected == Tiles[i][j])
+                        {
+                            Selected = null;
+                        }
+                        else
+                        {
+                            // Check if pressed tile next to selected
+                            if (Tiles[i][j] == Tiles[Selected.TilePosition.X - 1][Selected.TilePosition.Y] || Tiles[i][j] == Tiles[Selected.TilePosition.X + 1][Selected.TilePosition.Y] ||
+                                Tiles[i][j] == Tiles[Selected.TilePosition.X][Selected.TilePosition.Y + 1] || Tiles[i][j] == Tiles[Selected.TilePosition.X][Selected.TilePosition.Y - 1])
+                            {
+                                Tiles[i][j].color = Color.White;
+                                Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].color = Color.White;
+
+                                Tile temp = Tiles[i][j];
+                                Tiles[i][j] = Selected;
+                                Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
+                                Selected = null;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
