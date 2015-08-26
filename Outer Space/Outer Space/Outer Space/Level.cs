@@ -16,6 +16,7 @@ namespace Outer_Space
         // Public properties
         public List<List<Tile>> Tiles { get; set; }
         public Tile Selected { get; set; }
+        public Point BoardSize { get { return new Point(8, 8); } }
 
         // Constructor(s)
         public Level()
@@ -26,10 +27,10 @@ namespace Outer_Space
         // Method(s)
         public void InitializeTiles()
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < BoardSize.X; i++)
             {
                 Tiles.Add(new List<Tile>()); 
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < BoardSize.Y; j++)
                 {
                     // List with avalible tileTypes
                     List<int> avalibleTileType = new List<int>();
@@ -75,11 +76,108 @@ namespace Outer_Space
                     Tiles[i][j].Draw(spriteBatch);
                 }
             }
+
+            // Selected
+            if (Selected != null)
+            {
+                spriteBatch.Draw(TextureManager.selected, Selected.Position, null, Color.White, 0f, new Vector2(TextureManager.selected.Width / 2, TextureManager.selected.Height / 2), 1f, SpriteEffects.None, 0f); 
+            }
+        }
+
+        public void CheckMatch()
+        {
+            for (int i = 0; i < BoardSize.X; i++)
+            {
+                for (int j = 0; j < BoardSize.Y; j++)
+                {
+                    // Check if right is same
+                    if (j < BoardSize.Y - 1)
+                    {
+                        int number = 1;
+                        while (Tiles[i][j].Type == Tiles[i][j + number].Type && !Tiles[i][j + number].Hidden && !Tiles[i][j].Hidden)
+                        {
+                            number++;
+                            if (j + number >= BoardSize.Y)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (number >= 3)
+                        {
+                            for (int k = 0; k < number; k++)
+                            {
+                                Tiles[i][j + k].Hide();
+                            }
+                        }
+                    }
+
+                    // Check if down is same
+                    if (i < BoardSize.X - 1 && !Tiles[i][j].Hidden)
+                    {
+                        int number = 1;
+                        while (Tiles[i][j].Type == Tiles[i + number][j].Type && !Tiles[i + number][j].Hidden && !Tiles[i][j].Hidden)
+                        {
+                            number++;
+                            if (i + number >= BoardSize.X)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (number >= 3)
+                        {
+                            for (int k = 0; k < number; k++)
+                            {
+                                Tiles[i + k][j].Hide();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool CheckAdjacent(int x, int y)
+        {
+            // Tiles to check
+            List<Point> adjacentTiles;
+            adjacentTiles = new List<Point>();
+
+            // add adjacent tiles to check if not on boarder
+            if (Selected.TilePosition.X != 0)
+            {
+                adjacentTiles.Add(new Point(-1, 0));
+            }
+            if (Selected.TilePosition.X != BoardSize.X - 1)
+            {
+                adjacentTiles.Add(new Point(1, 0));
+            }
+            if (Selected.TilePosition.Y != 0)
+            {
+                adjacentTiles.Add(new Point(0, -1));
+            }
+            if (Selected.TilePosition.Y != BoardSize.Y - 1)
+            {
+                adjacentTiles.Add(new Point(0, 1));
+            }
+
+            // Check
+            for (int i = 0; i < adjacentTiles.Count; i++)
+            {
+                if (Tiles[x][y] == Tiles[Selected.TilePosition.X + adjacentTiles[i].X][Selected.TilePosition.Y + adjacentTiles[i].Y])
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Update()
         {
+            CheckMatch();
+
             // Update tiles
+            bool canSelect = true;
             for (int i = 0; i < Tiles.Count; i++)
             {
                 for (int j = 0; j < Tiles[i].Count; j++)
@@ -87,34 +185,45 @@ namespace Outer_Space
                     Tiles[i][j].Update();
                     Tiles[i][j].TilePosition = new Point(i, j);
 
-                    // Select
-                    if (Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box))
+                    if (!Tiles[i][j].Hidden)
                     {
-                        if (Selected == null)
-                        {
-                            Selected = Tiles[i][j];
-                            Tiles[i][j].color = Color.Red;
-                        }
-                        else if (Selected == Tiles[i][j])
-                        {
-                            Selected = null;
-                        }
-                        else
-                        {
-                            // Check if pressed tile next to selected
-                            if (Tiles[i][j] == Tiles[Selected.TilePosition.X - 1][Selected.TilePosition.Y] || Tiles[i][j] == Tiles[Selected.TilePosition.X + 1][Selected.TilePosition.Y] ||
-                                Tiles[i][j] == Tiles[Selected.TilePosition.X][Selected.TilePosition.Y + 1] || Tiles[i][j] == Tiles[Selected.TilePosition.X][Selected.TilePosition.Y - 1])
-                            {
-                                Tiles[i][j].color = Color.White;
-                                Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].color = Color.White;
 
-                                Tile temp = Tiles[i][j];
-                                Tiles[i][j] = Selected;
-                                Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
-                                Selected = null;
-                                break;
-                            }
+                        // Above hidden
+                        if (j < BoardSize.Y - 1 && Tiles[i][j + 1].Hidden && Tiles[i][j + 1].Size < 0.1)
+                        {
+                            Tile temp = Tiles[i][j];
+                            Tiles[i][j] = Tiles[i][j + 1];
+                            Tiles[i][j + 1] = temp;
                         }
+
+                        // Select
+                        if (canSelect && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box))
+                        {
+                            canSelect = false;
+                            if (Selected == null)
+                            {
+                                Selected = Tiles[i][j];
+                            }
+                            else if (Selected == Tiles[i][j])
+                            {
+                                Selected = null;
+                            }
+                            else
+                            {
+                                // Check if pressed tile next to selected
+                                if (CheckAdjacent(i, j))
+                                {
+                                    Tile temp = Tiles[i][j];
+                                    Tiles[i][j] = Selected;
+                                    Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
+                                    Selected = null;
+                                }
+                                else
+                                {
+                                    Selected = Tiles[i][j];
+                                }
+                            }
+                        } 
                     }
                 }
             }

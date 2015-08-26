@@ -18,7 +18,8 @@ namespace Outer_Space
         // Public properties
         public TileType Type { get; set; }
         public Point TilePosition { get; set; }
-        public override Vector2 Position { get; set; }
+        public bool Hidden { get; private set; }
+
 
         // Constructor(s)
         public Tile(Point tilePosition, TileType type)
@@ -36,8 +37,23 @@ namespace Outer_Space
             base.Update();
 
             // Move
-            Vector2 move = new Vector2(TilePosition.X * 64 + 100, TilePosition.Y * 64 + 100) - Position;
-            Position += move * 0.1f;
+            if (Position != new Vector2(TilePosition.X * 64 + 100, TilePosition.Y * 64 + 100))
+            {
+                Vector2 move = new Vector2(TilePosition.X * 64 + 100, TilePosition.Y * 64 + 100) - Position;
+                //move.Normalize();
+                Position += move * 0.04f;
+            }
+
+            // Hide
+            if (Hidden && Size > 0)
+            {
+                Size -= 0.02f;
+            }
+        }
+
+        public void Hide()
+        {
+            Hidden = true;
         }
     }
 }

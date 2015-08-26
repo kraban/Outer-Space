@@ -14,21 +14,23 @@ namespace Outer_Space
     public abstract class GameObject
     {
         // Public properties
-        public virtual Vector2 Position { get; set; }
+        public Vector2 Position { get; set; }
         public Texture2D Texture { get; set; }
         public Rectangle Box { get { return new Rectangle((int)Position.X - Texture.Width / 2, (int)Position.Y - Texture.Height / 2, Texture.Width, Texture.Height); } }
+        public float Size { get; set; }
         public Color color;
 
         // Constructor(s)
         public GameObject()
         {
             color = Color.White;
+            this.Size = 1;
         }
 
         // Method(s)
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, null, color, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position, null, color, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, 0f);
         }
 
         public virtual void Update()

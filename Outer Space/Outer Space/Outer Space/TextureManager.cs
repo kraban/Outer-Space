@@ -14,13 +14,18 @@ namespace Outer_Space
     class TextureManager
     {
         public static Texture2D
-            player;
+            player,
+            none,
+            selected;
 
         public static List<Texture2D> tiles;
 
         // Initialize
         public static void Initialize(ContentManager content)
         {
+            none = content.Load<Texture2D>("Tiles/None");
+            selected = content.Load<Texture2D>("Selected");
+
             // Tiles
             tiles = new List<Texture2D>();
             tiles.Add(content.Load<Texture2D>("Tiles/Shield"));
