@@ -19,43 +19,54 @@ namespace Outer_Space
 
         // Private variable(s)
         private int duration;
+        private int maxDuration;
+        private float maxSize;
         private bool shaking;
+        private Color opacityColor;
 
         // Constructor(s)
-        public Text(Vector2 position, string write, Color textColor, int duration, bool shaking)
+        public Text(Vector2 position, string write, Color textColor, int duration, bool shaking, float size)
             : base()
         {
             this.Position = position;
             this.Write = write;
             this.TextColor = textColor;
             this.duration = duration;
+            this.maxDuration = duration;
+            this.shaking = shaking;
+            this.Size = size;
+            this.maxSize = size;
         }
 
         // Method(s)
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.SpriteFont20, Write, Position, TextColor, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, Write, Position, opacityColor, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth);
         }
 
         public override void Update()
         {
             base.Update();
-
             duration--;
+            Size -= maxSize / maxDuration;
+            opacityColor = TextColor * Size;
             if (duration < 0)
             {
                 Dead = true;
             }
 
             // Shake
-            if (duration % 2 == 0)
+            if (shaking)
             {
-                Direction -= 0.2f;
-            }
-            else
-            {
-                Direction += 0.2f;
-            }
+                if (duration % 2 == 0)
+                {
+                    Direction -= 0.2f;
+                }
+                else
+                {
+                    Direction += 0.2f;
+                }
+            } 
         }
     }
 }

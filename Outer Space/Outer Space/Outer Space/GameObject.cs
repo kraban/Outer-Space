@@ -19,6 +19,7 @@ namespace Outer_Space
         public Rectangle Box { get { return new Rectangle((int)Position.X - Texture.Width / 2, (int)Position.Y - Texture.Height / 2, Texture.Width, Texture.Height); } }
         public float Size { get; set; }
         public float Direction { get; set; }
+        public float Depth { get; set; }
         public bool Dead { get; set; }
 
         // Constructor(s)
@@ -30,7 +31,7 @@ namespace Outer_Space
         // Method(s)
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position, null, Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth);
         }
 
         public virtual void Update()

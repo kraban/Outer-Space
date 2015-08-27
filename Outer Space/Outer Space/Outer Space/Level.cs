@@ -23,10 +23,7 @@ namespace Outer_Space
         public Level()
         {
             this.Tiles = new List<List<Tile>>();
-
             this.GameObjects = new List<GameObject>();
-
-            GameObjects.Add(new Text(new Vector2(100, 100), "HEJDgre", Color.White, 240, true));
         }
 
         // Method(s)
@@ -101,7 +98,7 @@ namespace Outer_Space
             {
                 for (int j = 0; j < BoardSize.Y; j++)
                 {
-                    // Check if right is same
+                    // Check if down is same
                     if (j < BoardSize.Y - 1)
                     {
                         int number = 1;
@@ -120,13 +117,17 @@ namespace Outer_Space
                             {
                                 Tiles[i][j + k].Hide();
 
-                                // Create pieces
+                                // Create pieces and text
+                                if (k == 0)
+                                {
+                                    GameObjects.Add(new Text(new Vector2(Tiles[i][j].Position.X, Tiles[i][j].Position.Y + (number * 64) / 2 - 32), Tiles[i][j + k].Type.ToString(), Color.Red, 120, false, 2));
+                                }
                                 Explosion(i, j + k);
                             }
                         }
                     }
 
-                    // Check if down is same
+                    // Check if right is same
                     if (i < BoardSize.X - 1 && !Tiles[i][j].Hidden)
                     {
                         int number = 1;
@@ -145,13 +146,92 @@ namespace Outer_Space
                             {
                                 Tiles[i + k][j].Hide();
 
-                                // Create pieces
+                                // Create pieces and text
+                                if (k == 0)
+                                {
+                                    GameObjects.Add(new Text(new Vector2(Tiles[i][j].Position.X + (number * 64) / 2 - 32, Tiles[i][j].Position.Y), Tiles[i + k][j].Type.ToString(), Color.Red, 120, false, 2));
+                                }
                                 Explosion(i + k, j);
                             }
                         }
                     }
                 }
             }
+        }
+
+        public bool CheckSingleMatch(int x, int y)
+        {
+            int numberDown = 0, numberUp = 0, numberRight = 0, numberLeft = 0;
+            // Check if down is same
+            if (y < BoardSize.Y - 1)
+            {
+                while (Tiles[x][y].Type == Tiles[x][y + numberDown + 1].Type && !Tiles[x][y + numberDown + 1].Hidden)
+                {
+                    numberDown++;
+                    if (y + numberDown + 1 >= BoardSize.Y)
+                    {
+                        break;
+                    }
+                }
+
+                if (numberDown >= 2)
+                {
+                    return true;
+                }
+            }
+            // Check if Up is same
+            if (y > 0)
+            {
+                while (Tiles[x][y].Type == Tiles[x][y - numberUp - 1].Type && !Tiles[x][y - numberUp - 1].Hidden)
+                {
+                    numberUp++;
+                    if (y - numberUp <= 0)
+                    {
+                        break;
+                    }
+                }
+
+                if (numberUp + numberDown >= 2)
+                {
+                    return true;
+                }
+            }
+
+            // Check if Right is same
+            if (x < BoardSize.X - 1)
+            {
+                while (Tiles[x][y].Type == Tiles[x + numberRight + 1][y].Type && !Tiles[x + numberRight + 1][y].Hidden)
+                {
+                    numberRight++;
+                    if (x + numberRight + 1 >= BoardSize.X)
+                    {
+                        break;
+                    }
+                }
+
+                if (numberRight >= 2)
+                {
+                    return true;
+                }
+            }
+            // Check if Left is same
+            if (x > 0)
+            {
+                while (Tiles[x][y].Type == Tiles[x - numberLeft - 1][y].Type && !Tiles[x - numberLeft - 1][y].Hidden)
+                {
+                    numberLeft++;
+                    if (x - numberLeft <= 0)
+                    {
+                        break;
+                    }
+                }
+
+                if (numberLeft + numberRight >= 2)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Explosion(int x, int y)
@@ -191,7 +271,7 @@ namespace Outer_Space
             {
                 if (Tiles[x][y] == Tiles[Selected.TilePosition.X + adjacentTiles[i].X][Selected.TilePosition.Y + adjacentTiles[i].Y])
                 {
-                    return true;
+                    return true; 
                 }
             }
             return false;
@@ -220,7 +300,7 @@ namespace Outer_Space
                         }
 
                         // Select
-                        if (canSelect && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box))
+                        if (canSelect && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box) && !Tiles.Any(Column => Column.Any(item => item.Moving == true)))
                         {
                             canSelect = false;
                             if (Selected == null)
@@ -241,6 +321,16 @@ namespace Outer_Space
                                     Tiles[i][j].Moving = true;
                                     Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
                                     Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = true;
+
+                                    // Check if swap is matching
+                                    if (!CheckSingleMatch(i, j) && !CheckSingleMatch(Selected.TilePosition.X, Selected.TilePosition.Y))
+                                    {
+                                        Tiles[i][j] = Tiles[Selected.TilePosition.X][Selected.TilePosition.Y];
+                                        Tiles[i][j].Moving = false;
+                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = Selected;
+                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = false;
+                                        GameObjects.Add(new Text(Tiles[i][j].Position - (Tiles[i][j].Position - Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Position), "Invalid Swap!", Color.Red, 60, false, 2));
+                                    }
                                     Selected = null;
                                 }
                                 else
