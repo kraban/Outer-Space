@@ -20,11 +20,17 @@ namespace Outer_Space
 
         public static List<Texture2D> tiles;
 
+
+        public static SpriteFont SpriteFont20 { get; set; }
+
         // Initialize
         public static void Initialize(ContentManager content)
         {
             none = content.Load<Texture2D>("Tiles/None");
             selected = content.Load<Texture2D>("Selected");
+
+            // SpriteFonts
+            SpriteFont20 = content.Load<SpriteFont>("SpriteFont20");
 
             // Tiles
             tiles = new List<Texture2D>();

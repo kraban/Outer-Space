@@ -17,11 +17,16 @@ namespace Outer_Space
         public List<List<Tile>> Tiles { get; set; }
         public Tile Selected { get; set; }
         public Point BoardSize { get { return new Point(8, 8); } }
+        public List<GameObject> GameObjects { get; set; }
 
         // Constructor(s)
         public Level()
         {
             this.Tiles = new List<List<Tile>>();
+
+            this.GameObjects = new List<GameObject>();
+
+            GameObjects.Add(new Text(new Vector2(100, 100), "HEJDgre", Color.White, 240, true));
         }
 
         // Method(s)
@@ -82,6 +87,12 @@ namespace Outer_Space
             {
                 spriteBatch.Draw(TextureManager.selected, Selected.Position, null, Color.White, 0f, new Vector2(TextureManager.selected.Width / 2, TextureManager.selected.Height / 2), 1f, SpriteEffects.None, 0f); 
             }
+
+            // Game objects
+            foreach (GameObject go in GameObjects)
+            {
+                go.Draw(spriteBatch);
+            }
         }
 
         public void CheckMatch()
@@ -94,7 +105,7 @@ namespace Outer_Space
                     if (j < BoardSize.Y - 1)
                     {
                         int number = 1;
-                        while (Tiles[i][j].Type == Tiles[i][j + number].Type && !Tiles[i][j + number].Hidden && !Tiles[i][j].Hidden)
+                        while (Tiles[i][j].Type == Tiles[i][j + number].Type && !Tiles[i][j + number].Hidden && !Tiles[i][j].Hidden && !Tiles[i][j + number].Moving && !Tiles[i][j].Moving)
                         {
                             number++;
                             if (j + number >= BoardSize.Y)
@@ -108,6 +119,9 @@ namespace Outer_Space
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i][j + k].Hide();
+
+                                // Create pieces
+                                Explosion(i, j + k);
                             }
                         }
                     }
@@ -116,7 +130,7 @@ namespace Outer_Space
                     if (i < BoardSize.X - 1 && !Tiles[i][j].Hidden)
                     {
                         int number = 1;
-                        while (Tiles[i][j].Type == Tiles[i + number][j].Type && !Tiles[i + number][j].Hidden && !Tiles[i][j].Hidden)
+                        while (Tiles[i][j].Type == Tiles[i + number][j].Type && !Tiles[i + number][j].Hidden && !Tiles[i][j].Hidden && !Tiles[i + number][j].Moving && !Tiles[i][j].Moving)
                         {
                             number++;
                             if (i + number >= BoardSize.X)
@@ -130,10 +144,21 @@ namespace Outer_Space
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i + k][j].Hide();
+
+                                // Create pieces
+                                Explosion(i + k, j);
                             }
                         }
                     }
                 }
+            }
+        }
+
+        public void Explosion(int x, int y)
+        {
+            for (int i = 0; i < Globals.Randomizer.Next(10, 15); i++)
+            {
+                GameObjects.Add(new Piece(new Vector2(Tiles[x][y].Position.X + Globals.Randomizer.Next(-20, 20), Tiles[x][y].Position.Y + Globals.Randomizer.Next(-20, 20)), Tiles[x][y].Texture));
             }
         }
 
@@ -174,16 +199,14 @@ namespace Outer_Space
 
         public void Update()
         {
-            CheckMatch();
-
             // Update tiles
             bool canSelect = true;
             for (int i = 0; i < Tiles.Count; i++)
             {
                 for (int j = 0; j < Tiles[i].Count; j++)
                 {
-                    Tiles[i][j].Update();
                     Tiles[i][j].TilePosition = new Point(i, j);
+                    Tiles[i][j].Update();
 
                     if (!Tiles[i][j].Hidden)
                     {
@@ -215,7 +238,9 @@ namespace Outer_Space
                                 {
                                     Tile temp = Tiles[i][j];
                                     Tiles[i][j] = Selected;
+                                    Tiles[i][j].Moving = true;
                                     Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
+                                    Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = true;
                                     Selected = null;
                                 }
                                 else
@@ -225,6 +250,28 @@ namespace Outer_Space
                             }
                         } 
                     }
+                    else if (j== 0)
+                    {
+                        // "New" tile if hidden on top layer
+                        Tiles[i][j].UnHide();
+                    }
+                }
+            }
+
+            CheckMatch();
+
+            // Game objects
+            foreach (GameObject go in GameObjects)
+            {
+                go.Update();
+            }
+
+            // Remove
+            for (int i = GameObjects.Count - 1; i >= 0; i--)
+            {
+                if (GameObjects[i].Dead)
+                {
+                    GameObjects.RemoveAt(i);
                 }
             }
         }
