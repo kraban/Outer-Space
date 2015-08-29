@@ -24,6 +24,8 @@ namespace Outer_Space
         {
             this.Tiles = new List<List<Tile>>();
             this.GameObjects = new List<GameObject>();
+            GameObjects.Add(new Player());
+            GameObjects.Add(new Enemy());
         }
 
         // Method(s)
@@ -113,6 +115,10 @@ namespace Outer_Space
 
                         if (number >= 3)
                         {
+                            // Player action
+                            Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                            player.Action(number, Tiles[i][j].Type, this);
+
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i][j + k].Hide();
@@ -142,6 +148,10 @@ namespace Outer_Space
 
                         if (number >= 3)
                         {
+                            // Player action
+                            Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                            player.Action(number, Tiles[i][j].Type, this);
+
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i + k][j].Hide();

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public enum TileType { shield, up, down, cog, shoot }
+    public enum TileType { shield, right, left, cog, shoot }
 
     class Tile : GameObject
     {
