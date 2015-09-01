@@ -48,7 +48,7 @@ namespace Outer_Space
             Globals.Initialize();
 
             // TextureManager
-            TextureManager.Initialize(Content);
+            TextureManager.Initialize(Content, GraphicsDevice);
 
             level = new Level();
             level.InitializeTiles();

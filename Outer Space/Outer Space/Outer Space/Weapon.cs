@@ -14,38 +14,35 @@ namespace Outer_Space
     class Weapon : GameObject
     {
         // Public properties
+        public int Damage { get; set; }
         public Shoot Action { get; set; }
         public List<Shoot> ShootMethods { get; set; }
-
-        // Private variable(s)
 
         // Constructor(s)
         public Weapon()
             : base()
         {
+            this.Damage = Globals.Randomizer.Next(10, 20);
+
             ShootMethods = new List<Shoot>();
             ShootMethods.Add(FireStandard);
             ShootMethods.Add(FireAiming);
 
-            Action = ShootMethods[Globals.Randomizer.Next(0, ShootMethods.Count)]; 
+            Action = ShootMethods[Globals.Randomizer.Next(0, ShootMethods.Count)];
         }
 
         // Method(s)
-        public override void Update()
-        {
-            base.Update();
-        }
 
         public delegate void Shoot(Vector2 position, float direction, int tilesMatched, Level level);
 
         public void FireStandard(Vector2 position, float direction, int tilesMatched, Level level)
         {
-            level.GameObjects.Add(new Shot(position, direction, 5));
+            level.GameObjects.Add(new Shot(position, direction, Damage));
         }
 
         public void FireAiming(Vector2 position, float direction, int tilesMatched, Level level)
         {
-            level.GameObjects.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).Y, (level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).X)), 5));
+            level.GameObjects.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).Y, (level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).X)), Damage));
         }
     }
 }

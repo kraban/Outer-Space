@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Level
+    public class Level
     {
         // Public properties
         public List<List<Tile>> Tiles { get; set; }
@@ -296,7 +296,7 @@ namespace Outer_Space
                 for (int j = 0; j < Tiles[i].Count; j++)
                 {
                     Tiles[i][j].TilePosition = new Point(i, j);
-                    Tiles[i][j].Update();
+                    Tiles[i][j].UpdateLevel(this);
 
                     if (!Tiles[i][j].Hidden)
                     {
@@ -363,7 +363,7 @@ namespace Outer_Space
             // Game objects
             foreach (GameObject go in GameObjects)
             {
-                go.Update();
+                go.UpdateLevel(this);
             }
 
             // Remove

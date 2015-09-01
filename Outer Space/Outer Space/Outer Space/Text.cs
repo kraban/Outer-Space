@@ -44,6 +44,13 @@ namespace Outer_Space
             spriteBatch.DrawString(TextureManager.SpriteFont20, Write, Position, opacityColor, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth);
         }
 
+        public override void UpdateLevel(Level level)
+        {
+            base.UpdateLevel(level);
+
+            Update();
+        }
+
         public override void Update()
         {
             base.Update();

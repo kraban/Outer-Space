@@ -11,35 +11,23 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Enemy : GameObject
+    class Shield : GameObject
     {
         // Public properties
-        public Bar Health { get; set; }
+        public int MaxCharges { get; private set; }
+        public int Charges { get; set; }
 
         // Constructor(s)
-        public Enemy()
+        public Shield(int maxCharges)
             : base()
         {
-            this.Position = new Vector2(100, 100);
-            this.Texture = TextureManager.player;
-
-            this.Health = new Bar(new Vector2(0, 0), 100, 20, 100, Color.Red);
+            this.MaxCharges = maxCharges;
         }
 
-        public override void UpdateLevel(Level level)
-        {
-            base.UpdateLevel(level);
-
-            if (Health.Value <= 0)
-            {
-                Dead = true;
-            }
-        }
-
+        // Method(s)
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
-            Health.Draw(spriteBatch);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield: " + Charges + "/" + MaxCharges, new Vector2(0, Globals.ScreenSize.Y - 30), Color.White);
         }
     }
 }

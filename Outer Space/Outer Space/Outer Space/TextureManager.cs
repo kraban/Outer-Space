@@ -17,7 +17,8 @@ namespace Outer_Space
             player,
             none,
             selected,
-            shot;
+            shot,
+            pixel;
 
         public static List<Texture2D> tiles;
 
@@ -25,12 +26,15 @@ namespace Outer_Space
         public static SpriteFont SpriteFont20 { get; set; }
 
         // Initialize
-        public static void Initialize(ContentManager content)
+        public static void Initialize(ContentManager content, GraphicsDevice graphicsDevice)
         {
             player = content.Load<Texture2D>("Ship");
             none = content.Load<Texture2D>("Tiles/None");
             selected = content.Load<Texture2D>("Selected");
             shot = content.Load<Texture2D>("ShotRed");
+
+            pixel = new Texture2D(graphicsDevice, 1, 1);
+            pixel.SetData<Color>(new Color[] { Color.White });
 
             // SpriteFonts
             SpriteFont20 = content.Load<SpriteFont>("SpriteFont20");

@@ -42,6 +42,13 @@ namespace Outer_Space
             spriteBatch.Draw(Texture, Position, DrawArea, Color.White, Direction + Turn, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, 0f);
         }
 
+        public override void UpdateLevel(Level level)
+        {
+            base.UpdateLevel(level);
+
+            Update();
+        }
+
         public override void Update()
         {
             base.Update();

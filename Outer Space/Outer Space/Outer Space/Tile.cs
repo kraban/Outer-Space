@@ -13,7 +13,7 @@ namespace Outer_Space
 {
     public enum TileType { shield, right, left, cog, shoot }
 
-    class Tile : GameObject
+    public class Tile : GameObject
     {
         // Public properties
         public TileType Type { get; set; }
@@ -34,9 +34,9 @@ namespace Outer_Space
         }
 
         // Method(s)
-        public override void Update()
+        public override void UpdateLevel(Level level)
         {
-            base.Update();
+            base.UpdateLevel(level);
 
             // Move
             if (Position != new Vector2(TilePosition.X * 64 + (Globals.ScreenSize.X - 64 * 8), TilePosition.Y * 64 + 100))

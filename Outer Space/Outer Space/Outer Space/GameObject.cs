@@ -25,6 +25,8 @@ namespace Outer_Space
         // Constructor(s)
         public GameObject()
         {
+            // Default texture
+            this.Texture = TextureManager.none;
             this.Size = 1;
         }
 
@@ -38,5 +40,8 @@ namespace Outer_Space
         {
 
         }
+
+        public virtual void UpdateLevel(Level level)
+        { }
     }
 }

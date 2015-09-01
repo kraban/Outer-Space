@@ -26,12 +26,20 @@ namespace Outer_Space
         }
 
         // Method(s)
-        public override void Update()
+        public override void UpdateLevel(Level level)
         {
-            base.Update();
+            base.UpdateLevel(level);
 
             // Move
             Position += new Vector2((float)Math.Cos(Direction) * 5, (float)Math.Sin(Direction) * 5);
+
+            // Hit
+            if (level.GameObjects.Any(item => item.GetType().Name == "Enemy" && item.Box.Intersects(Box)))
+            {
+                Enemy enemy = (Enemy)level.GameObjects.First(item => item.GetType().Name == "Enemy" && item.Box.Intersects(Box));
+                enemy.Health.Change(-Damage);
+                Dead = true;
+            }
         }
     }
 }
