@@ -29,7 +29,7 @@ namespace Outer_Space
         public static void Initialize(ContentManager content, GraphicsDevice graphicsDevice)
         {
             player = content.Load<Texture2D>("Ship");
-            none = content.Load<Texture2D>("Tiles/None");
+            none = content.Load<Texture2D>("None");
             selected = content.Load<Texture2D>("Selected");
             shot = content.Load<Texture2D>("ShotRed");
 

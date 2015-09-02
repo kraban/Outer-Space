@@ -27,6 +27,8 @@ namespace Outer_Space
             ShootMethods = new List<Shoot>();
             ShootMethods.Add(FireStandard);
             ShootMethods.Add(FireAiming);
+            ShootMethods.Add(FireCrit);
+            ShootMethods.Add(FireDelayEnemyShot);
 
             Action = ShootMethods[Globals.Randomizer.Next(0, ShootMethods.Count)];
         }
@@ -37,12 +39,22 @@ namespace Outer_Space
 
         public void FireStandard(Vector2 position, float direction, int tilesMatched, Level level)
         {
-            level.ToAdd.Add(new Shot(position, direction, Damage));
+            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitBasic));
         }
 
         public void FireAiming(Vector2 position, float direction, int tilesMatched, Level level)
         {
-            level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).Y, (level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).X)), Damage));
+            level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).Y, (level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).X)), Damage, Shot.HitBasic));
+        }
+
+        public void FireCrit(Vector2 position, float direction, int tilesMatched, Level level)
+        {
+            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitCrit));
+        }
+
+        public void FireDelayEnemyShot(Vector2 position, float direction, int tilesMatched, Level level)
+        {
+            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitEnemyShotDelay));
         }
     }
 }

@@ -15,17 +15,49 @@ namespace Outer_Space
     {
         // Public properties
         public int Damage { get; set; }
+        public Hit HitEnemy { get; set; }
 
         // Constructor(s)
-        public Shot(Vector2 position, float direction, int damage)
+        public Shot(Vector2 position, float direction, int damage, Hit hit)
         {
             this.Position = position;
             this.Direction = direction;
             this.Damage = damage;
+            this.HitEnemy = hit;
             this.Texture = TextureManager.shot;
         }
 
         // Method(s)
+        public delegate void Hit(Enemy enemy, Level level, Shot shot);
+
+        public static void HitBasic(Enemy enemy, Level level, Shot shot)
+        {
+            enemy.Health.Change(-shot.Damage);
+        }
+
+        public static void HitCrit(Enemy enemy, Level level, Shot shot)
+        {
+            if (Globals.Randomizer.Next(0, 101) < 40)
+            {
+                enemy.Health.Change(-shot.Damage * 2);
+                level.ToAdd.Add(new Text(new Vector2(200, 300), "CRIT!", Color.Red, 90, false, 1.2f));
+            }
+            else
+            {
+                enemy.Health.Change(-shot.Damage);
+            }
+        }
+
+        public static void HitEnemyShotDelay(Enemy enemy, Level level, Shot shot)
+        {
+            enemy.Health.Change(-shot.Damage);
+            if (Globals.Randomizer.Next(0, 101) < 30)
+            {
+                enemy.ShootTimer = 300;
+                level.ToAdd.Add(new Text(new Vector2(200, 300), "Enemy Weapon Jammed!", Color.Red, 90, false, 1.2f));
+            }
+        }
+
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
@@ -37,7 +69,7 @@ namespace Outer_Space
             if (level.GameObjects.Any(item => item.GetType().Name == "Enemy" && item.Box.Intersects(Box)))
             {
                 Enemy enemy = (Enemy)level.GameObjects.First(item => item.GetType().Name == "Enemy" && item.Box.Intersects(Box));
-                enemy.Health.Change(-Damage);
+                HitEnemy(enemy, level, this);
                 Dead = true;
             }
         }

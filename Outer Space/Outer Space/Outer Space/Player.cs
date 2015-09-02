@@ -38,7 +38,7 @@ namespace Outer_Space
             this.ShipLocation = Location.middle;
 
             this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.Red);
-            this.Energy = new Bar(new Vector2(350, Globals.ScreenSize.Y - 30), 100, 20, 50, Color.OrangeRed);
+            this.Energy = new Bar(new Vector2(350, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
 
             this.Weapons = new List<Weapon>();
             Weapons.Add(new Weapon());

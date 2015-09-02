@@ -15,9 +15,7 @@ namespace Outer_Space
     {
         // Public properties
         public Bar Health { get; set; }
-
-        // Private variable(s)
-        private int shootTimer;
+        public int ShootTimer { get; set; }
 
         // Constructor(s)
         public Enemy()
@@ -27,7 +25,7 @@ namespace Outer_Space
             this.Texture = TextureManager.player;
             this.Direction = (float)Math.PI * 0.5f;
 
-            this.Health = new Bar(new Vector2(0, 0), 100, 20, 10, Color.Red);
+            this.Health = new Bar(new Vector2(0, 0), 100, 20, 100, Color.Red);
         }
 
         public override void UpdateLevel(Level level)
@@ -35,11 +33,11 @@ namespace Outer_Space
             base.UpdateLevel(level);
 
             // Shoot
-            shootTimer--;
-            if (shootTimer < 0)
+            ShootTimer--;
+            if (ShootTimer < 0)
             {
-                shootTimer = 180;
-                level.ToAdd.Add(new Shot(new Vector2(Position.X, Position.Y + 50), Direction, 25));
+                ShootTimer = 180;
+                level.ToAdd.Add(new Shot(new Vector2(Position.X, Position.Y + 50), Direction, 25, Shot.HitBasic));
             }
 
             // Die
