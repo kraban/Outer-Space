@@ -22,6 +22,10 @@ namespace Outer_Space
         public static MouseState PrevMState { get; set; }
         public static Rectangle MRectangle { get { return new Rectangle((int)MState.X, (int)MState.Y, 1, 1); } }
 
+        // Keyboard
+        public static KeyboardState KState { get; set; }
+        public static KeyboardState PrevKState { get; set; }
+
         // Initialize
         public static void Initialize()
         {
@@ -33,6 +37,9 @@ namespace Outer_Space
         {
             PrevMState = MState;
             MState = Mouse.GetState();
+
+            PrevKState = KState;
+            KState = Keyboard.GetState();
         }
     }
 }

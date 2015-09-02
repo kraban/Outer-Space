@@ -37,12 +37,12 @@ namespace Outer_Space
 
         public void FireStandard(Vector2 position, float direction, int tilesMatched, Level level)
         {
-            level.GameObjects.Add(new Shot(position, direction, Damage));
+            level.ToAdd.Add(new Shot(position, direction, Damage));
         }
 
         public void FireAiming(Vector2 position, float direction, int tilesMatched, Level level)
         {
-            level.GameObjects.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).Y, (level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).X)), Damage));
+            level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).Y, (level.GameObjects.First(item => item.GetType().Name == "Enemy").Position - position).X)), Damage));
         }
     }
 }

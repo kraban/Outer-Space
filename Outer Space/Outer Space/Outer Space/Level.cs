@@ -18,6 +18,7 @@ namespace Outer_Space
         public Tile Selected { get; set; }
         public Point BoardSize { get { return new Point(8, 8); } }
         public List<GameObject> GameObjects { get; set; }
+        public List<GameObject> ToAdd { get; set; }
 
         // Constructor(s)
         public Level()
@@ -26,6 +27,7 @@ namespace Outer_Space
             this.GameObjects = new List<GameObject>();
             GameObjects.Add(new Player());
             GameObjects.Add(new Enemy());
+            ToAdd = new List<GameObject>();
         }
 
         // Method(s)
@@ -365,6 +367,13 @@ namespace Outer_Space
             {
                 go.UpdateLevel(this);
             }
+
+            // Add
+            foreach (GameObject toAdd in ToAdd)
+            {
+                GameObjects.Add(toAdd);
+            }
+            ToAdd.Clear();
 
             // Remove
             for (int i = GameObjects.Count - 1; i >= 0; i--)

@@ -57,7 +57,7 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Tiles\Shot.png">
+    <Compile Include="Shot.png">
       <Name>Shot</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -69,7 +69,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tiles\None.png">
+    <Compile Include="None.png">
       <Name>None</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
