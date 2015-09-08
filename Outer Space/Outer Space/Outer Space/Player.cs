@@ -13,7 +13,7 @@ namespace Outer_Space
 {
     public enum Location { left, middle, right }
 
-    class Player : GameObject
+    public class Player : GameObject
     {
         // Public properties
         public Location ShipLocation { get; set; }
@@ -24,6 +24,9 @@ namespace Outer_Space
 
         public Bar Health { get; set; }
         public Bar Energy { get; set; }
+
+        // Tiles chances
+        public List<TileType> TileChance { get; set; }
 
         // Private variable(s)
         private float directionSpeed;
@@ -44,6 +47,22 @@ namespace Outer_Space
             Weapons.Add(new Weapon());
 
             PlayerShield = new Shield(3);
+
+            // Tiles chances
+            TileChance = new List<TileType>();
+            for (int i = 0; i < Enum.GetNames(typeof(TileType)).Length; i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    TileChance.Add((TileType)i);
+                }
+            }
+
+            // !TEMPORARY! Increase shoot tile chance
+            for (int i = 0; i < 20; i++)
+            {
+                TileChance.Add(TileType.shoot);
+            }
         }
 
         // Method(s)

@@ -67,13 +67,12 @@ namespace Outer_Space
             Hidden = true;
         }
 
-        public void UnHide()
+        public void UnHide(Player player)
         {
             Hidden = false;
             Size = 1f;
-            int type = Globals.Randomizer.Next(0, Enum.GetNames(typeof(TileType)).Length);
-            Type = (TileType)type;
-            Texture = TextureManager.tiles[type];
+            Type = player.TileChance[Globals.Randomizer.Next(0, player.TileChance.Count)];
+            Texture = TextureManager.tiles[(int)Type];
             Position = new Vector2(Position.X, -100);
         }
     }

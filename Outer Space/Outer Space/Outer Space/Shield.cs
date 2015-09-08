@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Shield : GameObject
+    public class Shield : GameObject
     {
         // Public properties
         public int MaxCharges { get; private set; }

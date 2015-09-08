@@ -39,10 +39,10 @@ namespace Outer_Space
                 for (int j = 0; j < BoardSize.Y; j++)
                 {
                     // List with avalible tileTypes
-                    List<int> avalibleTileType = new List<int>();
+                    List<TileType> avalibleTileType = new List<TileType>();
                     for (int k = 0; k < Enum.GetNames(typeof(TileType)).Length; k++)
                     {
-                        avalibleTileType.Add(k);
+                        avalibleTileType.Add((TileType)k);
                     }
 
                     // Check if 2 left is same
@@ -50,7 +50,7 @@ namespace Outer_Space
                     {
                         if (Tiles[i][j - 1].Type == Tiles[i][j - 2].Type)
                         {
-                            avalibleTileType.Remove((int)Tiles[i][j - 1].Type);
+                            avalibleTileType.Remove(Tiles[i][j - 1].Type);
                         }
                     }
 
@@ -59,15 +59,24 @@ namespace Outer_Space
                     {
                         if (Tiles[i - 1][j].Type == Tiles[i - 2][j].Type)
                         {
-                            if (avalibleTileType.Contains((int)Tiles[i - 1][j].Type))
+                            if (avalibleTileType.Contains(Tiles[i - 1][j].Type))
                             {
-                                avalibleTileType.Remove((int)Tiles[i - 1][j].Type);
+                                avalibleTileType.Remove(Tiles[i - 1][j].Type);
                             }
                         }
                     }
 
                     // Add tile
-                    Tiles[i].Add(new Tile(new Point(i, j), (TileType)avalibleTileType[Globals.Randomizer.Next(0, avalibleTileType.Count)]));
+                    List<TileType> tileChance = new List<TileType>();
+                    Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                    for (int k = 0; k < avalibleTileType.Count; k++)
+                    {
+                        foreach (TileType tileType in player.TileChance.Where(item => item == avalibleTileType[k]))
+                        {
+                            tileChance.Add(tileType);
+                        }
+                    }
+                    Tiles[i].Add(new Tile(new Point(i, j), tileChance[Globals.Randomizer.Next(0, tileChance.Count)]));
                 }
             }
         }
@@ -355,7 +364,8 @@ namespace Outer_Space
                     else if (j== 0)
                     {
                         // "New" tile if hidden on top layer
-                        Tiles[i][j].UnHide();
+                        Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                        Tiles[i][j].UnHide(player);
                     }
                 }
             }

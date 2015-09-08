@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Bar : GameObject
+    public class Bar : GameObject
     {
         // Public properties
         public int Width { get; private set; }
