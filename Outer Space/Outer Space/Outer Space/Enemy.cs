@@ -16,12 +16,14 @@ namespace Outer_Space
         // Public properties
         public Bar Health { get; set; }
         public int ShootTimer { get; set; }
+        public Location ShipLocation { get; set; }
 
         // Constructor(s)
         public Enemy()
             : base()
         {
-            this.Position = new Vector2(100, 100);
+            this.ShipLocation = Location.middle;
+            this.Position = new Vector2((int)ShipLocation * 100 + 100, 100);
             this.Texture = TextureManager.player;
             this.Direction = (float)Math.PI * 0.5f;
 
@@ -34,11 +36,26 @@ namespace Outer_Space
 
             // Shoot
             ShootTimer--;
-            if (ShootTimer < 0)
+            if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation)
             {
                 ShootTimer = 180;
                 level.ToAdd.Add(new Shot(new Vector2(Position.X, Position.Y + 50), Direction, 25, Shot.HitBasic));
             }
+
+            // Move
+            if (Globals.Randomizer.Next(0, 1001) < 2)
+            {
+                if (ShipLocation < level.Player.ShipLocation)
+                {
+                    ShipLocation++;
+                }
+                else if (ShipLocation > level.Player.ShipLocation)
+                {
+                    ShipLocation--;
+                } 
+            }
+            Vector2 move = new Vector2((int)ShipLocation * 100 + 100, Position.Y) - Position;
+            Position += move * 0.05f;
 
             // Die
             if (Health.Value <= 0)
@@ -46,10 +63,7 @@ namespace Outer_Space
                 Dead = true;
 
                 // Pieces
-                for (int i = 0; i < Globals.Randomizer.Next(10, 15); i++)
-                {
-                    level.ToAdd.Add(new Piece(new Vector2(Position.X + Globals.Randomizer.Next(-20, 20), Position.Y + Globals.Randomizer.Next(-20, 20)), Texture));
-                }
+                level.CreatePieces(Position, Texture);
             }
         }
 

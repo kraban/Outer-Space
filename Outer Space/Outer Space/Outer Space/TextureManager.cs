@@ -18,7 +18,8 @@ namespace Outer_Space
             none,
             selected,
             shot,
-            pixel;
+            pixel,
+            rock;
 
         public static List<Texture2D> tiles;
 
@@ -32,6 +33,7 @@ namespace Outer_Space
             none = content.Load<Texture2D>("None");
             selected = content.Load<Texture2D>("Selected");
             shot = content.Load<Texture2D>("ShotRed");
+            rock = content.Load<Texture2D>("Rock");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

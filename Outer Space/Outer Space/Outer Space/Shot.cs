@@ -72,6 +72,12 @@ namespace Outer_Space
                 HitEnemy(enemy, level, this);
                 Dead = true;
             }
+
+            // Outside screen
+            if (OutsideScreen())
+            {
+                Dead = true;
+            }
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Outer_Space
             }
 
             // !TEMPORARY! Increase shoot tile chance
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 40; i++)
             {
                 TileChance.Add(TileType.shoot);
             }

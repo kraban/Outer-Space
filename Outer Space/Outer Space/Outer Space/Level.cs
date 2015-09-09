@@ -19,6 +19,7 @@ namespace Outer_Space
         public Point BoardSize { get { return new Point(8, 8); } }
         public List<GameObject> GameObjects { get; set; }
         public List<GameObject> ToAdd { get; set; }
+        public Player Player { get { return (Player)GameObjects.First(item => item.GetType().Name == "Player"); } }
 
         // Constructor(s)
         public Level()
@@ -180,13 +181,75 @@ namespace Outer_Space
             }
         }
 
-        public bool CheckSingleMatch(int x, int y)
+        public List<TileType> CheckPossibleMatches()
+        {
+            List<TileType> tileTypes = new List<TileType>();
+
+            // Creates a copy of TileBoard
+            List<List<Tile>> tempTiles = new List<List<Tile>>();
+            for (int i = 0; i < Tiles.Count; i++)
+            {
+                tempTiles.Add(new List<Tile>());
+                for (int j = 0; j < Tiles[i].Count; j++)
+                {
+                    tempTiles[i].Add(Tiles[i][j]);
+                }
+            }
+
+            // Loop through tempBoard
+            for (int i = 0; i < tempTiles.Count; i++)
+            {
+                for (int j = 0; j < tempTiles[i].Count; j++)
+                {
+                    // Tiles to check
+                    List<Point> adjacentTiles;
+                    adjacentTiles = new List<Point>();
+
+                    // add adjacent tiles to check if not on boarder
+                    if (i != 0)
+                    {
+                        adjacentTiles.Add(new Point(-1, 0));
+                    }
+                    if (i != BoardSize.X - 1)
+                    {
+                        adjacentTiles.Add(new Point(1, 0));
+                    }
+                    if (j != 0)
+                    {
+                        adjacentTiles.Add(new Point(0, -1));
+                    }
+                    if (j != BoardSize.Y - 1)
+                    {
+                        adjacentTiles.Add(new Point(0, 1));
+                    }
+
+                    // Move every tile in every possible direction and check if match with CheckSingleMatch() Method
+                    // then add match type to list
+                    for (int k = 0; k < adjacentTiles.Count; k++)
+                    {
+                        Tile temp = tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y];
+                        tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y] = tempTiles[i][j];
+                        tempTiles[i][j] = temp;
+                        if (CheckSingleMatch(i + adjacentTiles[k].X, j + adjacentTiles[k].Y, tempTiles))
+                        {
+                            tileTypes.Add(tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y].Type);
+                        }
+                        tempTiles[i][j] = tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y];
+                        tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y] = temp;
+                    }
+                }
+            }
+
+            return tileTypes;
+        }
+
+        public bool CheckSingleMatch(int x, int y, List<List<Tile>> tiles)
         {
             int numberDown = 0, numberUp = 0, numberRight = 0, numberLeft = 0;
             // Check if down is same
             if (y < BoardSize.Y - 1)
             {
-                while (Tiles[x][y].Type == Tiles[x][y + numberDown + 1].Type && !Tiles[x][y + numberDown + 1].Hidden)
+                while (tiles[x][y].Type == tiles[x][y + numberDown + 1].Type && !tiles[x][y + numberDown + 1].Hidden)
                 {
                     numberDown++;
                     if (y + numberDown + 1 >= BoardSize.Y)
@@ -203,7 +266,7 @@ namespace Outer_Space
             // Check if Up is same
             if (y > 0)
             {
-                while (Tiles[x][y].Type == Tiles[x][y - numberUp - 1].Type && !Tiles[x][y - numberUp - 1].Hidden)
+                while (tiles[x][y].Type == tiles[x][y - numberUp - 1].Type && !Tiles[x][y - numberUp - 1].Hidden)
                 {
                     numberUp++;
                     if (y - numberUp <= 0)
@@ -221,7 +284,7 @@ namespace Outer_Space
             // Check if Right is same
             if (x < BoardSize.X - 1)
             {
-                while (Tiles[x][y].Type == Tiles[x + numberRight + 1][y].Type && !Tiles[x + numberRight + 1][y].Hidden)
+                while (tiles[x][y].Type == tiles[x + numberRight + 1][y].Type && !tiles[x + numberRight + 1][y].Hidden)
                 {
                     numberRight++;
                     if (x + numberRight + 1 >= BoardSize.X)
@@ -238,7 +301,7 @@ namespace Outer_Space
             // Check if Left is same
             if (x > 0)
             {
-                while (Tiles[x][y].Type == Tiles[x - numberLeft - 1][y].Type && !Tiles[x - numberLeft - 1][y].Hidden)
+                while (tiles[x][y].Type == tiles[x - numberLeft - 1][y].Type && !tiles[x - numberLeft - 1][y].Hidden)
                 {
                     numberLeft++;
                     if (x - numberLeft <= 0)
@@ -260,6 +323,14 @@ namespace Outer_Space
             for (int i = 0; i < Globals.Randomizer.Next(10, 15); i++)
             {
                 GameObjects.Add(new Piece(new Vector2(Tiles[x][y].Position.X + Globals.Randomizer.Next(-20, 20), Tiles[x][y].Position.Y + Globals.Randomizer.Next(-20, 20)), Tiles[x][y].Texture));
+            }
+        }
+
+        public void CreatePieces(Vector2 position, Texture2D texture)
+        {
+            for (int i = 0; i < Globals.Randomizer.Next(10, 15); i++)
+            {
+                ToAdd.Add(new Piece(new Vector2(position.X + Globals.Randomizer.Next(-20, 20), position.Y + Globals.Randomizer.Next(-20, 20)), texture));
             }
         }
 
@@ -344,7 +415,7 @@ namespace Outer_Space
                                     Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = true;
 
                                     // Check if swap is matching
-                                    if (!CheckSingleMatch(i, j) && !CheckSingleMatch(Selected.TilePosition.X, Selected.TilePosition.Y))
+                                    if (!CheckSingleMatch(i, j, Tiles) && !CheckSingleMatch(Selected.TilePosition.X, Selected.TilePosition.Y, Tiles))
                                     {
                                         Tiles[i][j] = Tiles[Selected.TilePosition.X][Selected.TilePosition.Y];
                                         Tiles[i][j].Moving = false;
@@ -371,6 +442,12 @@ namespace Outer_Space
             }
 
             CheckMatch();
+
+            // Rock
+            if (Globals.Randomizer.Next(0, 1001) < 100 && CheckPossibleMatches().Any(item => item == TileType.left))
+            {
+                ToAdd.Add(new Rock(Player, this));
+            }
 
             // Game objects
             foreach (GameObject go in GameObjects)

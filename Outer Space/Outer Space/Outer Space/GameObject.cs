@@ -43,5 +43,14 @@ namespace Outer_Space
 
         public virtual void UpdateLevel(Level level)
         { }
+
+        public bool OutsideScreen()
+        {
+            if (Position.X + Texture.Width / 2 < 0 || Position.X - Texture.Width / 2 > Globals.ScreenSize.X || Position.Y + Texture.Height / 2 < 0 || Position.Y - Texture.Height / 2 > Globals.ScreenSize.Y)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
