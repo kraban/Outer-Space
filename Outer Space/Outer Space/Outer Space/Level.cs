@@ -129,7 +129,7 @@ namespace Outer_Space
                         {
                             // Player action
                             Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
-                            player.Action(number, Tiles[i][j].Type, this);
+                            player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.X == i && tile.TilePosition.Y >= j && tile.TilePosition.Y <= j + number)));
 
                             for (int k = 0; k < number; k++)
                             {
@@ -162,8 +162,7 @@ namespace Outer_Space
                         {
                             // Player action
                             Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
-                            player.Action(number, Tiles[i][j].Type, this);
-
+                            player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.Y == j && tile.TilePosition.X >= i && tile.TilePosition.X <= i + number)));
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i + k][j].Hide();
@@ -411,8 +410,10 @@ namespace Outer_Space
                                     Tile temp = Tiles[i][j];
                                     Tiles[i][j] = Selected;
                                     Tiles[i][j].Moving = true;
+                                    Tiles[i][j].ManuallyMoved = 180;
                                     Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
                                     Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = true;
+                                    Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].ManuallyMoved = 180;
 
                                     // Check if swap is matching
                                     if (!CheckSingleMatch(i, j, Tiles) && !CheckSingleMatch(Selected.TilePosition.X, Selected.TilePosition.Y, Tiles))
@@ -432,19 +433,29 @@ namespace Outer_Space
                             }
                         } 
                     }
-                    else if (j== 0)
+                    else
                     {
+                        if (Tiles[i][j].ManuallyMoved >= 0)
+                        {
+                            Tiles[i][j].ManuallyMoved = -1;
+                        }
+
                         // "New" tile if hidden on top layer
-                        Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
-                        Tiles[i][j].UnHide(player);
+                        if (j== 0)
+                        {
+                            Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                            Tiles[i][j].UnHide(player);
+                        }
                     }
                 }
             }
 
             CheckMatch();
 
-            // Rock
-            if (Globals.Randomizer.Next(0, 1001) < 100 && CheckPossibleMatches().Any(item => item == TileType.left))
+            // spawn rock if possible to move
+            if (Globals.Randomizer.Next(0, 1001) < 2 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item == TileType.right))
+                 && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item == TileType.left))
+                 && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item == TileType.left) && !CheckPossibleMatches().Any(item => item == TileType.right)))
             {
                 ToAdd.Add(new Rock(Player, this));
             }

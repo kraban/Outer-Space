@@ -20,6 +20,7 @@ namespace Outer_Space
         public Point TilePosition { get; set; }
         public bool Hidden { get; private set; }
         public bool Moving { get; set; }
+        public int ManuallyMoved { get; set; }
 
 
         // Constructor(s)
@@ -37,6 +38,11 @@ namespace Outer_Space
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
+
+            if (ManuallyMoved >= 0)
+            {
+                ManuallyMoved--;
+            }
 
             // Move
             if (Position != new Vector2(TilePosition.X * 64 + (Globals.ScreenSize.X - 64 * 8), TilePosition.Y * 64 + 100))

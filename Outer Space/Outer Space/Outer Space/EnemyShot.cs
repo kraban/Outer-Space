@@ -11,34 +11,36 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Shot : GameObject
+    class EnemyShot : Shot
     {
         // Public properties
-        public float Damage { get; set; }
+        public Hit HitPlayer { get; set; }
 
         // Constructor(s)
-        public Shot(Vector2 position, float direction, float damage)
+        public EnemyShot(Vector2 position, float direction, float damage, Hit hit)
+            : base(position, direction, damage)
         {
-            this.Position = position;
-            this.Direction = direction;
-            this.Damage = damage;
-            this.Texture = TextureManager.shot;
+            HitPlayer = hit;
         }
 
         // Method(s)
-
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
 
-            // Move
-            Position += new Vector2((float)Math.Cos(Direction) * 5, (float)Math.Sin(Direction) * 5);
-
-            // Outside screen
-            if (OutsideScreen())
+            // Hit
+            if (level.Player.Box.Intersects(Box))
             {
+                HitPlayer(level.Player, level, this);
                 Dead = true;
             }
+        }
+
+        public delegate void Hit(Player player, Level level, Shot shot);
+
+        public static void HitBasic(Player player, Level level, Shot shot)
+        {
+            player.TakeDamage(shot.Damage * 2.5f, 0f);
         }
     }
 }

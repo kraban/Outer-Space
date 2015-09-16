@@ -37,12 +37,12 @@ namespace Outer_Space
             {
                 Dead = true;
                 level.CreatePieces(Position, Texture);
-                level.Player.Health.Change(-20);
+                level.Player.TakeDamage(20, 0);
                 Globals.ScreenShakeTimer = 30;
             }
 
             // Outside screen
-            if (OutsideScreen())
+            if (Position.Y - Texture.Height / 2 > Globals.ScreenSize.Y)
             {
                 Dead = true;
             }

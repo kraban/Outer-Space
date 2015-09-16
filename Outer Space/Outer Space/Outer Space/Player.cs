@@ -40,13 +40,13 @@ namespace Outer_Space
             this.Position = new Vector2(200, Globals.ScreenSize.Y - Texture.Height);
             this.ShipLocation = Location.middle;
 
-            this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.Red);
+            this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 100, Color.Red);
             this.Energy = new Bar(new Vector2(350, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
 
             this.Weapons = new List<Weapon>();
             Weapons.Add(new Weapon());
 
-            PlayerShield = new Shield(3);
+            PlayerShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100);
 
             // Tiles chances
             TileChance = new List<TileType>();
@@ -61,11 +61,26 @@ namespace Outer_Space
             // !TEMPORARY! Increase shoot tile chance
             for (int i = 0; i < 40; i++)
             {
-                TileChance.Add(TileType.shoot);
+                TileChance.Add(TileType.shield);
             }
         }
 
         // Method(s)
+        public void TakeDamage(float damage, float goThroughShield)
+        {
+            if (PlayerShield.Value > 0 && goThroughShield < 1)
+            {
+                float damageThroughShield = damage * goThroughShield;
+                damage -= damageThroughShield;
+                Health.Change(-damageThroughShield);
+                Health.Change(PlayerShield.Change(-damage));
+            }
+            else if (PlayerShield.Value <= 0 || goThroughShield >= 1)
+            {
+                Health.Change(-damage);
+            }
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
@@ -134,15 +149,19 @@ namespace Outer_Space
             }
         }
 
-        public void Action(int tilesMatched, TileType tileType, Level level)
+        public void Action(int tilesMatched, TileType tileType, Level level, bool manuallyMatched)
         {
             if (tileType == TileType.cog)
             {
                 Energy.Change(tilesMatched * 5 + (tilesMatched - 3) * 10);
             }
-            else if (Energy.Value > 10)
+            else if (Energy.Value > 10 || !manuallyMatched)
             {
-                Energy.Change(-10);
+                if (manuallyMatched)
+                {
+                    Energy.Change(-10);  
+                }
+
                 if (tileType == TileType.shoot)
                 {
                     Weapons.First().Action(new Vector2(Position.X, Position.Y - Texture.Height / 2), Direction, tilesMatched, level);
@@ -160,9 +179,9 @@ namespace Outer_Space
                     directionSpeed = 0.0005f;
                 }
 
-                if (tileType == TileType.shield && PlayerShield.Charges != PlayerShield.MaxCharges)
+                if (tileType == TileType.shield && PlayerShield.Value != PlayerShield.Width)
                 {
-                    PlayerShield.Charges++;
+                    PlayerShield.Change(10 * tilesMatched);
                 } 
             }
             else

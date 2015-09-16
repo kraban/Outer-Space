@@ -39,7 +39,7 @@ namespace Outer_Space
             if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation)
             {
                 ShootTimer = 180;
-                level.ToAdd.Add(new Shot(new Vector2(Position.X, Position.Y + 50), Direction, 25, Shot.HitBasic));
+                level.ToAdd.Add(new EnemyShot(new Vector2(Position.X, Position.Y + 50), Direction, 25, EnemyShot.HitBasic));
             }
 
             // Move
