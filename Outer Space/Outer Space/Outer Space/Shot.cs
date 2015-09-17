@@ -91,5 +91,11 @@ namespace Outer_Space
                 level.CombatText(ship.GetType().Name + " Weapon Jammed!");
             }
         }
+
+        public static void HitDamageOverTime(Ship ship, Level level, Shot shot)
+        {
+            ship.TakeDamage(shot.Damage, 0);
+            ship.SetDamageOverTime(shot.Damage / 6, 6);
+        }
     }
 }

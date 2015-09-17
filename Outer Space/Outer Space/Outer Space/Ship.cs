@@ -23,6 +23,11 @@ namespace Outer_Space
         public float StandardDirection { get; set; }
         public int SelectedWeapon { get; set; }
 
+        // Damage over time
+        public int DamageOverTimeCount { get; private set; }
+        public float DamageOverTimeDamage { get; private set; }
+        private int damageOverTimeTimer;
+
         public Bar Health { get; set; }
 
         // Constructor(s)
@@ -45,6 +50,8 @@ namespace Outer_Space
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
+
+            DamageOverTime();
 
             // Weapons
             foreach (Weapon w in Weapons)
@@ -79,6 +86,23 @@ namespace Outer_Space
             }
         }
 
+        public void SetDamageOverTime(float damage, int count)
+        {
+            DamageOverTimeDamage = damage;
+            DamageOverTimeCount = count;
+        }
+
+        public void DamageOverTime()
+        {
+            damageOverTimeTimer--;
+            if (DamageOverTimeCount > 0 && damageOverTimeTimer < 0)
+            {
+                damageOverTimeTimer = 10;
+                DamageOverTimeCount--;
+                TakeDamage(DamageOverTimeDamage, 0);
+            }
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
@@ -86,6 +110,5 @@ namespace Outer_Space
             Health.Draw(spriteBatch);
             ShipShield.Draw(spriteBatch);
         }
-
     }
 }
