@@ -21,7 +21,7 @@ namespace Outer_Space
             this.Texture = TextureManager.rock;
             this.Position = new Vector2(Globals.Randomizer.Next(400, Globals.ScreenSize.X - 300), -100);
             this.Direction = (float)Math.Atan2((player.Position - Position).Y, (player.Position - Position).X);
-            level.ToAdd.Add(new Text(new Vector2(Globals.CombatScreenSize.X / 2, Globals.CombatScreenSize.Y / 2), "Rock heading towards you! Move!", Color.Red, 120, false, 2f));
+            level.CombatText("Rock heading towards you! Move!");
         }
 
         // Method(s)

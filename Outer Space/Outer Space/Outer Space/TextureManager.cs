@@ -19,12 +19,14 @@ namespace Outer_Space
             selected,
             shot,
             pixel,
-            rock;
+            rock,
+            jammed;
 
         public static List<Texture2D> tiles;
 
 
         public static SpriteFont SpriteFont20 { get; set; }
+        public static SpriteFont SpriteFont15 { get; set; }
 
         // Initialize
         public static void Initialize(ContentManager content, GraphicsDevice graphicsDevice)
@@ -34,12 +36,14 @@ namespace Outer_Space
             selected = content.Load<Texture2D>("Selected");
             shot = content.Load<Texture2D>("ShotRed");
             rock = content.Load<Texture2D>("Rock");
+            jammed = content.Load<Texture2D>("Jammed");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });
 
             // SpriteFonts
             SpriteFont20 = content.Load<SpriteFont>("SpriteFont20");
+            SpriteFont15 = content.Load<SpriteFont>("SpriteFont15");
 
             // Tiles
             tiles = new List<Texture2D>();

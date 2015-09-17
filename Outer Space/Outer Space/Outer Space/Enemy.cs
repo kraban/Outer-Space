@@ -11,23 +11,26 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Enemy : GameObject
+    class Enemy : Ship
     {
         // Public properties
-        public Bar Health { get; set; }
         public int ShootTimer { get; set; }
-        public Location ShipLocation { get; set; }
 
         // Constructor(s)
         public Enemy()
-            : base()
+            : base((float)Math.PI * 0.5f)
         {
-            this.ShipLocation = Location.middle;
             this.Position = new Vector2((int)ShipLocation * 100 + 100, 100);
             this.Texture = TextureManager.player;
-            this.Direction = (float)Math.PI * 0.5f;
 
-            this.Health = new Bar(new Vector2(0, 0), 100, 20, 100, Color.Red);
+            this.Health = new Bar(new Vector2(0, 10), 100, 10, 100, Color.Red);
+            this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 100);
+
+            // Weapontargets
+            foreach (Weapon w in Weapons)
+            {
+                w.Targets.Add("Player");
+            }
         }
 
         public override void UpdateLevel(Level level)
@@ -36,10 +39,10 @@ namespace Outer_Space
 
             // Shoot
             ShootTimer--;
-            if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation)
+            if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation && Weapons[SelectedWeapon].Disabled < 0)
             {
                 ShootTimer = 180;
-                level.ToAdd.Add(new EnemyShot(new Vector2(Position.X, Position.Y + 50), Direction, 25, EnemyShot.HitBasic));
+                Weapons[SelectedWeapon].Action(Position, Direction, 0, level);
             }
 
             // Move
@@ -48,14 +51,14 @@ namespace Outer_Space
                 if (ShipLocation < level.Player.ShipLocation)
                 {
                     ShipLocation++;
+                    DirectionSpeed = -0.0005f;
                 }
                 else if (ShipLocation > level.Player.ShipLocation)
                 {
                     ShipLocation--;
-                } 
+                    DirectionSpeed = 0.0005f;
+                }
             }
-            Vector2 move = new Vector2((int)ShipLocation * 100 + 100, Position.Y) - Position;
-            Position += move * 0.05f;
 
             // Die
             if (Health.Value <= 0)

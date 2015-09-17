@@ -11,42 +11,24 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public enum Location { left, middle, right }
-
-    public class Player : GameObject
+    public class Player : Ship
     {
-        // Public properties
-        public Location ShipLocation { get; set; }
-        public List<Weapon> Weapons { get; set; }
-        public Shield PlayerShield { get; set; }
         public int MoveLeft { get; set; }
         public int MoveRight { get; set; }
 
-        public Bar Health { get; set; }
         public Bar Energy { get; set; }
 
         // Tiles chances
         public List<TileType> TileChance { get; set; }
 
-        // Private variable(s)
-        private float directionSpeed;
-
         // Constructor(s)
         public Player()
-            : base()
+            : base((float)Math.PI * 1.5f)
         {
-            this.Direction = (float)Math.PI * 1.5f;
             this.Texture = TextureManager.player;
             this.Position = new Vector2(200, Globals.ScreenSize.Y - Texture.Height);
-            this.ShipLocation = Location.middle;
 
-            this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 100, Color.Red);
             this.Energy = new Bar(new Vector2(350, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
-
-            this.Weapons = new List<Weapon>();
-            Weapons.Add(new Weapon());
-
-            PlayerShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100);
 
             // Tiles chances
             TileChance = new List<TileType>();
@@ -58,6 +40,12 @@ namespace Outer_Space
                 }
             }
 
+            // Weapontargets
+            foreach (Weapon w in Weapons)
+            {
+                w.Targets.Add("Enemy");
+            }
+
             // !TEMPORARY! Increase shoot tile chance
             for (int i = 0; i < 40; i++)
             {
@@ -66,29 +54,23 @@ namespace Outer_Space
         }
 
         // Method(s)
-        public void TakeDamage(float damage, float goThroughShield)
-        {
-            if (PlayerShield.Value > 0 && goThroughShield < 1)
-            {
-                float damageThroughShield = damage * goThroughShield;
-                damage -= damageThroughShield;
-                Health.Change(-damageThroughShield);
-                Health.Change(PlayerShield.Change(-damage));
-            }
-            else if (PlayerShield.Value <= 0 || goThroughShield >= 1)
-            {
-                Health.Change(-damage);
-            }
-        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
-            Health.Draw(spriteBatch);
             Energy.Draw(spriteBatch);
 
-            PlayerShield.Draw(spriteBatch);
+            // Weapons
+            for (int i = 0; i < Weapons.Count; i++)
+            {
+                Weapons[i].Position = new Vector2(Weapons[i].Texture.Width / 2, Globals.ScreenSize.Y - i * Weapons[i].Texture.Height - 150);
+                if (i == SelectedWeapon)
+                {
+                    spriteBatch.Draw(TextureManager.selected, new Vector2(Weapons[i].Position.X - Weapons[i].Texture.Width / 2, Weapons[i].Position.Y - Weapons[i].Texture.Height / 2), Color.White);
+                }
+                Weapons[i].Draw(spriteBatch);
+            }
 
             // Right
             if (MoveRight > 0)
@@ -115,16 +97,15 @@ namespace Outer_Space
         {
             base.UpdateLevel(level);
 
-            // Move
-            Vector2 move = new Vector2((int)ShipLocation * 100 + 100, Position.Y) - Position;
-            Position += move * 0.05f;
-
-            // Ship tilt
-            if (move.Length() > 10)
+            // Select weapon
+            if (Globals.KState.IsKeyDown(Keys.D1))
             {
-                Direction += move.Length() * directionSpeed;
+                SelectedWeapon = 0;
             }
-            Direction = MathHelper.Lerp(Direction, (float)Math.PI * 1.5f, 0.1f);
+            else if (Globals.KState.IsKeyDown(Keys.D2))
+            {
+                SelectedWeapon = 1;
+            }
 
             // Right
             if (MoveRight > 0)
@@ -162,31 +143,31 @@ namespace Outer_Space
                     Energy.Change(-10);  
                 }
 
-                if (tileType == TileType.shoot)
+                if (tileType == TileType.shoot && Weapons[SelectedWeapon].Disabled < 0)
                 {
-                    Weapons.First().Action(new Vector2(Position.X, Position.Y - Texture.Height / 2), Direction, tilesMatched, level);
+                    Weapons[SelectedWeapon].Action(new Vector2(Position.X, Position.Y - Texture.Height / 2), Direction, tilesMatched, level); 
                 }
 
                 if (tileType == TileType.left && ShipLocation != Location.left)
                 {
                     MoveLeft += 20 * tilesMatched;
-                    directionSpeed = -0.0005f;
+                    DirectionSpeed = -0.0005f;
                 }
 
                 if (tileType == TileType.right && ShipLocation != Location.right)
                 {
                     MoveRight += 20 * tilesMatched;
-                    directionSpeed = 0.0005f;
+                    DirectionSpeed = 0.0005f;
                 }
 
-                if (tileType == TileType.shield && PlayerShield.Value != PlayerShield.Width)
+                if (tileType == TileType.shield && ShipShield.Value != ShipShield.Width)
                 {
-                    PlayerShield.Change(10 * tilesMatched);
+                    ShipShield.Change(10 * tilesMatched);
                 } 
             }
             else
             {
-                level.ToAdd.Add(new Text(new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2), "NOT ENOUGH ENERGY!", Color.Red, 120, false, 3f));
+                level.CombatText("NOT ENOUGH ENERGY!");
             }
         }
     }

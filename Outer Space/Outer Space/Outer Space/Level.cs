@@ -333,6 +333,11 @@ namespace Outer_Space
             }
         }
 
+        public void CombatText(string text)
+        {
+            ToAdd.Add(new Text(new Vector2(Globals.CombatScreenSize.X - TextureManager.SpriteFont20.MeasureString(text).X / 2, Globals.CombatScreenSize.Y / 2), text, Color.Red, 120, false, 1.4f));
+        }
+
         public bool CheckAdjacent(int x, int y)
         {
             // Tiles to check
