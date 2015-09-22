@@ -145,7 +145,7 @@ namespace Outer_Space
 
                 if (tileType == TileType.shoot && Weapons[SelectedWeapon].Disabled < 0)
                 {
-                    Weapons[SelectedWeapon].Action(new Vector2(Position.X, Position.Y - Texture.Height / 2), Direction, tilesMatched, level); 
+                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](new Vector2(Position.X, Position.Y - Texture.Height / 2), Direction, tilesMatched, level); 
                 }
 
                 if (tileType == TileType.left && ShipLocation != Location.left)

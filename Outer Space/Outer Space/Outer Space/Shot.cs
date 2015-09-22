@@ -15,11 +15,12 @@ namespace Outer_Space
     {
         // Public properties
         public float Damage { get; set; }
+        public float ShieldPiercing { get; set; }
         public List<String> Targets { get; set; }
         public Hit Effect { get; set; }
 
         // Constructor(s)
-        public Shot(Vector2 position, float direction, float damage, Hit hit, List<String> targets)
+        public Shot(Vector2 position, float direction, float damage, Hit hit, List<String> targets, float shieldPiercing)
         {
             this.Position = position;
             this.Direction = direction;
@@ -28,6 +29,7 @@ namespace Outer_Space
             this.Texture = TextureManager.shot;
             this.Targets = new List<string>();
             this.Targets = targets;
+            this.ShieldPiercing = shieldPiercing;
         }
 
         // Method(s)
@@ -66,25 +68,25 @@ namespace Outer_Space
 
         public static void HitBasic(Ship ship, Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, 0);
+            ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
         }
 
         public static void HitCrit(Ship ship, Level level, Shot shot)
         {
             if (Globals.Randomizer.Next(0, 101) < 40)
             {
-                ship.TakeDamage(shot.Damage * 2, 0);
+                ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing);
                 level.CombatText("CRIT!");
             }
             else
             {
-                ship.TakeDamage(shot.Damage, 0);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
             }
         }
 
         public static void HitEnemyShotDelay(Ship ship, Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, 0);
+            ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
             if (Globals.Randomizer.Next(0, 101) < 30)
             {
                 ship.Weapons[Globals.Randomizer.Next(0, ship.Weapons.Count)].Disabled = 120;
@@ -94,8 +96,8 @@ namespace Outer_Space
 
         public static void HitDamageOverTime(Ship ship, Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, 0);
-            ship.SetDamageOverTime(shot.Damage / 6, 6);
+            ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
+            ship.SetDamageOverTime(shot.Damage / 6, 6, shot.ShieldPiercing);
         }
     }
 }

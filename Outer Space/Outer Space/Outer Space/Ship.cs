@@ -27,6 +27,7 @@ namespace Outer_Space
         public int DamageOverTimeCount { get; private set; }
         public float DamageOverTimeDamage { get; private set; }
         private int damageOverTimeTimer;
+        private float shieldPiercing;
 
         public Bar Health { get; set; }
 
@@ -86,10 +87,11 @@ namespace Outer_Space
             }
         }
 
-        public void SetDamageOverTime(float damage, int count)
+        public void SetDamageOverTime(float damage, int count, float shieldPiercingDamage)
         {
             DamageOverTimeDamage = damage;
             DamageOverTimeCount = count;
+            shieldPiercing = shieldPiercingDamage;
         }
 
         public void DamageOverTime()
@@ -99,7 +101,7 @@ namespace Outer_Space
             {
                 damageOverTimeTimer = 10;
                 DamageOverTimeCount--;
-                TakeDamage(DamageOverTimeDamage, 0);
+                TakeDamage(DamageOverTimeDamage, shieldPiercing);
             }
         }
 

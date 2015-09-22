@@ -42,7 +42,7 @@ namespace Outer_Space
             if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation && Weapons[SelectedWeapon].Disabled < 0)
             {
                 ShootTimer = 180;
-                Weapons[SelectedWeapon].Action(Position, Direction, 0, level);
+                Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](Position, Direction, 0, level);
             }
 
             // Move
