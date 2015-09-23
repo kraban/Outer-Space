@@ -21,11 +21,10 @@ namespace Outer_Space
         private int duration;
         private int maxDuration;
         private float maxSize;
-        private bool shaking;
         private Color opacityColor;
 
         // Constructor(s)
-        public Text(Vector2 position, string write, Color textColor, int duration, bool shaking, float size)
+        public Text(Vector2 position, string write, Color textColor, int duration, float size)
             : base()
         {
             this.Position = position;
@@ -33,7 +32,6 @@ namespace Outer_Space
             this.TextColor = textColor;
             this.duration = duration;
             this.maxDuration = duration;
-            this.shaking = shaking;
             this.Size = size;
             this.maxSize = size;
         }
@@ -41,7 +39,28 @@ namespace Outer_Space
         // Method(s)
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.SpriteFont20, Write, Position, opacityColor, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth);
+            if (!Write.Contains("|"))
+            {
+                spriteBatch.DrawString(TextureManager.SpriteFont20, Write, Position, opacityColor, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth); 
+            }
+            else // different colors in same string
+            {
+                string[] strings = Write.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+
+                float offset = 0;
+                float length = 0;
+
+                for (int i = 1; i < strings.Length; i += 2)
+                {
+                    length += TextureManager.SpriteFont20.MeasureString(strings[i]).X;
+                }
+
+                for (int i = 0; i < strings.Length; i += 2)
+                {
+                    spriteBatch.DrawString(TextureManager.SpriteFont20, strings[i + 1], new Vector2(Position.X + offset, Position.Y), new Color(float.Parse(strings[i].Split(',')[0]), float.Parse(strings[i].Split(',')[1]), float.Parse(strings[i].Split(',')[2])), Direction, new Vector2(length / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth);
+                    offset += TextureManager.SpriteFont20.MeasureString(strings[i + 1]).X * Size;
+                }
+            }
         }
 
         public override void UpdateLevel(Level level)
@@ -61,19 +80,6 @@ namespace Outer_Space
             {
                 Dead = true;
             }
-
-            // Shake
-            if (shaking)
-            {
-                if (duration % 2 == 0)
-                {
-                    Direction -= 0.2f;
-                }
-                else
-                {
-                    Direction += 0.2f;
-                }
-            } 
         }
     }
 }
