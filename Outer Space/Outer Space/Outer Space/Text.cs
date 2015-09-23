@@ -37,6 +37,40 @@ namespace Outer_Space
         }
 
         // Method(s)
+
+        // different colors in same string
+        public static void TextDifferentColor(SpriteBatch spriteBatch, string s, Vector2 position, float size, SpriteFont spriteFont)
+        {
+            string[] strings = s.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+
+            float offsetX = 0;
+            float length = 0;
+
+            for (int i = 1; i < strings.Length; i += 2)
+            {
+                length += spriteFont.MeasureString(strings[i]).X;
+            }
+
+            for (int i = 0; i < strings.Length; i += 2)
+            {
+                float offsetY = 0;
+                for (int j = 1; j < i + 1; j += 2)
+                {
+                    if (strings[j].Contains('\n'))
+                    {
+                        offsetY = +spriteFont.MeasureString(strings[i]).Y * size;
+                    }
+                }
+
+                spriteBatch.DrawString(spriteFont, strings[i + 1], new Vector2(position.X + offsetX, position.Y + offsetY), new Color(float.Parse(strings[i].Split(',')[0]), float.Parse(strings[i].Split(',')[1]), float.Parse(strings[i].Split(',')[2])), 0f, new Vector2(0, 0), size, SpriteEffects.None, 0f);
+                offsetX += spriteFont.MeasureString(strings[i + 1]).X * size;
+                if (i + 2 < strings.Length && strings[i + 3].Contains('\n'))
+                {
+                    offsetX = 0;
+                }
+            }
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (!Write.Contains("|"))
@@ -45,21 +79,7 @@ namespace Outer_Space
             }
             else // different colors in same string
             {
-                string[] strings = Write.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
-
-                float offset = 0;
-                float length = 0;
-
-                for (int i = 1; i < strings.Length; i += 2)
-                {
-                    length += TextureManager.SpriteFont20.MeasureString(strings[i]).X;
-                }
-
-                for (int i = 0; i < strings.Length; i += 2)
-                {
-                    spriteBatch.DrawString(TextureManager.SpriteFont20, strings[i + 1], new Vector2(Position.X + offset, Position.Y), new Color(float.Parse(strings[i].Split(',')[0]), float.Parse(strings[i].Split(',')[1]), float.Parse(strings[i].Split(',')[2])), Direction, new Vector2(length / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth);
-                    offset += TextureManager.SpriteFont20.MeasureString(strings[i + 1]).X * Size;
-                }
+                TextDifferentColor(spriteBatch, Write, Position, Size, TextureManager.SpriteFont20);
             }
         }
 

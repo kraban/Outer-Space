@@ -95,7 +95,7 @@ namespace Outer_Space
             // Description
             if (drawDescription)
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, "Damage: " + Damage + "\nShield Piercing: " + ShieldPiercing * 100 + "%\n" + Description[Action], new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), Color.White);
+                Text.TextDifferentColor(spriteBatch, "|255,255,255|Damage: |255,0,0|" + Damage + "|255,255,255|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|255,255,255|%\n" + Description[Action], new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15);
             }
 
             // Disabled
