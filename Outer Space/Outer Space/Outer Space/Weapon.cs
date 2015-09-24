@@ -52,7 +52,7 @@ namespace Outer_Space
             Description.Add("Shoot a standard shot");
             Description.Add("Shoot a shot that aims at a random target");
             Description.Add("Shoot a shot that has a chance to crit");
-            Description.Add("Shoot a shot that has a chance to disable\n a random target weapon for a few seconds");
+            Description.Add("Shoot a shot that has a chance to disable|W|\na random target weapon for a few seconds");
             Description.Add("Shoot a shot that deals damage over time");
         }
 
@@ -95,7 +95,7 @@ namespace Outer_Space
             // Description
             if (drawDescription)
             {
-                Text.TextDifferentColor(spriteBatch, "|255,255,255|Damage: |255,0,0|" + Damage + "|255,255,255|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|255,255,255|%\n" + Description[Action], new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15);
+                Text.TextDifferentColor(spriteBatch, "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Description[Action], new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
             }
 
             // Disabled

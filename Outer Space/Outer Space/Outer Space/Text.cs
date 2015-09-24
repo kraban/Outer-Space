@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Text.RegularExpressions;
 
 namespace Outer_Space
 {
@@ -39,30 +40,40 @@ namespace Outer_Space
         // Method(s)
 
         // different colors in same string
-        public static void TextDifferentColor(SpriteBatch spriteBatch, string s, Vector2 position, float size, SpriteFont spriteFont)
+        public static void TextDifferentColor(SpriteBatch spriteBatch, string s, Vector2 position, float size, SpriteFont spriteFont, bool oneLine)
         {
             string[] strings = s.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
+            string[] originalStrings = s.Split(new string[] { "|" }, StringSplitOptions.RemoveEmptyEntries);
 
             float offsetX = 0;
             float length = 0;
 
-            for (int i = 1; i < strings.Length; i += 2)
+            if (oneLine)
             {
-                length += spriteFont.MeasureString(strings[i]).X;
+                for (int i = 1; i < strings.Length; i += 2)
+                {
+                    length += spriteFont.MeasureString(strings[i]).X;
+                } 
             }
 
             for (int i = 0; i < strings.Length; i += 2)
             {
-                float offsetY = 0;
                 for (int j = 1; j < i + 1; j += 2)
                 {
-                    if (strings[j].Contains('\n'))
+                    for (int k = 0; k < Regex.Matches(originalStrings[j], "\n").Count; k++)
                     {
-                        offsetY = +spriteFont.MeasureString(strings[i]).Y * size;
+                        strings[i + 1] = strings[i + 1].Insert(0, "\n");
                     }
                 }
 
-                spriteBatch.DrawString(spriteFont, strings[i + 1], new Vector2(position.X + offsetX, position.Y + offsetY), new Color(float.Parse(strings[i].Split(',')[0]), float.Parse(strings[i].Split(',')[1]), float.Parse(strings[i].Split(',')[2])), 0f, new Vector2(0, 0), size, SpriteEffects.None, 0f);
+                if (!strings[i].Contains("W"))
+                {
+                    spriteBatch.DrawString(spriteFont, strings[i + 1], new Vector2(position.X + offsetX, position.Y), new Color(float.Parse(strings[i].Split(',')[0]), float.Parse(strings[i].Split(',')[1]), float.Parse(strings[i].Split(',')[2])), 0f, new Vector2(length / 2, 0), size, SpriteEffects.None, 0f);
+                }
+                else
+                {
+                    spriteBatch.DrawString(spriteFont, strings[i + 1], new Vector2(position.X + offsetX, position.Y), Color.White, 0f, new Vector2(length / 2, 0), size, SpriteEffects.None, 0f);
+                }
                 offsetX += spriteFont.MeasureString(strings[i + 1]).X * size;
                 if (i + 2 < strings.Length && strings[i + 3].Contains('\n'))
                 {
@@ -79,7 +90,7 @@ namespace Outer_Space
             }
             else // different colors in same string
             {
-                TextDifferentColor(spriteBatch, Write, Position, Size, TextureManager.SpriteFont20);
+                TextDifferentColor(spriteBatch, Write, Position, Size, TextureManager.SpriteFont20, true);
             }
         }
 
