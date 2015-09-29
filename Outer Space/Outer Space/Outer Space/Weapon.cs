@@ -60,7 +60,7 @@ namespace Outer_Space
             Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
             Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
             Description.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
-            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to miss.");
+            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to shoot in a random direction.");
         }
 
         // Method(s)
@@ -168,14 +168,12 @@ namespace Outer_Space
         {
             if (!initialize)
             {
+                float miss = 0;
                 if (Globals.Randomizer.Next(0, 101) < Chance)
                 {
-                    level.ToAdd.Add(new Shot(position, direction + 0.5f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
+                    miss = MathHelper.Lerp(-0.5f, 0.5f, (float)Globals.Randomizer.NextDouble());
                 }
-                else
-                {
-                    level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
-                }
+                level.ToAdd.Add(new Shot(position, direction + miss, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
             }
             else
             {
