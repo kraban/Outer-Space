@@ -16,6 +16,7 @@ namespace Outer_Space
         // Public properties
         public int Damage { get; set; }
         public float ShieldPiercing { get; set; }
+        public int Chance { get; set; }
         public int Action { get; set; }
         public List<Shoot> ShootMethods { get; set; }
         public List<String> Description { get; set; }
@@ -32,6 +33,7 @@ namespace Outer_Space
         {
             this.Damage = Globals.Randomizer.Next(10, 20);
             this.ShieldPiercing = (float)Math.Round(Globals.Randomizer.NextDouble(), 2);
+            this.Chance = Globals.Randomizer.Next(20, 30);
             this.Depth = 0.5f;
 
             this.Texture = TextureManager.player;
@@ -42,8 +44,12 @@ namespace Outer_Space
             ShootMethods.Add(FireCrit);
             ShootMethods.Add(FireDelayEnemyShot);
             ShootMethods.Add(FireDamageOverTime);
+            ShootMethods.Add(FireChanceToMiss);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
+
+            // Initialize weapon
+            ShootMethods[Action](Position, Direction, 0, null, true);
 
             Targets = new List<string>();
 
@@ -51,9 +57,10 @@ namespace Outer_Space
             Description = new List<string>();
             Description.Add("Shoot a standard shot");
             Description.Add("Shoot a shot that aims at a random target");
-            Description.Add("Shoot a shot that has a chance to crit");
-            Description.Add("Shoot a shot that has a chance to disable|W|\na random target weapon for a few seconds");
-            Description.Add("Shoot a shot that deals damage over time");
+            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
+            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
+            Description.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
+            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to miss.");
         }
 
         // Method(s)
@@ -105,32 +112,76 @@ namespace Outer_Space
             }
         }
 
-        public delegate void Shoot(Vector2 position, float direction, int tilesMatched, Level level);
-
-
-        public void FireStandard(Vector2 position, float direction, int tilesMatched, Level level)
+        public int ShotDamage(int tilesMatched)
         {
-            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitBasic, Targets, ShieldPiercing));
+            if (tilesMatched < 3)
+            {
+                tilesMatched = 3;
+            }
+            return Damage + (tilesMatched - 3) * (Damage / 3);
         }
 
-        public void FireAiming(Vector2 position, float direction, int tilesMatched, Level level)
+        public delegate void Shoot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize);
+
+
+        public void FireStandard(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
         {
-            level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).Y, (level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).X)), Damage, Shot.HitBasic, Targets, ShieldPiercing));
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing)); 
+            }
         }
 
-        public void FireCrit(Vector2 position, float direction, int tilesMatched, Level level)
+        public void FireAiming(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
         {
-            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitCrit, Targets, ShieldPiercing));
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).Y, (level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).X)), ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
+            }
         }
 
-        public void FireDelayEnemyShot(Vector2 position, float direction, int tilesMatched, Level level)
+        public void FireCrit(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
         {
-            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitEnemyShotDelay, Targets, ShieldPiercing));
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitCrit, Targets, ShieldPiercing));
+            }
         }
 
-        public void FireDamageOverTime(Vector2 position, float direction, int tilesMatched, Level level)
+        public void FireDelayEnemyShot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
         {
-            level.ToAdd.Add(new Shot(position, direction, Damage, Shot.HitDamageOverTime, Targets, ShieldPiercing));
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitEnemyShotDelay, Targets, ShieldPiercing));
+            }
+        }
+
+        public void FireDamageOverTime(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing));
+            }
+        }
+
+        public void FireChanceToMiss(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                if (Globals.Randomizer.Next(0, 101) < Chance)
+                {
+                    level.ToAdd.Add(new Shot(position, direction + 0.5f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
+                }
+                else
+                {
+                    level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
+                }
+            }
+            else
+            {
+                Damage += 15;
+                Chance = 50;
+            }
         }
     }
 }

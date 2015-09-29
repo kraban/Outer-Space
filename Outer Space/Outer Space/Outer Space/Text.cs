@@ -68,7 +68,7 @@ namespace Outer_Space
 
                 if (!strings[i].Contains("W"))
                 {
-                    spriteBatch.DrawString(spriteFont, strings[i + 1], new Vector2(position.X + offsetX, position.Y), new Color(float.Parse(strings[i].Split(',')[0]), float.Parse(strings[i].Split(',')[1]), float.Parse(strings[i].Split(',')[2])), 0f, new Vector2(length / 2, 0), size, SpriteEffects.None, 0f);
+                    spriteBatch.DrawString(spriteFont, strings[i + 1], new Vector2(position.X + offsetX, position.Y), new Color(int.Parse(strings[i].Split(',')[0]), int.Parse(strings[i].Split(',')[1]), int.Parse(strings[i].Split(',')[2])), 0f, new Vector2(length / 2, 0), size, SpriteEffects.None, 0f);
                 }
                 else
                 {

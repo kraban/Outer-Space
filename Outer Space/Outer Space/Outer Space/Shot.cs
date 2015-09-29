@@ -16,6 +16,7 @@ namespace Outer_Space
         // Public properties
         public float Damage { get; set; }
         public float ShieldPiercing { get; set; }
+        public int Chance { get; set; }
         public List<String> Targets { get; set; }
         public Hit Effect { get; set; }
 
@@ -52,6 +53,7 @@ namespace Outer_Space
             {
                 Ship ship = (Ship)level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name) && item.Box.Intersects(Box));
                 Effect(ship, level, this);
+                level.CombatText(Damage.ToString());
                 Dead = true;
             }
 
@@ -73,7 +75,7 @@ namespace Outer_Space
 
         public static void HitCrit(Ship ship, Level level, Shot shot)
         {
-            if (Globals.Randomizer.Next(0, 101) < 40)
+            if (Globals.Randomizer.Next(0, 101) < shot.Chance)
             {
                 ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing);
                 level.CombatText("CRIT!");
@@ -87,7 +89,7 @@ namespace Outer_Space
         public static void HitEnemyShotDelay(Ship ship, Level level, Shot shot)
         {
             ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
-            if (Globals.Randomizer.Next(0, 101) < 30)
+            if (Globals.Randomizer.Next(0, 101) < shot.Chance)
             {
                 ship.Weapons[Globals.Randomizer.Next(0, ship.Weapons.Count)].Disabled = 120;
                 level.CombatText(ship.GetType().Name + " Weapon Jammed!");

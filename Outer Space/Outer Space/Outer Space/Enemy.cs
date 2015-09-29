@@ -33,6 +33,23 @@ namespace Outer_Space
             }
         }
 
+        // Method(s)
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+
+            // Weapons
+            for (int i = 0; i < Weapons.Count; i++)
+            {
+                Weapons[i].Position = new Vector2(Weapons[i].Texture.Width / 2, 200 + i * Weapons[i].Texture.Height);
+                if (i == SelectedWeapon)
+                {
+                    spriteBatch.Draw(TextureManager.selected, new Vector2(Weapons[i].Position.X - Weapons[i].Texture.Width / 2, Weapons[i].Position.Y - Weapons[i].Texture.Height / 2), Color.White);
+                }
+                Weapons[i].Draw(spriteBatch);
+            }
+        }
+
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
@@ -42,7 +59,7 @@ namespace Outer_Space
             if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation && Weapons[SelectedWeapon].Disabled < 0)
             {
                 ShootTimer = 180;
-                Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](Position, Direction, 0, level);
+                Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](Position, Direction, 0, level, false);
             }
 
             // Move
