@@ -37,7 +37,7 @@ namespace Outer_Space
             {
                 Dead = true;
                 level.CreatePieces(Position, Texture);
-                level.Player.TakeDamage(20, 0);
+                level.Player.TakeDamage(20, 0, DamageType.rock);
                 Globals.ScreenShakeTimer = 30;
             }
 

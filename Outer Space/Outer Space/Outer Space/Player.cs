@@ -26,9 +26,9 @@ namespace Outer_Space
             : base((float)Math.PI * 1.5f)
         {
             this.Texture = TextureManager.player;
-            this.Position = new Vector2(200, Globals.ScreenSize.Y - Texture.Height);
+            this.Position = new Vector2(300, Globals.ScreenSize.Y - Texture.Height);
 
-            this.Energy = new Bar(new Vector2(350, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
+            this.Energy = new Bar(new Vector2(450, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
 
             // Tiles chances
             TileChance = new List<TileType>();
@@ -47,10 +47,10 @@ namespace Outer_Space
             }
 
             // !TEMPORARY! Increase shoot tile chance
-            for (int i = 0; i < 40; i++)
-            {
-                TileChance.Add(TileType.shoot);
-            }
+            //for (int i = 0; i < 40; i++)
+            //{
+            //    TileChance.Add(TileType.shoot);
+            //}
         }
 
         // Method(s)
@@ -61,10 +61,16 @@ namespace Outer_Space
 
             Energy.Draw(spriteBatch);
 
+            // Hull
+            ShipHull.Position = new Vector2(ShipHull.Texture.Width / 2, Globals.ScreenSize.Y - 150 - ShipHull.Texture.Height);
+
+            // Shield
+            ShipShield.Position = new Vector2(ShipShield.Texture.Width / 2, Globals.ScreenSize.Y - 150);
+
             // Weapons
             for (int i = 0; i < Weapons.Count; i++)
             {
-                Weapons[i].Position = new Vector2(Weapons[i].Texture.Width / 2, Globals.ScreenSize.Y - i * Weapons[i].Texture.Height - 150);
+                Weapons[i].Position = new Vector2(Weapons[i].Texture.Width / 2 + 64, Globals.ScreenSize.Y - i * Weapons[i].Texture.Height - 150);
                 if (i == SelectedWeapon)
                 {
                     spriteBatch.Draw(TextureManager.selected, new Vector2(Weapons[i].Position.X - Weapons[i].Texture.Width / 2, Weapons[i].Position.Y - Weapons[i].Texture.Height / 2), Color.White);
@@ -89,7 +95,7 @@ namespace Outer_Space
             // Locations
             for (int i = 0; i < 3; i++)
             {
-                spriteBatch.Draw(Texture, new Vector2(i * 100 + 100, Globals.ScreenSize.Y - Texture.Height), null, Color.White * 0.3f, (float)Math.PI * 1.5f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0.9f);
+                spriteBatch.Draw(Texture, new Vector2(i * 100 + 200, Globals.ScreenSize.Y - Texture.Height), null, Color.White * 0.3f, (float)Math.PI * 1.5f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0.9f);
             }
         }
 

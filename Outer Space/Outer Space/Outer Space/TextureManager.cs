@@ -23,6 +23,9 @@ namespace Outer_Space
             jammed;
 
         public static List<Texture2D> tiles;
+        public static List<Texture2D> hulls;
+        public static List<Texture2D> shields;
+        public static List<Texture2D> weapons;
 
 
         public static SpriteFont SpriteFont20 { get; set; }
@@ -52,6 +55,18 @@ namespace Outer_Space
             tiles.Add(content.Load<Texture2D>("Tiles/Left"));
             tiles.Add(content.Load<Texture2D>("Tiles/Cog"));
             tiles.Add(content.Load<Texture2D>("Tiles/Shot"));
+
+            // Hulls
+            hulls = new List<Texture2D>();
+            hulls.Add(content.Load<Texture2D>("Hulls/Hull1"));
+
+            // Shields
+            shields = new List<Texture2D>();
+            shields.Add(content.Load<Texture2D>("Shields/Shield1"));
+
+            // Weapons
+            weapons = new List<Texture2D>();
+            weapons.Add(content.Load<Texture2D>("Weapons/Weapon1"));
         }
     }
 }

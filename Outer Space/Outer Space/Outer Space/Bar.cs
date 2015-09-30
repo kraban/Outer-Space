@@ -17,6 +17,7 @@ namespace Outer_Space
         public int Width { get; private set; }
         public int Height { get; private set; }
         public float Value { get; private set; }
+        public float MaxValue { get; set; }
         public Color BarColor { get; private set; }
 
         // Constructor(s)
@@ -28,6 +29,7 @@ namespace Outer_Space
             this.Width = width;
             this.Height = height;
             this.Value = value;
+            this.MaxValue = value;
             this.BarColor = color;
         }
 
@@ -35,10 +37,10 @@ namespace Outer_Space
         {
             Value += value;
             float overflow = 0;
-            if (Value > Width)
+            if (Value > MaxValue)
             {
-                overflow = Value - Width;
-                Value = Width;
+                overflow = Value - MaxValue;
+                Value = MaxValue;
             }
             else if (Value < 0)
             {
@@ -50,7 +52,7 @@ namespace Outer_Space
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, new Rectangle((int)Position.X, (int)Position.Y, (int)Value, Height), null, BarColor, 0f, new Vector2(0, 0), SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, new Rectangle((int)Position.X, (int)Position.Y, (int)((Value / MaxValue) * Width), Height), null, BarColor, 0f, new Vector2(0, 0), SpriteEffects.None, 0f);
             if (BarColor.A == 255)
             {
                 spriteBatch.Draw(Texture, new Rectangle((int)Position.X, (int)Position.Y, Width, Height), null, Color.White, 0f, new Vector2(0, 0), SpriteEffects.None, 0.1f); 

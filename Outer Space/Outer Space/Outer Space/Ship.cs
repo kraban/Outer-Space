@@ -19,6 +19,7 @@ namespace Outer_Space
         public Location ShipLocation { get; set; }
         public List<Weapon> Weapons { get; set; }
         public Shield ShipShield { get; set; }
+        public Hull ShipHull { get; set; }
         public float DirectionSpeed { get; set; }
         public float StandardDirection { get; set; }
         public int SelectedWeapon { get; set; }
@@ -43,7 +44,9 @@ namespace Outer_Space
             this.Weapons.Add(new Weapon());
             this.Weapons.Add(new Weapon());
 
-            this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 100, Color.Red);
+            this.ShipHull = new Hull(this);
+
+            this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 140, Color.Red);
             this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100);
         }
 
@@ -61,7 +64,7 @@ namespace Outer_Space
             }
 
             // Move
-            Vector2 move = new Vector2((int)ShipLocation * 100 + 100, Position.Y) - Position;
+            Vector2 move = new Vector2((int)ShipLocation * 100 + 200, Position.Y) - Position;
             Position += move * 0.05f;
 
             // Ship tilt
@@ -72,8 +75,17 @@ namespace Outer_Space
             Direction = MathHelper.Lerp(Direction, StandardDirection, 0.1f);
         }
 
-        public void TakeDamage(float damage, float goThroughShield)
+        public void TakeDamage(float damage, float goThroughShield, DamageType damageType)
         {
+            // Rock resist hull
+            if (damageType == DamageType.rock)
+            {
+                damage *= ShipHull.RockResistance;
+            }
+
+            // Armor
+            damage *= (float)(1 - (float)ShipHull.Armor / 100);
+
             if (ShipShield.Value > 0 && goThroughShield < 1)
             {
                 float damageThroughShield = damage * goThroughShield;
@@ -101,7 +113,7 @@ namespace Outer_Space
             {
                 damageOverTimeTimer = 10;
                 DamageOverTimeCount--;
-                TakeDamage(DamageOverTimeDamage, shieldPiercing);
+                TakeDamage(DamageOverTimeDamage, shieldPiercing, DamageType.damageOverTime);
             }
         }
 
@@ -111,6 +123,7 @@ namespace Outer_Space
 
             Health.Draw(spriteBatch);
             ShipShield.Draw(spriteBatch);
+            ShipHull.Draw(spriteBatch);
         }
     }
 }

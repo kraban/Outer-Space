@@ -21,6 +21,8 @@ namespace Outer_Space
         public List<GameObject> ToAdd { get; set; }
         public Player Player { get { return (Player)GameObjects.First(item => item.GetType().Name == "Player"); } }
 
+        public bool Started { get; set; }
+
         // Constructor(s)
         public Level()
         {
@@ -103,6 +105,11 @@ namespace Outer_Space
             foreach (GameObject go in GameObjects)
             {
                 go.Draw(spriteBatch);
+            }
+
+            if (!Started)
+            {
+                Text.TextDifferentColor(spriteBatch, "|W|Press enter to start", new Vector2(Globals.ScreenSize.X / 2, 10), 1.3f, TextureManager.SpriteFont20, true);
             }
         }
 
@@ -376,93 +383,100 @@ namespace Outer_Space
         public void Update()
         {
             // Update tiles
-            bool canSelect = true;
-            for (int i = 0; i < Tiles.Count; i++)
+            if (Started)
             {
-                for (int j = 0; j < Tiles[i].Count; j++)
+                bool canSelect = true;
+                for (int i = 0; i < Tiles.Count; i++)
                 {
-                    Tiles[i][j].TilePosition = new Point(i, j);
-                    Tiles[i][j].UpdateLevel(this);
-
-                    if (!Tiles[i][j].Hidden)
+                    for (int j = 0; j < Tiles[i].Count; j++)
                     {
+                        Tiles[i][j].TilePosition = new Point(i, j);
+                        Tiles[i][j].UpdateLevel(this);
 
-                        // Above hidden
-                        if (j < BoardSize.Y - 1 && Tiles[i][j + 1].Hidden && Tiles[i][j + 1].Size < 0.1)
+                        if (!Tiles[i][j].Hidden)
                         {
-                            Tile temp = Tiles[i][j];
-                            Tiles[i][j] = Tiles[i][j + 1];
-                            Tiles[i][j + 1] = temp;
-                        }
 
-                        // Select
-                        if (canSelect && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box) && !Tiles.Any(Column => Column.Any(item => item.Moving == true)))
-                        {
-                            canSelect = false;
-                            if (Selected == null)
+                            // Above hidden
+                            if (j < BoardSize.Y - 1 && Tiles[i][j + 1].Hidden && Tiles[i][j + 1].Size < 0.1)
                             {
-                                Selected = Tiles[i][j];
+                                Tile temp = Tiles[i][j];
+                                Tiles[i][j] = Tiles[i][j + 1];
+                                Tiles[i][j + 1] = temp;
                             }
-                            else if (Selected == Tiles[i][j])
+
+                            // Select
+                            if (canSelect && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && Globals.MRectangle.Intersects(Tiles[i][j].Box) && !Tiles.Any(Column => Column.Any(item => item.Moving == true)))
                             {
-                                Selected = null;
-                            }
-                            else
-                            {
-                                // Check if pressed tile next to selected
-                                if (CheckAdjacent(i, j))
+                                canSelect = false;
+                                if (Selected == null)
                                 {
-                                    Tile temp = Tiles[i][j];
-                                    Tiles[i][j] = Selected;
-                                    Tiles[i][j].Moving = true;
-                                    Tiles[i][j].ManuallyMoved = 180;
-                                    Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
-                                    Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = true;
-                                    Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].ManuallyMoved = 180;
-
-                                    // Check if swap is matching
-                                    if (!CheckSingleMatch(i, j, Tiles) && !CheckSingleMatch(Selected.TilePosition.X, Selected.TilePosition.Y, Tiles))
-                                    {
-                                        Tiles[i][j] = Tiles[Selected.TilePosition.X][Selected.TilePosition.Y];
-                                        Tiles[i][j].Moving = false;
-                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = Selected;
-                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = false;
-                                        GameObjects.Add(new Text(Tiles[i][j].Position - (Tiles[i][j].Position - Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Position), "Invalid Swap!", Color.Red, 60, 2));
-                                    }
+                                    Selected = Tiles[i][j];
+                                }
+                                else if (Selected == Tiles[i][j])
+                                {
                                     Selected = null;
                                 }
                                 else
                                 {
-                                    Selected = Tiles[i][j];
+                                    // Check if pressed tile next to selected
+                                    if (CheckAdjacent(i, j))
+                                    {
+                                        Tile temp = Tiles[i][j];
+                                        Tiles[i][j] = Selected;
+                                        Tiles[i][j].Moving = true;
+                                        Tiles[i][j].ManuallyMoved = 180;
+                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = temp;
+                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = true;
+                                        Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].ManuallyMoved = 180;
+
+                                        // Check if swap is matching
+                                        if (!CheckSingleMatch(i, j, Tiles) && !CheckSingleMatch(Selected.TilePosition.X, Selected.TilePosition.Y, Tiles))
+                                        {
+                                            Tiles[i][j] = Tiles[Selected.TilePosition.X][Selected.TilePosition.Y];
+                                            Tiles[i][j].Moving = false;
+                                            Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = Selected;
+                                            Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = false;
+                                            GameObjects.Add(new Text(Tiles[i][j].Position - (Tiles[i][j].Position - Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Position), "Invalid Swap!", Color.Red, 60, 2));
+                                        }
+                                        Selected = null;
+                                    }
+                                    else
+                                    {
+                                        Selected = Tiles[i][j];
+                                    }
                                 }
                             }
-                        } 
-                    }
-                    else
-                    {
-                        if (Tiles[i][j].ManuallyMoved >= 0)
-                        {
-                            Tiles[i][j].ManuallyMoved = -1;
                         }
-
-                        // "New" tile if hidden on top layer
-                        if (j== 0)
+                        else
                         {
-                            Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
-                            Tiles[i][j].UnHide(player);
+                            if (Tiles[i][j].ManuallyMoved >= 0)
+                            {
+                                Tiles[i][j].ManuallyMoved = -1;
+                            }
+
+                            // "New" tile if hidden on top layer
+                            if (j == 0)
+                            {
+                                Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                                Tiles[i][j].UnHide(player);
+                            }
                         }
                     }
                 }
+
+                CheckMatch();
+
+                // spawn rock if possible to move
+                if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item == TileType.right))
+                     && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item == TileType.left))
+                     && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item == TileType.left) && !CheckPossibleMatches().Any(item => item == TileType.right)))
+                {
+                    ToAdd.Add(new Rock(Player, this));
+                } 
             }
-
-            CheckMatch();
-
-            // spawn rock if possible to move
-            if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item == TileType.right))
-                 && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item == TileType.left))
-                 && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item == TileType.left) && !CheckPossibleMatches().Any(item => item == TileType.right)))
+            else if (Globals.KState.IsKeyDown(Keys.Enter))
             {
-                ToAdd.Add(new Rock(Player, this));
+                Started = true;
             }
 
             // Game objects

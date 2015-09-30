@@ -21,7 +21,7 @@ namespace Outer_Space
         public Hit Effect { get; set; }
 
         // Constructor(s)
-        public Shot(Vector2 position, float direction, float damage, Hit hit, List<String> targets, float shieldPiercing)
+        public Shot(Vector2 position, float direction, float damage, Hit hit, List<String> targets, float shieldPiercing, int chance)
         {
             this.Position = position;
             this.Direction = direction;
@@ -31,6 +31,7 @@ namespace Outer_Space
             this.Targets = new List<string>();
             this.Targets = targets;
             this.ShieldPiercing = shieldPiercing;
+            this.Chance = chance;
         }
 
         // Method(s)
@@ -53,7 +54,6 @@ namespace Outer_Space
             {
                 Ship ship = (Ship)level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name) && item.Box.Intersects(Box));
                 Effect(ship, level, this);
-                level.CombatText(Damage.ToString());
                 Dead = true;
             }
 
@@ -70,25 +70,25 @@ namespace Outer_Space
 
         public static void HitBasic(Ship ship, Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
+            ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
         }
 
         public static void HitCrit(Ship ship, Level level, Shot shot)
         {
             if (Globals.Randomizer.Next(0, 101) < shot.Chance)
             {
-                ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing);
+                ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing, DamageType.laser);
                 level.CombatText("CRIT!");
             }
             else
             {
-                ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
             }
         }
 
         public static void HitEnemyShotDelay(Ship ship, Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
+            ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
             if (Globals.Randomizer.Next(0, 101) < shot.Chance)
             {
                 ship.Weapons[Globals.Randomizer.Next(0, ship.Weapons.Count)].Disabled = 120;
@@ -98,7 +98,7 @@ namespace Outer_Space
 
         public static void HitDamageOverTime(Ship ship, Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, shot.ShieldPiercing);
+            ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
             ship.SetDamageOverTime(shot.Damage / 6, 6, shot.ShieldPiercing);
         }
     }

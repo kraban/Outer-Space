@@ -11,11 +11,13 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
+    public enum DamageType { laser, rock, damageOverTime }
+
     class Globals
     {
         public static Random Randomizer { get; set; }
 
-        public static Point ScreenSize { get { return new Point(1024, 600); } }
+        public static Point ScreenSize { get { return new Point(1124, 600); } }
         public static Point CombatScreenSize { get { return new Point(ScreenSize.X / 2, ScreenSize.Y); } }
 
         public static Vector3 ScreenShake { get; set; }

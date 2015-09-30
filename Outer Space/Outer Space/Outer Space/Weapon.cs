@@ -36,7 +36,7 @@ namespace Outer_Space
             this.Chance = Globals.Randomizer.Next(20, 30);
             this.Depth = 0.5f;
 
-            this.Texture = TextureManager.player;
+            this.Texture = TextureManager.weapons[Globals.Randomizer.Next(0, TextureManager.weapons.Count)];
 
             ShootMethods = new List<Shoot>();
             ShootMethods.Add(FireStandard);
@@ -54,16 +54,21 @@ namespace Outer_Space
             Targets = new List<string>();
 
             // Description
+            LoadDescription();
+        }
+
+        // Method(s)
+        public void LoadDescription()
+        {
             Description = new List<string>();
             Description.Add("Shoot a standard shot");
             Description.Add("Shoot a shot that aims at a random target");
             Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
             Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
             Description.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
-            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to shoot in a random direction.");
+            Description.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
         }
 
-        // Method(s)
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
@@ -128,7 +133,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing)); 
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance)); 
             }
         }
 
@@ -136,7 +141,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).Y, (level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).X)), ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
+                level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).Y, (level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).X)), ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
             }
         }
 
@@ -144,7 +149,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitCrit, Targets, ShieldPiercing));
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitCrit, Targets, ShieldPiercing, Chance));
             }
         }
 
@@ -152,7 +157,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitEnemyShotDelay, Targets, ShieldPiercing));
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitEnemyShotDelay, Targets, ShieldPiercing, Chance));
             }
         }
 
@@ -160,7 +165,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing));
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
             }
         }
 
@@ -169,16 +174,16 @@ namespace Outer_Space
             if (!initialize)
             {
                 float miss = 0;
-                if (Globals.Randomizer.Next(0, 101) < Chance)
+                if (Globals.Randomizer.Next(0, 101) > Chance)
                 {
                     miss = MathHelper.Lerp(-0.5f, 0.5f, (float)Globals.Randomizer.NextDouble());
                 }
-                level.ToAdd.Add(new Shot(position, direction + miss, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing));
+                level.ToAdd.Add(new Shot(position, direction + miss, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
             }
             else
             {
                 Damage += 15;
-                Chance = 50;
+                Chance = 40;
             }
         }
     }
