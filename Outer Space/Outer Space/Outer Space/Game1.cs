@@ -11,15 +11,14 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         Level level;
+
+        private static bool exit;
 
         public Game1()
         {
@@ -52,6 +51,9 @@ namespace Outer_Space
 
             level = new Level();
             level.InitializeTiles();
+
+            // Scene
+            SceneManager.Initialize();
 
             base.Initialize();
         }
@@ -93,7 +95,19 @@ namespace Outer_Space
             // Globals
             Globals.Update();
 
-            level.Update();
+            Camera.Update();
+
+            SceneManager.Update();
+
+            SceneManager.CurrentScene.Update();
+
+            //level.Update();
+
+            // Exit
+            if (exit)
+            {
+                Exit();
+            }
 
             base.Update(gameTime);
         }
@@ -107,13 +121,20 @@ namespace Outer_Space
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(Globals.ScreenShake));
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(Camera.Position));
 
-            level.Draw(spriteBatch);
+            //level.Draw(spriteBatch);
+
+            SceneManager.CurrentScene.Draw(spriteBatch);
 
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public static void Quit()
+        {
+            exit = true;
         }
     }
 }

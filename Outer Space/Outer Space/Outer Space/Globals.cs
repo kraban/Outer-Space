@@ -20,9 +20,6 @@ namespace Outer_Space
         public static Point ScreenSize { get { return new Point(1124, 600); } }
         public static Point CombatScreenSize { get { return new Point(ScreenSize.X / 2, ScreenSize.Y); } }
 
-        public static Vector3 ScreenShake { get; set; }
-        public static int ScreenShakeTimer { get; set; }
-
         // Mouse
         public static MouseState MState { get; set; }
         public static MouseState PrevMState { get; set; }
@@ -41,14 +38,6 @@ namespace Outer_Space
         // Update
         public static void Update()
         {
-            // Screen shake
-            if (ScreenShakeTimer > 0)
-            {
-                ScreenShakeTimer--;
-                int screenOffset = (int)MathHelper.Clamp(ScreenShakeTimer, 0, 10);
-                ScreenShake = new Vector3(Globals.Randomizer.Next(-screenOffset, screenOffset), Globals.Randomizer.Next(-screenOffset, screenOffset), 0);
-            }
-
             PrevMState = MState;
             MState = Mouse.GetState();
 

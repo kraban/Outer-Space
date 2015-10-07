@@ -17,6 +17,8 @@ namespace Outer_Space
         // Public properties
         public string Write { get; set; }
         public Color TextColor { get; set; }
+        public float MoveDirection { get; set; }
+        public float Speed { get; set; }
 
         // Private variable(s)
         private int duration;
@@ -104,6 +106,9 @@ namespace Outer_Space
         public override void Update()
         {
             base.Update();
+
+            Position += new Vector2((float)Math.Cos(MoveDirection) * Speed, (float)Math.Sin(MoveDirection) * Speed);
+
             duration--;
             Size -= maxSize / maxDuration;
             opacityColor = TextColor * Size;
