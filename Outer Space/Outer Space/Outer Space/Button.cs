@@ -15,9 +15,9 @@ namespace Outer_Space
     {
         public Vector2 Position { get; set; }
         public float Offset { get; set; }
-        public String Text { get; set; }
+        public String Write { get; set; }
         public SpriteFont spriteFont { get; set; }
-        public Rectangle Box { get { return new Rectangle((int)Position.X, (int)Position.Y, (int)spriteFont.MeasureString(Text).X, (int)spriteFont.MeasureString(Text).Y); } }
+        public Rectangle Box { get { return new Rectangle((int)Position.X, (int)Position.Y, (int)spriteFont.MeasureString(Write).X, (int)spriteFont.MeasureString(Write).Y); } }
         public Color NormalColor { get; set; }
         public Color HoverColor { get; set; }
         public Color TextColor { get; set; }
@@ -29,7 +29,7 @@ namespace Outer_Space
         public Button(Vector2 position, string text, SpriteFont spriteFont)
         {
             this.Position = position;
-            this.Text = text;
+            this.Write = text;
             this.spriteFont = spriteFont;
             this.NormalColor = new Color(255, 255, 255);
             this.TextColor = NormalColor;
@@ -41,7 +41,7 @@ namespace Outer_Space
         {
             if (exploded <= 0)
             {
-                spriteBatch.DrawString(spriteFont, Text, new Vector2(Position.X + Offset, Position.Y), TextColor); 
+                spriteBatch.DrawString(spriteFont, Write, new Vector2(Position.X + Offset, Position.Y), TextColor);
             }
 
             // Explode
@@ -87,9 +87,9 @@ namespace Outer_Space
         public void Explode()
         {
             exploded = 60;
-            for (int i = 0; i < Text.Length; i++)
+            for (int i = 0; i < Write.Length; i++)
             {
-                characters.Add(new Text(new Vector2(Position.X + Offset + (spriteFont.MeasureString(Text[i].ToString()).X * (i + 0.5f)), Position.Y + (spriteFont.MeasureString(Text).Y) / 2), Text[i].ToString(), HoverColor, exploded, 1.3f));
+                characters.Add(new Text(new Vector2(Position.X + Offset + (spriteFont.MeasureString(Write[i].ToString()).X * (i + 0.5f)), Position.Y + (spriteFont.MeasureString(Write).Y) / 2), Write[i].ToString(), HoverColor, exploded, 1.3f));
                 characters.Last().Speed = MathHelper.Lerp(2, 4, (float)Globals.Randomizer.NextDouble());
                 characters.Last().MoveDirection = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
             }
