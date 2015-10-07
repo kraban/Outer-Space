@@ -13,7 +13,6 @@ namespace Outer_Space
 {
     class Rock : GameObject
     {
-
         // Constructor(s)
         public Rock(Player player, Level level)
             : base()

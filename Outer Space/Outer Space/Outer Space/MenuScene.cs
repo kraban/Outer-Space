@@ -17,11 +17,18 @@ namespace Outer_Space
         public Button Options { get; set; }
         public Button Quit { get; set; }
 
+        public float Score { get; set; }
+        public float LerpScore { get; set; }
+
+        public List<GameObject> GameObjects { get; set; }
+
         public MenuScene()
         {
             this.Start = new Button(new Vector2(200, 200), "Start", TextureManager.SpriteFont20);
             this.Options = new Button(new Vector2(200, 250), "Options", TextureManager.SpriteFont20);
             this.Quit = new Button(new Vector2(200, 300), "Quit", TextureManager.SpriteFont20);
+
+            this.GameObjects = new List<GameObject>();
         }
 
         public override void Update()
@@ -44,6 +51,31 @@ namespace Outer_Space
             {
                 Game1.Quit();
             }
+
+            // Rocks
+            Score = MathHelper.Lerp(Score, LerpScore, 0.05f);
+
+            if (Globals.Randomizer.Next(0, 101) < 2)
+            {
+                GameObjects.Add(new MenuRock());
+            }
+
+            foreach (GameObject go in GameObjects)
+            {
+                go.Update();
+            }
+
+            for (int i = GameObjects.Count - 1; i >= 0; i--)
+            {
+                if (GameObjects[i].Dead)
+                {
+                    if (GameObjects[i].GetType().Name == "MenuRock")
+                    {
+                        LerpScore += 100;
+                    }
+                    GameObjects.RemoveAt(i);
+                }
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -51,6 +83,13 @@ namespace Outer_Space
             Start.Draw(spriteBatch);
             Options.Draw(spriteBatch);
             Quit.Draw(spriteBatch);
+
+            foreach (GameObject go in GameObjects)
+            {
+                go.Draw(spriteBatch);
+            }
+
+            spriteBatch.DrawString(TextureManager.SpriteFont15, "Score: " + Score.ToString("0"), new Vector2(Globals.ScreenSize.X - 150, 0), Color.Yellow);
         }
     }
 }
