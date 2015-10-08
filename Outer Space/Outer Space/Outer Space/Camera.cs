@@ -33,7 +33,7 @@ namespace Outer_Space
             ChangeSceneDelay--;
             if (ChangeSceneDelay == 0)
             {
-                Camera.LerpPosition = new Vector3(0, -500, 0);
+                Camera.LerpPosition = new Vector3(0, -Globals.ScreenSize.Y - 50, 0);
             }
 
             if (ScreenShakeTimer <= 0)

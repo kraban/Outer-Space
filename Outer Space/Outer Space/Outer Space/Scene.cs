@@ -13,7 +13,6 @@ namespace Outer_Space
 {
     public class Scene
     {
-
         // Method(s)
         public virtual void Update()
         { }

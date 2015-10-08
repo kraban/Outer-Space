@@ -17,7 +17,7 @@ namespace Outer_Space
         public float Offset { get; set; }
         public String Write { get; set; }
         public SpriteFont spriteFont { get; set; }
-        public Rectangle Box { get { return new Rectangle((int)Position.X, (int)Position.Y, (int)spriteFont.MeasureString(Write).X, (int)spriteFont.MeasureString(Write).Y); } }
+        public Rectangle Box { get { return new Rectangle((int)Position.X, (int)Position.Y - (int)spriteFont.MeasureString(Write).Y / 2, (int)spriteFont.MeasureString(Write).X, (int)spriteFont.MeasureString(Write).Y); } }
         public Color NormalColor { get; set; }
         public Color HoverColor { get; set; }
         public Color TextColor { get; set; }
@@ -25,6 +25,7 @@ namespace Outer_Space
         // Explode
         private List<Text> characters;
         private int exploded;
+        private float size;
 
         public Button(Vector2 position, string text, SpriteFont spriteFont)
         {
@@ -34,6 +35,7 @@ namespace Outer_Space
             this.NormalColor = new Color(255, 255, 255);
             this.TextColor = NormalColor;
             this.HoverColor = new Color(0, 255, 255);
+            this.size = 1f;
             this.characters = new List<Text>();
         }
 
@@ -41,7 +43,7 @@ namespace Outer_Space
         {
             if (exploded <= 0)
             {
-                spriteBatch.DrawString(spriteFont, Write, new Vector2(Position.X + Offset, Position.Y), TextColor);
+                spriteBatch.DrawString(spriteFont, Write, new Vector2(Position.X + Offset, Position.Y), TextColor, 0f, new Vector2(0, spriteFont.MeasureString(Write).Y / 2), size, SpriteEffects.None, 0f);
             }
 
             // Explode
@@ -58,11 +60,13 @@ namespace Outer_Space
                 if (Globals.MRectangle.Intersects(Box))
                 {
                     Offset = MathHelper.Lerp(Offset, 20, 0.1f);
+                    size = MathHelper.Lerp(size, 1.5f, 0.1f);
                     TextColor = new Color((int)MathHelper.Lerp(TextColor.R, HoverColor.R, 0.1f), (int)MathHelper.Lerp(TextColor.G, HoverColor.G, 0.1f), (int)MathHelper.Lerp(TextColor.B, HoverColor.B, 0.1f));
                 }
                 else
                 {
                     Offset = MathHelper.Lerp(0, Offset, 0.9f);
+                    size = MathHelper.Lerp(1, size, 0.9f);
                     TextColor = new Color((int)MathHelper.Lerp(TextColor.R, NormalColor.R, 0.1f), (int)MathHelper.Lerp(TextColor.G, NormalColor.G, 0.1f), (int)MathHelper.Lerp(TextColor.B, NormalColor.B, 0.1f));
                 } 
             }
@@ -89,7 +93,7 @@ namespace Outer_Space
             exploded = 60;
             for (int i = 0; i < Write.Length; i++)
             {
-                characters.Add(new Text(new Vector2(Position.X + Offset + (spriteFont.MeasureString(Write[i].ToString()).X * (i + 0.5f)), Position.Y + (spriteFont.MeasureString(Write).Y) / 2), Write[i].ToString(), HoverColor, exploded, 1.3f));
+                characters.Add(new Text(new Vector2(Position.X + Offset + (spriteFont.MeasureString(Write[i].ToString()).X * (i + 0.5f)), Position.Y + (spriteFont.MeasureString(Write).Y) / 2), Write[i].ToString(), HoverColor, exploded, 1.4f));
                 characters.Last().Speed = MathHelper.Lerp(2, 4, (float)Globals.Randomizer.NextDouble());
                 characters.Last().MoveDirection = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
             }

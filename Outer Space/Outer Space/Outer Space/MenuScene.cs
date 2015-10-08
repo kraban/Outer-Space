@@ -71,7 +71,15 @@ namespace Outer_Space
                 {
                     if (GameObjects[i].GetType().Name == "MenuRock")
                     {
-                        LerpScore += 100;
+                        MenuRock rock = (MenuRock)GameObjects[i];
+                        if (rock.MouseKill)
+                        {
+                            LerpScore += 100;
+                            for (int j = 0; j < Globals.Randomizer.Next(5, 8); j++)
+                            {
+                                GameObjects.Add(new Piece(GameObjects[i].Position, GameObjects[i].Texture)); 
+                            }
+                        }
                     }
                     GameObjects.RemoveAt(i);
                 }
