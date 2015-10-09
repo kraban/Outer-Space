@@ -20,7 +20,8 @@ namespace Outer_Space
             shot,
             pixel,
             rock,
-            jammed;
+            jammed,
+            ship2;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -40,6 +41,7 @@ namespace Outer_Space
             shot = content.Load<Texture2D>("ShotRed");
             rock = content.Load<Texture2D>("Rock");
             jammed = content.Load<Texture2D>("Jammed");
+            ship2 = content.Load<Texture2D>("Ship2Game");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

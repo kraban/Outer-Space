@@ -20,11 +20,13 @@ namespace Outer_Space
 
         public static MenuScene menuScene { get; set; }
         public static OptionsScene optionsScene { get; set; }
+        public static ShipSelectScene shipSelectScene { get; set; }
 
         public static void Initialize()
         {
             menuScene = new MenuScene();
             optionsScene = new OptionsScene();
+            shipSelectScene = new ShipSelectScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

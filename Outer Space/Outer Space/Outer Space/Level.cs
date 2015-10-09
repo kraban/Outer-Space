@@ -31,6 +31,12 @@ namespace Outer_Space
             GameObjects.Add(new Player());
             GameObjects.Add(new Enemy());
             ToAdd = new List<GameObject>();
+
+            // Stars
+            for (int i = 0; i < Globals.Randomizer.Next(30, 40); i++)
+            {
+                GameObjects.Add(new Star(new Vector2(Globals.Randomizer.Next(5, Globals.ScreenSize.X - 5), Globals.Randomizer.Next(5, Globals.ScreenSize.Y - 5))));
+            }
         }
 
         // Method(s)
@@ -472,11 +478,17 @@ namespace Outer_Space
                      && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item == TileType.left) && !CheckPossibleMatches().Any(item => item == TileType.right)))
                 {
                     ToAdd.Add(new Rock(Player, this));
-                } 
+                }
             }
             else if (Globals.KState.IsKeyDown(Keys.Enter))
             {
                 Started = true;
+            }
+
+            // Stars
+            if (Globals.Randomizer.Next(0, 1001) < 15)
+            {
+                ToAdd.Add(new Star(new Vector2(-30, Globals.Randomizer.Next(5, Globals.ScreenSize.Y - 5))));
             }
 
             // Game objects

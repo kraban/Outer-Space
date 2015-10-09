@@ -39,7 +39,7 @@ namespace Outer_Space
 
             if (Start.Press())
             {
-                //SceneManager.ChangeMenu(SceneManager.
+                SceneManager.ChangeScene(SceneManager.shipSelectScene);
             }
 
             if (Options.Press())
