@@ -13,6 +13,8 @@ namespace Outer_Space
 {
     public static class SceneManager
     {
+        public static List<Star> Stars { get; set; }
+
         public static Scene CurrentScene { get; private set; }
         private static Scene changeTo;
 
@@ -32,6 +34,12 @@ namespace Outer_Space
             changeTo = menuScene;
 
             changeSceneTimer = 40;
+
+            Stars = new List<Star>();
+            for (int i = 0; i < Globals.Randomizer.Next(40, 50); i++)
+            {
+                Stars.Add(new Star(new Vector2(Globals.Randomizer.Next(5, Globals.ScreenSize.X - 5), Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2))));
+            }
         }
 
         public static void Update()
@@ -40,6 +48,25 @@ namespace Outer_Space
             if (changeSceneTimer <= 0)
             {
                 CurrentScene = changeTo;
+            }
+
+            // Stars
+            if (Globals.Randomizer.Next(0, 101) < Options.StarChance)
+            {
+                Stars.Add(new Star(new Vector2(-5, Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2))));
+            }
+
+            foreach (Star s in Stars)
+            {
+                s.Update();
+            }
+        }
+
+        public static void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (Star s in Stars)
+            {
+                s.Draw(spriteBatch);
             }
         }
 

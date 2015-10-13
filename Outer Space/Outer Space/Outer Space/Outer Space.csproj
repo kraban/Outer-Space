@@ -117,6 +117,7 @@
     <Compile Include="Level.cs" />
     <Compile Include="MenuRock.cs" />
     <Compile Include="Scenes\MenuScene.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Scenes\OptionsScene.cs" />
     <Compile Include="Piece.cs" />
     <Compile Include="Player.cs" />
@@ -126,12 +127,14 @@
     <Compile Include="Rock.cs" />
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Scenes\SceneManager.cs" />
+    <Compile Include="Slider.cs" />
     <Compile Include="Shield.cs" />
     <Compile Include="Ship.cs" />
     <Compile Include="Scenes\ShipSelectScene.cs" />
     <Compile Include="Shot.cs" />
     <Compile Include="Star.cs" />
     <Compile Include="Text.cs" />
+    <Compile Include="TextureButton.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Weapon.cs" />

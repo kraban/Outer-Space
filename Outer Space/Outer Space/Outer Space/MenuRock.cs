@@ -23,6 +23,7 @@ namespace Outer_Space
             this.Texture = TextureManager.rock;
             this.Speed = MathHelper.Lerp(1, 4, (float)Globals.Randomizer.NextDouble());
             this.Depth = 1;
+            this.Direction = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
         }
 
         // Method(s)

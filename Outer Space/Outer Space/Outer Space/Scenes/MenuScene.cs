@@ -77,7 +77,7 @@ namespace Outer_Space
                             LerpScore += 100;
                             for (int j = 0; j < Globals.Randomizer.Next(5, 8); j++)
                             {
-                                GameObjects.Add(new Piece(GameObjects[i].Position, GameObjects[i].Texture)); 
+                                GameObjects.Add(new Piece(GameObjects[i].Position, GameObjects[i].Texture, 60, 1)); 
                             }
                         }
                     }

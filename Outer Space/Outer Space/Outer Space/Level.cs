@@ -28,7 +28,7 @@ namespace Outer_Space
         {
             this.Tiles = new List<List<Tile>>();
             this.GameObjects = new List<GameObject>();
-            GameObjects.Add(new Player());
+            GameObjects.Add(Globals.player);
             GameObjects.Add(new Enemy());
             ToAdd = new List<GameObject>();
 
@@ -334,7 +334,7 @@ namespace Outer_Space
         {
             for (int i = 0; i < Globals.Randomizer.Next(10, 15); i++)
             {
-                GameObjects.Add(new Piece(new Vector2(Tiles[x][y].Position.X + Globals.Randomizer.Next(-20, 20), Tiles[x][y].Position.Y + Globals.Randomizer.Next(-20, 20)), Tiles[x][y].Texture));
+                GameObjects.Add(new Piece(new Vector2(Tiles[x][y].Position.X + Globals.Randomizer.Next(-20, 20), Tiles[x][y].Position.Y + Globals.Randomizer.Next(-20, 20)), Tiles[x][y].Texture, 60, 1));
             }
         }
 
@@ -342,7 +342,7 @@ namespace Outer_Space
         {
             for (int i = 0; i < Globals.Randomizer.Next(10, 15); i++)
             {
-                ToAdd.Add(new Piece(new Vector2(position.X + Globals.Randomizer.Next(-20, 20), position.Y + Globals.Randomizer.Next(-20, 20)), texture));
+                ToAdd.Add(new Piece(new Vector2(position.X + Globals.Randomizer.Next(-20, 20), position.Y + Globals.Randomizer.Next(-20, 20)), texture, 60, 1));
             }
         }
 

@@ -19,8 +19,12 @@ namespace Outer_Space
         public float Turn { get; set; }
         public float Speed { get; set; }
 
+        private int duration;
+        public int maxDuration;
+        private float maxSize;
+
         // Constructor(s)
-        public Piece(Vector2 position, Texture2D texture)
+        public Piece(Vector2 position, Texture2D texture, int duration, float size)
             : base()
         {
             this.TurnSpeed = MathHelper.Lerp(-0.02f, 0.02f, (float)Globals.Randomizer.NextDouble());
@@ -28,7 +32,10 @@ namespace Outer_Space
             this.Position = position;
             this.Texture = texture;
             this.Direction = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
-            this.Size = 0.7f;
+            this.Size = size;
+            this.maxSize = size;
+            this.duration = duration;
+            this.maxDuration = duration;
 
             // Piece of texture
             int x = Globals.Randomizer.Next(0, texture.Width / 2);
@@ -58,8 +65,9 @@ namespace Outer_Space
             Turn += TurnSpeed;
 
             // Die
-            Size -= 0.01f;
-            if (Size < 0.03)
+            duration--;
+            Size -= maxSize / maxDuration;
+            if (duration < 0)
             {
                 Dead = true;
             }

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Star : GameObject
+    public class Star : GameObject
     {
         // Public properties
         public float Speed { get; set; }
@@ -34,6 +34,13 @@ namespace Outer_Space
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
+
+            Update();
+        }
+
+        public override void Update()
+        {
+            base.Update();
 
             // Move
             Position += new Vector2(Speed, 0);
