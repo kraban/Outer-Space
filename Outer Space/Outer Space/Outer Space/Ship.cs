@@ -18,6 +18,7 @@ namespace Outer_Space
         // Public properties
         public Location ShipLocation { get; set; }
         public List<Weapon> Weapons { get; set; }
+        public Item[] Inventory { get; set; }
         public Shield ShipShield { get; set; }
         public Hull ShipHull { get; set; }
         public float DirectionSpeed { get; set; }
@@ -45,6 +46,8 @@ namespace Outer_Space
             this.Weapons.Add(new Weapon());
 
             this.ShipHull = new Hull(this);
+
+            this.Inventory = new Item[25];
 
             this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 140, Color.Red);
             this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100);

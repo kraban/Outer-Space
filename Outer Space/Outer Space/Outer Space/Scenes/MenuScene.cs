@@ -17,6 +17,8 @@ namespace Outer_Space
         public Button Options { get; set; }
         public Button Quit { get; set; }
 
+        public Button Inventory { get; set; }
+
         public float Score { get; set; }
         public float LerpScore { get; set; }
 
@@ -28,6 +30,8 @@ namespace Outer_Space
             this.Options = new Button(new Vector2(200, 250), "Options", TextureManager.SpriteFont20);
             this.Quit = new Button(new Vector2(200, 300), "Quit", TextureManager.SpriteFont20);
 
+            this.Inventory = new Button(new Vector2(200, 400), "Inventory", TextureManager.SpriteFont20);
+
             this.GameObjects = new List<GameObject>();
         }
 
@@ -36,6 +40,12 @@ namespace Outer_Space
             Start.Update();
             Options.Update();
             Quit.Update();
+
+            Inventory.Update();
+            if (Inventory.Press())
+            {
+                SceneManager.ChangeScene(SceneManager.inventoryScene);
+            }
 
             if (Start.Press())
             {
@@ -91,6 +101,8 @@ namespace Outer_Space
             Start.Draw(spriteBatch);
             Options.Draw(spriteBatch);
             Quit.Draw(spriteBatch);
+
+            Inventory.Draw(spriteBatch);
 
             foreach (GameObject go in GameObjects)
             {

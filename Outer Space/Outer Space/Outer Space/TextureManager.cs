@@ -23,7 +23,8 @@ namespace Outer_Space
             jammed,
             ship2,
             slider,
-            slideButton;
+            slideButton,
+            inventory;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -46,6 +47,7 @@ namespace Outer_Space
             ship2 = content.Load<Texture2D>("Ship2Game");
             slider = content.Load<Texture2D>("Slider");
             slideButton = content.Load<Texture2D>("SlideButton");
+            inventory = content.Load<Texture2D>("Inventory");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

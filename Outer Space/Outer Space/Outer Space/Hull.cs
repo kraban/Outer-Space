@@ -11,13 +11,14 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public class Hull : GameObject
+    public class Hull : Item
     {
         // Public properties
         public int Armor { get; set; }
         public List<HullMethod> HullMethods { get; set; }
-        public List<string> Description { get; set; }
+        public List<string> Descriptions { get; set; }
         public int Method { get; set; }
+        public bool Combat { get; set; }
         
         // Method variable(s)
         public float RockResistance { get; set; }
@@ -27,6 +28,8 @@ namespace Outer_Space
         public Hull(Ship ship)
             : base()
         {
+            this.Type = ItemType.hull;
+
             // Method variables
             RockResistance = 1;
 
@@ -42,11 +45,13 @@ namespace Outer_Space
             this.Method = Globals.Randomizer.Next(0, HullMethods.Count);
             HullMethods[Method](ship);
 
-            this.Description = new List<string>();
+            this.Descriptions = new List<string>();
 
-            Description.Add("A standard hull.");
-            Description.Add("Rocks deals half damage.");
-            Description.Add("Increase |255, 70, 0|weapon chance|W| by " + WeaponChance + "%");
+            Descriptions.Add("A standard hull.");
+            Descriptions.Add("Rocks deals half damage.");
+            Descriptions.Add("Increase |255, 70, 0|weapon chance|W| by " + WeaponChance + "%");
+
+            this.Description = "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Descriptions[Method];
         }
 
         // Method(s)
@@ -60,9 +65,9 @@ namespace Outer_Space
             base.Draw(spriteBatch);
 
             // Description
-            if (Globals.MRectangle.Intersects(Box))
+            if (Globals.MRectangle.Intersects(Box) && Combat)
             {
-                Text.TextDifferentColor(spriteBatch, "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Description[Method], new Vector2(Position.X + Texture.Width / 2 + 84, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
+                Text.TextDifferentColor(spriteBatch, Description, new Vector2(Position.X + Texture.Width / 2 + 84, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
             }
         }
 
@@ -82,7 +87,7 @@ namespace Outer_Space
             foreach (Weapon w in ship.Weapons)
             {
                 w.Chance += WeaponChance;
-                w.LoadDescription();
+                w.LoadDescriptions();
             }
         }
     }

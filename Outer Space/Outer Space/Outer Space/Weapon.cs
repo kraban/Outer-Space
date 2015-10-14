@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public class Weapon : GameObject
+    public class Weapon : Item
     {
         // Public properties
         public int Damage { get; set; }
@@ -19,7 +19,7 @@ namespace Outer_Space
         public int Chance { get; set; }
         public int Action { get; set; }
         public List<Shoot> ShootMethods { get; set; }
-        public List<String> Description { get; set; }
+        public List<String> Descriptions { get; set; }
         public List<String> Targets { get; set; }
         public int Disabled { get; set; }
 
@@ -31,6 +31,7 @@ namespace Outer_Space
         public Weapon()
             : base()
         {
+            this.Type = ItemType.weapon;
             this.Damage = Globals.Randomizer.Next(10, 20);
             this.ShieldPiercing = (float)Math.Round(Globals.Randomizer.NextDouble(), 2);
             this.Chance = Globals.Randomizer.Next(20, 30);
@@ -54,19 +55,21 @@ namespace Outer_Space
             Targets = new List<string>();
 
             // Description
-            LoadDescription();
+            LoadDescriptions();
         }
 
         // Method(s)
-        public void LoadDescription()
+        public void LoadDescriptions()
         {
-            Description = new List<string>();
-            Description.Add("Shoot a standard shot");
-            Description.Add("Shoot a shot that aims at a random target");
-            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
-            Description.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
-            Description.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
-            Description.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
+            Descriptions = new List<string>();
+            Descriptions.Add("Shoot a standard shot");
+            Descriptions.Add("Shoot a shot that aims at a random target");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
+            Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
+
+            this.Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
 
         public override void UpdateLevel(Level level)
@@ -107,7 +110,7 @@ namespace Outer_Space
             // Description
             if (drawDescription)
             {
-                Text.TextDifferentColor(spriteBatch, "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Description[Action], new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
+                Text.TextDifferentColor(spriteBatch, Description, new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
             }
 
             // Disabled

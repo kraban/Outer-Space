@@ -103,7 +103,7 @@ namespace Outer_Space
 
             SceneManager.CurrentScene.Update();
 
-            level.Update();
+            //level.Update();
 
             // Exit
             if (exit)
@@ -125,7 +125,7 @@ namespace Outer_Space
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(Camera.Position));
 
-            level.Draw(spriteBatch);
+            //level.Draw(spriteBatch);
 
             SceneManager.CurrentScene.Draw(spriteBatch);
 

@@ -21,6 +21,10 @@ namespace Outer_Space
         // Tiles chances
         public List<TileType> TileChance { get; set; }
 
+        // Inventory
+        private Item selectedItem;
+        private int selectedItemArrayPosition;
+
         // Constructor(s)
         public Player()
             : base((float)Math.PI * 1.5f)
@@ -41,6 +45,8 @@ namespace Outer_Space
             }
 
             // Weapontargets
+
+            // BUG EQUIPED WEAPONS DO NOT HAVE TARGETS
             foreach (Weapon w in Weapons)
             {
                 w.Targets.Add("Enemy");
@@ -51,9 +57,113 @@ namespace Outer_Space
             //{
             //    TileChance.Add(TileType.shoot);
             //}
+
+            // Temp items
+            for (int i = 0; i < 25; i++)
+            {
+                Inventory[i] = (new Item());
+            }
+            Inventory[5] = new Weapon();
+            Inventory[6] = new Shield(new Vector2(200, 200), 5, 5, 5);
+            Inventory[7] = new Hull(this);
         }
 
         // Method(s)
+        public void UpdateInventory()
+        {
+            for (int i = 0; i < Inventory.Length; i++)
+			{
+                if (Inventory[i].Pressed() && Inventory[i].Type != ItemType.trash)
+                {
+                    selectedItem = Inventory[i];
+                    selectedItemArrayPosition = i;
+                }
+            }
+
+            if (Globals.MState.LeftButton == ButtonState.Released)
+            {
+                if (selectedItem != null)
+                {
+                    // Move item in inventory
+                    for (int i = 0; i < Inventory.Length; i++)
+                    {
+                        if (Inventory[i].HoverOver())
+                        {
+                            Item temp = Inventory[i];
+                            Inventory[i] = selectedItem;
+                            Inventory[selectedItemArrayPosition] = temp;
+                            break;
+                        }
+                    }
+                }
+
+                if (selectedItem != null)
+                {
+                    // replace weapon
+                    for (int i = 0; i < Weapons.Count; i++)
+                    {
+                        if (Weapons[i].HoverOver() && selectedItem.Type == Weapons[i].Type)
+                        {
+                            Item temp = Weapons[i];
+                            Weapons[i] = (Weapon)selectedItem;
+                            Inventory[selectedItemArrayPosition] = temp;
+                            break;
+                        }
+                    }
+                }
+
+                if (selectedItem != null)
+                {
+                    if (ShipShield.HoverOver() && selectedItem.Type == ShipShield.Type)
+                    {
+                        Item temp = ShipShield;
+                        ShipShield = (Shield)selectedItem;
+                        Inventory[selectedItemArrayPosition] = temp;
+                    }
+                }
+
+                selectedItem = null;
+                selectedItemArrayPosition = 0;
+            }
+        }
+
+        public void DrawInventory(SpriteBatch spriteBatch)
+        {
+            // Selected item
+            if (selectedItem != null)
+            {
+                spriteBatch.Draw(selectedItem.Texture, new Vector2(Globals.MState.X - 32, Globals.MState.Y - 32), Color.White * 0.5f); 
+            }
+
+            // Weapons
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Weapons", new Vector2(100, 100), Color.White);
+            for (int i = 0; i < Weapons.Count; i++)
+            {
+                Weapons[i].DrawInventory(spriteBatch, new Vector2(i * 64 + 32, 164));
+            }
+
+            // Shield
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield", new Vector2(100, 250), Color.White);
+            ShipShield.DrawInventory(spriteBatch, new Vector2(100, 314));
+
+            // Hull
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Hull", new Vector2(100, 400), Color.White);
+            ShipHull.DrawInventory(spriteBatch, new Vector2(100, 464));
+
+            // Inventory
+            spriteBatch.Draw(TextureManager.inventory, new Vector2(300 - 32, 200 - 32), Color.White);
+
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(400, 100), Color.White);
+            int row = 0;
+            for (int i = 0; i < Inventory.Length; i++)
+            {
+                Inventory[i].DrawInventory(spriteBatch, new Vector2(300 + (i - row * 5) * 64, 200 + row * 64));
+                if (i - row * 5 >= 4)
+                {
+                    row++;
+                }
+            }
+        }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
