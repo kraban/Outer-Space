@@ -23,7 +23,7 @@ namespace Outer_Space
 
         // Inventory
         private Item selectedItem;
-        private int selectedItemArrayPosition;
+        private Point selectedItemArrayPosition;
 
         // Constructor(s)
         public Player()
@@ -46,7 +46,7 @@ namespace Outer_Space
 
             // Weapontargets
 
-            // BUG EQUIPED WEAPONS DO NOT HAVE TARGETS
+            // BUG NEW EQUIPED WEAPONS DO NOT HAVE TARGETS
             foreach (Weapon w in Weapons)
             {
                 w.Targets.Add("Enemy");
@@ -58,25 +58,31 @@ namespace Outer_Space
             //    TileChance.Add(TileType.shoot);
             //}
 
-            // Temp items
-            for (int i = 0; i < 25; i++)
-            {
-                Inventory[i] = (new Item());
-            }
-            Inventory[5] = new Weapon();
-            Inventory[6] = new Shield(new Vector2(200, 200), 5, 5, 5);
-            Inventory[7] = new Hull(this);
+            Inventory[0, 0] = new Weapon();
+            Inventory[1, 0] = new Shield(new Vector2(200, 200), 5, 5, 5);
+            Inventory[2, 0] = new Hull(this);
         }
 
         // Method(s)
+        public void SwapItem(Point swapWith)
+        {
+            Item temp = Inventory[swapWith.X, swapWith.Y];
+            Inventory[swapWith.X, swapWith.Y] = selectedItem;
+            Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = temp;
+
+        }
+
         public void UpdateInventory()
         {
-            for (int i = 0; i < Inventory.Length; i++)
+            for (int i = 0; i < Inventory.GetLength(0); i++)
 			{
-                if (Inventory[i].Pressed() && Inventory[i].Type != ItemType.trash)
+                for (int j = 0; j < Inventory.GetLength(1); j++)
                 {
-                    selectedItem = Inventory[i];
-                    selectedItemArrayPosition = i;
+                    if (Inventory[i, j].Pressed() && Inventory[i, j].Type != ItemType.trash)
+                    {
+                        selectedItem = Inventory[i, j];
+                        selectedItemArrayPosition = new Point(i, j);
+                    } 
                 }
             }
 
@@ -85,45 +91,48 @@ namespace Outer_Space
                 if (selectedItem != null)
                 {
                     // Move item in inventory
-                    for (int i = 0; i < Inventory.Length; i++)
+                    for (int i = 0; i < Inventory.GetLength(0); i++)
                     {
-                        if (Inventory[i].HoverOver())
+                        for (int j = 0; j < Inventory.GetLength(1); j++)
                         {
-                            Item temp = Inventory[i];
-                            Inventory[i] = selectedItem;
-                            Inventory[selectedItemArrayPosition] = temp;
-                            break;
+                            if (Inventory[i, j].HoverOver())
+                            {
+                                if ((i == 0 && j == 5) || (selectedItemArrayPosition.X == 0 && selectedItemArrayPosition.Y == 5)) // shield
+                                {
+                                    if (selectedItem.Type == ItemType.shield && Inventory[i, j].Type == ItemType.shield)
+                                    {
+                                        SwapItem(new Point(i, j));
+                                        break;
+                                    }
+                                }
+                                else if ((i == 1 && j == 5) || (selectedItemArrayPosition.X == 1 && selectedItemArrayPosition.Y == 5)) // hull
+                                {
+                                    if (selectedItem.Type == ItemType.hull && Inventory[i, j].Type == ItemType.hull)
+                                    {
+                                        SwapItem(new Point(i, j));
+                                        break;
+                                    }
+                                }
+                                else if ((i > 1 && j == 5) || (selectedItemArrayPosition.X > 1 && selectedItemArrayPosition.Y == 5)) // weapons
+                                {
+                                    if (((selectedItem.Type == ItemType.weapon || Inventory[i, j].Type == ItemType.weapon) && (Weapons.Count > 1 || !Weapons.Any(item => item == selectedItem)) || (selectedItem.Type == ItemType.weapon && Inventory[i, j].Type == ItemType.weapon)))
+                                    {
+                                        SwapItem(new Point(i, j)); 
+                                        break;
+                                    }
+                                }
+                                else // inventory
+                                {
+                                    SwapItem(new Point(i, j));
+                                    break; 
+                                }
+                            } 
                         }
-                    }
-                }
-
-                if (selectedItem != null)
-                {
-                    // replace weapon
-                    for (int i = 0; i < Weapons.Count; i++)
-                    {
-                        if (Weapons[i].HoverOver() && selectedItem.Type == Weapons[i].Type)
-                        {
-                            Item temp = Weapons[i];
-                            Weapons[i] = (Weapon)selectedItem;
-                            Inventory[selectedItemArrayPosition] = temp;
-                            break;
-                        }
-                    }
-                }
-
-                if (selectedItem != null)
-                {
-                    if (ShipShield.HoverOver() && selectedItem.Type == ShipShield.Type)
-                    {
-                        Item temp = ShipShield;
-                        ShipShield = (Shield)selectedItem;
-                        Inventory[selectedItemArrayPosition] = temp;
                     }
                 }
 
                 selectedItem = null;
-                selectedItemArrayPosition = 0;
+                selectedItemArrayPosition = new Point(0, 0);
             }
         }
 
@@ -137,31 +146,32 @@ namespace Outer_Space
 
             // Weapons
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Weapons", new Vector2(100, 100), Color.White);
-            for (int i = 0; i < Weapons.Count; i++)
+            for (int i = 0; i < 3; i++)
             {
-                Weapons[i].DrawInventory(spriteBatch, new Vector2(i * 64 + 32, 164));
+                Inventory[2 + i, 5].DrawInventory(spriteBatch, new Vector2(i * 64 + 32, 164));
+                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 - 32 + 32, 164 - 32), Color.White);
             }
 
             // Shield
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield", new Vector2(100, 250), Color.White);
             ShipShield.DrawInventory(spriteBatch, new Vector2(100, 314));
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 314 - 32), Color.White);
 
             // Hull
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Hull", new Vector2(100, 400), Color.White);
             ShipHull.DrawInventory(spriteBatch, new Vector2(100, 464));
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 464 - 32), Color.White);
 
             // Inventory
             spriteBatch.Draw(TextureManager.inventory, new Vector2(300 - 32, 200 - 32), Color.White);
 
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(400, 100), Color.White);
-            int row = 0;
-            for (int i = 0; i < Inventory.Length; i++)
+            for (int i = 0; i < Inventory.GetLength(0); i++)
             {
-                Inventory[i].DrawInventory(spriteBatch, new Vector2(300 + (i - row * 5) * 64, 200 + row * 64));
-                if (i - row * 5 >= 4)
-                {
-                    row++;
-                }
+                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+			    {
+			        Inventory[i, j].DrawInventory(spriteBatch, new Vector2(i * 64 + 300, j * 64 + 200));
+			    }
             }
         }
 

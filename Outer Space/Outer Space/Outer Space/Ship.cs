@@ -17,10 +17,25 @@ namespace Outer_Space
     {
         // Public properties
         public Location ShipLocation { get; set; }
-        public List<Weapon> Weapons { get; set; }
-        public Item[] Inventory { get; set; }
-        public Shield ShipShield { get; set; }
-        public Hull ShipHull { get; set; }
+        public List<Weapon> Weapons
+        {
+            get
+            {
+                List<Weapon> weapons = new List<Weapon>();
+                for (int i = 0; i < 3; i++)
+                {
+                    if (Inventory[2 + i, 5].Type == ItemType.weapon)
+                    {
+                        weapons.Add((Weapon)Inventory[2 + i, 5]);
+                    }
+                }
+                return weapons;
+            }
+        }
+
+        public Item[,] Inventory { get; set; }
+        public Shield ShipShield { get { return (Shield)Inventory[0, 5]; } set { Inventory[0, 5] = value; } }
+        public Hull ShipHull { get { return (Hull)Inventory[1, 5]; } set { Inventory[1, 5] = value; } }
         public float DirectionSpeed { get; set; }
         public float StandardDirection { get; set; }
         public int SelectedWeapon { get; set; }
@@ -41,13 +56,22 @@ namespace Outer_Space
             this.StandardDirection = standardDirection;
             this.Direction = StandardDirection;
 
-            this.Weapons = new List<Weapon>();
-            this.Weapons.Add(new Weapon());
-            this.Weapons.Add(new Weapon());
+            this.Inventory = new Item[5, 6];
+            // Fill inventory
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+                    Inventory[i, j] = (new Item());
+                }
+            }
+
+            // ENABLE COMBAT BOOL IN SHIELD AND HULL WHEN IN COMBAT!!
+
+            Inventory[2, 5] = new Weapon();
+            Inventory[3, 5] = new Weapon();
 
             this.ShipHull = new Hull(this);
-
-            this.Inventory = new Item[25];
 
             this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 140, Color.Red);
             this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100);

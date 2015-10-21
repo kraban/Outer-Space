@@ -24,7 +24,8 @@ namespace Outer_Space
             ship2,
             slider,
             slideButton,
-            inventory;
+            inventory,
+            inventorySlot;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -48,6 +49,7 @@ namespace Outer_Space
             slider = content.Load<Texture2D>("Slider");
             slideButton = content.Load<Texture2D>("SlideButton");
             inventory = content.Load<Texture2D>("Inventory");
+            inventorySlot = content.Load<Texture2D>("InventorySlot");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });
