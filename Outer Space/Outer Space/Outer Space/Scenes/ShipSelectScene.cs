@@ -46,6 +46,7 @@ namespace Outer_Space
                 if (shipButton.Pressed())
                 {
                     Globals.player.Texture = shipButton.Texture;
+                    SceneManager.ChangeScene(SceneManager.mapScene);
                 }
             }
         }

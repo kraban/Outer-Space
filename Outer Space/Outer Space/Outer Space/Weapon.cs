@@ -23,6 +23,10 @@ namespace Outer_Space
         public List<String> Targets { get; set; }
         public int Disabled { get; set; }
 
+        // Shot delay
+        List<Shot> ShotsToShoot { get; set; }
+        private int shotsToShootTimer;
+
         // Private variables
         private bool drawDescription;
         private int drawDescriptionTimer;
@@ -36,6 +40,7 @@ namespace Outer_Space
             this.ShieldPiercing = (float)Math.Round(Globals.Randomizer.NextDouble(), 2);
             this.Chance = Globals.Randomizer.Next(20, 30);
             this.Depth = 0.5f;
+            this.ShotsToShoot = new List<Shot>();
 
             this.Texture = TextureManager.weapons[Globals.Randomizer.Next(0, TextureManager.weapons.Count)];
 
@@ -46,6 +51,7 @@ namespace Outer_Space
             ShootMethods.Add(FireDelayEnemyShot);
             ShootMethods.Add(FireDamageOverTime);
             ShootMethods.Add(FireChanceToMiss);
+            ShootMethods.Add(FireThreeShots);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
 
@@ -68,8 +74,9 @@ namespace Outer_Space
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
             Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
+            Descriptions.Add("Shoot a burst with three shots.");
 
-            this.Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
+            Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
 
         public override void UpdateLevel(Level level)
@@ -79,6 +86,18 @@ namespace Outer_Space
             if (Disabled >= 0)
             {
                 Disabled--;
+            }
+
+            // Shots to shoot
+            if (ShotsToShoot.Count > 0 && Disabled < 0)
+            {
+                shotsToShootTimer++;
+                if (shotsToShootTimer > 5)
+	            {
+		            shotsToShootTimer = 0;
+                    level.ToAdd.Add(ShotsToShoot[0]);
+                    ShotsToShoot.RemoveAt(0); 
+	            }
             }
 
             string key = "D" + (level.Player.SelectedWeapon + 1);
@@ -187,6 +206,22 @@ namespace Outer_Space
             {
                 Damage += 15;
                 Chance = 40;
+            }
+        }
+
+        public void FireThreeShots(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                for (int i = 0; i < 2; i++)
+                {
+                    ShotsToShoot.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                }
+            }
+            else
+            {
+                Damage -= 6;
             }
         }
     }

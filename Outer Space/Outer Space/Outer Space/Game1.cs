@@ -49,7 +49,7 @@ namespace Outer_Space
             // Globals
             Globals.Initialize();
 
-            level = new Level();
+            level = new Level(new Vector2(100, 100));
             level.InitializeTiles();
 
             // Scene

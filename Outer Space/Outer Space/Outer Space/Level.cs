@@ -14,6 +14,7 @@ namespace Outer_Space
     public class Level
     {
         // Public properties
+        public Vector2 PositionOnMap { get; set; }
         public List<List<Tile>> Tiles { get; set; }
         public Tile Selected { get; set; }
         public Point BoardSize { get { return new Point(8, 8); } }
@@ -24,8 +25,9 @@ namespace Outer_Space
         public bool Started { get; set; }
 
         // Constructor(s)
-        public Level()
+        public Level(Vector2 positionOnMap)
         {
+            this.PositionOnMap = positionOnMap;
             this.Tiles = new List<List<Tile>>();
             this.GameObjects = new List<GameObject>();
             GameObjects.Add(Globals.player);

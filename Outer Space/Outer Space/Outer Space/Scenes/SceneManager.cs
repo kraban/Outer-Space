@@ -24,6 +24,7 @@ namespace Outer_Space
         public static OptionsScene optionsScene { get; set; }
         public static ShipSelectScene shipSelectScene { get; set; }
         public static InventoryScene inventoryScene { get; set; }
+        public static MapScene mapScene { get; set; }
 
         public static void Initialize()
         {
@@ -31,6 +32,7 @@ namespace Outer_Space
             optionsScene = new OptionsScene();
             shipSelectScene = new ShipSelectScene();
             inventoryScene = new InventoryScene();
+            mapScene = new MapScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

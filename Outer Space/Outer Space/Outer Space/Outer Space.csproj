@@ -118,6 +118,7 @@
     <Compile Include="Scenes\InventoryScene.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="MenuRock.cs" />
+    <Compile Include="Scenes\MapScene.cs" />
     <Compile Include="Scenes\MenuScene.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Scenes\OptionsScene.cs" />
