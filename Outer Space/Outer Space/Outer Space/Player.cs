@@ -59,7 +59,7 @@ namespace Outer_Space
             //}
 
             Inventory[0, 0] = new Weapon();
-            Inventory[1, 0] = new Shield(new Vector2(200, 200), 5, 5, 5);
+            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
             Inventory[2, 0] = new Hull(this);
         }
 
@@ -182,15 +182,15 @@ namespace Outer_Space
             Energy.Draw(spriteBatch);
 
             // Hull
-            ShipHull.Position = new Vector2(ShipHull.Texture.Width / 2, Globals.ScreenSize.Y - 150 - ShipHull.Texture.Height);
+            ShipHull.Position = new Vector2(ShipHull.Texture.Width / 2, Globals.ScreenSize.Y - 100 - ShipHull.Texture.Height);
 
             // Shield
-            ShipShield.Position = new Vector2(ShipShield.Texture.Width / 2, Globals.ScreenSize.Y - 150);
+            ShipShield.Position = new Vector2(ShipShield.Texture.Width / 2, Globals.ScreenSize.Y - 100);
 
             // Weapons
             for (int i = 0; i < Weapons.Count; i++)
             {
-                Weapons[i].Position = new Vector2(Weapons[i].Texture.Width / 2 + 64, Globals.ScreenSize.Y - i * Weapons[i].Texture.Height - 150);
+                Weapons[i].Position = new Vector2(Weapons[i].Texture.Width / 2 + 64, Globals.ScreenSize.Y - i * Weapons[i].Texture.Height - 100);
                 if (i == SelectedWeapon)
                 {
                     spriteBatch.Draw(TextureManager.selected, new Vector2(Weapons[i].Position.X - Weapons[i].Texture.Width / 2, Weapons[i].Position.Y - Weapons[i].Texture.Height / 2), Color.White);
@@ -228,9 +228,13 @@ namespace Outer_Space
             {
                 SelectedWeapon = 0;
             }
-            else if (Globals.KState.IsKeyDown(Keys.D2))
+            else if (Globals.KState.IsKeyDown(Keys.D2) && Weapons.Count >= 2)
             {
                 SelectedWeapon = 1;
+            }
+            else if (Globals.KState.IsKeyDown(Keys.D3) && Weapons.Count >= 3)
+            {
+                SelectedWeapon = 2;
             }
 
             // Right

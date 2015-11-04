@@ -66,8 +66,6 @@ namespace Outer_Space
                 }
             }
 
-            // ENABLE COMBAT BOOL IN SHIELD AND HULL WHEN IN COMBAT!!
-
             Inventory[2, 5] = new Weapon();
             Inventory[3, 5] = new Weapon();
 

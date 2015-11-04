@@ -14,25 +14,38 @@ namespace Outer_Space
     public class Level
     {
         // Public properties
-        public Vector2 PositionOnMap { get; set; }
         public List<List<Tile>> Tiles { get; set; }
         public Tile Selected { get; set; }
         public Point BoardSize { get { return new Point(8, 8); } }
         public List<GameObject> GameObjects { get; set; }
         public List<GameObject> ToAdd { get; set; }
         public Player Player { get { return (Player)GameObjects.First(item => item.GetType().Name == "Player"); } }
+        public bool Compelete { get; set; }
+
+        public TextureButton EnterLevel { get; set; }
 
         public bool Started { get; set; }
 
         // Constructor(s)
         public Level(Vector2 positionOnMap)
         {
-            this.PositionOnMap = positionOnMap;
             this.Tiles = new List<List<Tile>>();
             this.GameObjects = new List<GameObject>();
-            GameObjects.Add(Globals.player);
-            GameObjects.Add(new Enemy());
             ToAdd = new List<GameObject>();
+
+            EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
+        }
+
+        // Method(s)
+        public void Initialize(Player player)
+        {
+            GameObjects.Clear();
+            GameObjects.Clear();
+            GameObjects.Add(player);
+            Player.ShipHull.Combat = true;
+            Player.ShipShield.Combat = true;
+            ToAdd.Add(new Enemy());
+            InitializeTiles();
 
             // Stars
             for (int i = 0; i < Globals.Randomizer.Next(30, 40); i++)
@@ -41,7 +54,15 @@ namespace Outer_Space
             }
         }
 
-        // Method(s)
+        public void LevelComplete()
+        {
+            Player.ShipHull.Combat = false;
+            Player.ShipShield.Combat = false;
+            SceneManager.mapScene.ThePlayer = Player;
+            SceneManager.mapScene.SelectedLevel = -1;
+            Compelete = true;
+        }
+
         public void InitializeTiles()
         {
             for (int i = 0; i < BoardSize.X; i++)
@@ -79,10 +100,9 @@ namespace Outer_Space
 
                     // Add tile
                     List<TileType> tileChance = new List<TileType>();
-                    Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
                     for (int k = 0; k < avalibleTileType.Count; k++)
                     {
-                        foreach (TileType tileType in player.TileChance.Where(item => item == avalibleTileType[k]))
+                        foreach (TileType tileType in Player.TileChance.Where(item => item == avalibleTileType[k]))
                         {
                             tileChance.Add(tileType);
                         }
@@ -143,8 +163,7 @@ namespace Outer_Space
                         if (number >= 3)
                         {
                             // Player action
-                            Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
-                            player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.X == i && tile.TilePosition.Y >= j && tile.TilePosition.Y <= j + number)));
+                            Player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.X == i && tile.TilePosition.Y >= j && tile.TilePosition.Y <= j + number)));
 
                             for (int k = 0; k < number; k++)
                             {
@@ -176,8 +195,7 @@ namespace Outer_Space
                         if (number >= 3)
                         {
                             // Player action
-                            Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
-                            player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.Y == j && tile.TilePosition.X >= i && tile.TilePosition.X <= i + number)));
+                            Player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.Y == j && tile.TilePosition.X >= i && tile.TilePosition.X <= i + number)));
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i + k][j].Hide();
@@ -511,6 +529,10 @@ namespace Outer_Space
             {
                 if (GameObjects[i].Dead)
                 {
+                    if (GameObjects[i].GetType().Name == "Enemy")
+                    {
+                        LevelComplete();
+                    }
                     GameObjects.RemoveAt(i);
                 }
             }

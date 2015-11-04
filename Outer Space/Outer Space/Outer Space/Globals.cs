@@ -15,8 +15,6 @@ namespace Outer_Space
 
     class Globals
     {
-        public static Player player { get; set; }
-
         public static Random Randomizer { get; set; }
 
         public static Point ScreenSize { get { return new Point(1124, 600); } }
@@ -35,8 +33,6 @@ namespace Outer_Space
         public static void Initialize()
         {
             Randomizer = new Random();
-
-            player = new Player();
         }
 
         // Update

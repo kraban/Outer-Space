@@ -16,8 +16,6 @@ namespace Outer_Space
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Level level;
-
         private static bool exit;
 
         public Game1()
@@ -48,9 +46,6 @@ namespace Outer_Space
 
             // Globals
             Globals.Initialize();
-
-            level = new Level(new Vector2(100, 100));
-            level.InitializeTiles();
 
             // Scene
             SceneManager.Initialize();
@@ -103,8 +98,6 @@ namespace Outer_Space
 
             SceneManager.CurrentScene.Update();
 
-            //level.Update();
-
             // Exit
             if (exit)
             {
@@ -124,8 +117,6 @@ namespace Outer_Space
 
             // TODO: Add your drawing code here
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, null, null, null, null, Matrix.CreateTranslation(Camera.Position));
-
-            //level.Draw(spriteBatch);
 
             SceneManager.CurrentScene.Draw(spriteBatch);
 

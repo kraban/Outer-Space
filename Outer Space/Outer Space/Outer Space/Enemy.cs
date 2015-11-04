@@ -25,6 +25,8 @@ namespace Outer_Space
 
             this.Health = new Bar(new Vector2(0, 10), 100, 10, 100, Color.Red);
             this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 100);
+            this.ShipHull.Combat = true;
+            this.ShipShield.Combat = true;
 
             // Weapontargets
             foreach (Weapon w in Weapons)

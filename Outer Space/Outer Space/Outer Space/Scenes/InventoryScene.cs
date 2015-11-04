@@ -26,14 +26,14 @@ namespace Outer_Space
 
             Back.Draw(spriteBatch);
 
-            Globals.player.DrawInventory(spriteBatch);
+            SceneManager.mapScene.ThePlayer.DrawInventory(spriteBatch);
         }
 
         public override void Update()
         {
             base.Update();
 
-            Globals.player.UpdateInventory();
+            SceneManager.mapScene.ThePlayer.UpdateInventory();
 
             Back.Update();
             if (Back.Press())
