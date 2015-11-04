@@ -52,6 +52,7 @@ namespace Outer_Space
             ShootMethods.Add(FireDamageOverTime);
             ShootMethods.Add(FireChanceToMiss);
             ShootMethods.Add(FireThreeShots);
+            ShootMethods.Add(FireMatchFourExtraShot);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
 
@@ -75,6 +76,7 @@ namespace Outer_Space
             Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
             Descriptions.Add("Shoot a burst with three shots.");
+            Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
@@ -222,6 +224,18 @@ namespace Outer_Space
             else
             {
                 Damage -= 6;
+            }
+        }
+
+        public void FireMatchFourExtraShot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
+                if (tilesMatched > 3)
+                {
+                    ShotsToShoot.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
+                }
             }
         }
     }

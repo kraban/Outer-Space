@@ -53,10 +53,10 @@ namespace Outer_Space
             }
 
             // !TEMPORARY! Increase shoot tile chance
-            //for (int i = 0; i < 40; i++)
-            //{
-            //    TileChance.Add(TileType.shoot);
-            //}
+            for (int i = 0; i < 400; i++)
+            {
+                TileChance.Add(TileType.shoot);
+            }
 
             Inventory[0, 0] = new Weapon();
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
