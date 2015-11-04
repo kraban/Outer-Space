@@ -64,6 +64,15 @@ namespace Outer_Space
         }
 
         // Method(s)
+        public void EquipItem(Item item)
+        {
+            if (item.Type == ItemType.weapon)
+            {
+                Weapon weapon = (Weapon)item;
+                weapon.Targets.Add("Enemy");
+            }
+        }
+
         public void SwapItem(Point swapWith)
         {
             Item temp = Inventory[swapWith.X, swapWith.Y];
@@ -117,7 +126,8 @@ namespace Outer_Space
                                 {
                                     if (((selectedItem.Type == ItemType.weapon || Inventory[i, j].Type == ItemType.weapon) && (Weapons.Count > 1 || !Weapons.Any(item => item == selectedItem)) || (selectedItem.Type == ItemType.weapon && Inventory[i, j].Type == ItemType.weapon)))
                                     {
-                                        SwapItem(new Point(i, j)); 
+                                        SwapItem(new Point(i, j));
+                                        EquipItem(selectedItem);
                                         break;
                                     }
                                 }

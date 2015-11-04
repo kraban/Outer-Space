@@ -53,6 +53,8 @@ namespace Outer_Space
             ShootMethods.Add(FireChanceToMiss);
             ShootMethods.Add(FireThreeShots);
             ShootMethods.Add(FireMatchFourExtraShot);
+            ShootMethods.Add(FireTwoInV);
+            ShootMethods.Add(FireExplosiveShot);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
 
@@ -77,6 +79,8 @@ namespace Outer_Space
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
             Descriptions.Add("Shoot a burst with three shots.");
             Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
+            Descriptions.Add("Shoot two shots in a V pattern.");
+            Descriptions.Add("Fire a shot that has a small chance to explode when in air.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
@@ -231,11 +235,28 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
                 if (tilesMatched > 3)
                 {
-                    ShotsToShoot.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
+                    ShotsToShoot.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
                 }
+            }
+        }
+
+        public void FireTwoInV(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction + 0.2f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(position, direction - 0.2f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+            }
+        }
+
+        public void FireExplosiveShot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.UpdateChanceToExplode, Targets, ShieldPiercing, Chance));
             }
         }
     }

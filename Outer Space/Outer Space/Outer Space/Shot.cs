@@ -18,7 +18,7 @@ namespace Outer_Space
         public float ShieldPiercing { get; set; }
         public int Chance { get; set; }
         public List<String> Targets { get; set; }
-        public Hit Effect { get; set; }
+        public Hit HitTarget { get; set; }
 
         // Constructor(s)
         public Shot(Vector2 position, float direction, float damage, Hit hit, List<String> targets, float shieldPiercing, int chance)
@@ -26,7 +26,7 @@ namespace Outer_Space
             this.Position = position;
             this.Direction = direction;
             this.Damage = damage;
-            this.Effect = hit;
+            this.HitTarget = hit;
             this.Texture = TextureManager.shot;
             this.Targets = new List<string>();
             this.Targets = targets;
@@ -49,13 +49,7 @@ namespace Outer_Space
                 Dead = true;
             }
 
-            // Hit targets
-            if (level.GameObjects.Any(item => Targets.Any(target => target == item.GetType().Name) && item.Box.Intersects(Box)))
-            {
-                Ship ship = (Ship)level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name) && item.Box.Intersects(Box));
-                Effect(ship, level, this);
-                Dead = true;
-            }
+            HitTarget(level, this);
 
             // Hit rock
             if (level.GameObjects.Any(item => item.GetType().Name == "Rock" && item.Box.Intersects(Box)))
@@ -66,40 +60,82 @@ namespace Outer_Space
             }
         }
 
-        public delegate void Hit(Ship ship, Level level, Shot shot);
-
-        public static void HitBasic(Ship ship, Level level, Shot shot)
+        public static Ship CollisionTarget(Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+            if (level.GameObjects.Any(item => shot.Targets.Any(target => target == item.GetType().Name) && item.Box.Intersects(shot.Box)))
+            {
+                return (Ship)level.GameObjects.First(item => shot.Targets.Any(target => target == item.GetType().Name) && item.Box.Intersects(shot.Box));
+            }
+            return null;
         }
 
-        public static void HitCrit(Ship ship, Level level, Shot shot)
+        public delegate void Hit(Level level, Shot shot);
+
+        public static void HitBasic(Level level, Shot shot)
         {
-            if (Globals.Randomizer.Next(0, 101) < shot.Chance)
+            if (CollisionTarget(level, shot) != null)
             {
-                ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing, DamageType.laser);
-                level.CombatText("CRIT!");
-            }
-            else
-            {
+                Ship ship = CollisionTarget(level, shot);
                 ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                shot.Dead = true;
             }
         }
 
-        public static void HitEnemyShotDelay(Ship ship, Level level, Shot shot)
+        public static void HitCrit(Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
-            if (Globals.Randomizer.Next(0, 101) < shot.Chance)
+            if (CollisionTarget(level, shot) != null)
             {
-                ship.Weapons[Globals.Randomizer.Next(0, ship.Weapons.Count)].Disabled = 120;
-                level.CombatText(ship.GetType().Name + " Weapon Jammed!");
+                Ship ship = CollisionTarget(level, shot);
+                if (Globals.Randomizer.Next(0, 101) < shot.Chance)
+                {
+                    ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing, DamageType.laser);
+                    level.CombatText("CRIT!");
+                }
+                else
+                {
+                    ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                }
+                shot.Dead = true;
             }
         }
 
-        public static void HitDamageOverTime(Ship ship, Level level, Shot shot)
+        public static void HitEnemyShotDelay(Level level, Shot shot)
         {
-            ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
-            ship.SetDamageOverTime(shot.Damage / 6, 6, shot.ShieldPiercing);
+            if (CollisionTarget(level, shot) != null)
+            {
+                Ship ship = CollisionTarget(level, shot);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                if (Globals.Randomizer.Next(0, 101) < shot.Chance)
+                {
+                    ship.Weapons[Globals.Randomizer.Next(0, ship.Weapons.Count)].Disabled = 120;
+                    level.CombatText(ship.GetType().Name + " Weapon Jammed!");
+                }
+                shot.Dead = true;
+            }
+        }
+
+        public static void HitDamageOverTime(Level level, Shot shot)
+        {
+            if (CollisionTarget(level, shot) != null)
+            {
+                Ship ship = CollisionTarget(level, shot);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                ship.SetDamageOverTime(shot.Damage / 6, 6, shot.ShieldPiercing);
+                shot.Dead = true;
+            }
+        }
+
+        public static void UpdateChanceToExplode(Level level, Shot shot)
+        {
+            if (Globals.Randomizer.Next(0, 101) < 1)
+            {
+                for (int i = 0; i < 6; i++)
+			    {
+                    level.ToAdd.Add(new Shot(shot.Position, (float)(Math.PI * 2 / 6f) * i, shot.Damage, HitBasic, shot.Targets, shot.ShieldPiercing, shot.Chance));
+			    }
+                shot.Dead = true;
+            }
+            HitBasic(level, shot);
         }
     }
 }
