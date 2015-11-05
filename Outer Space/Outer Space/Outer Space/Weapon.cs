@@ -32,7 +32,7 @@ namespace Outer_Space
         private int drawDescriptionTimer;
 
         // Constructor(s)
-        public Weapon()
+        public Weapon(Ship ship)
             : base()
         {
             this.Type = ItemType.weapon;
@@ -55,11 +55,12 @@ namespace Outer_Space
             ShootMethods.Add(FireMatchFourExtraShot);
             ShootMethods.Add(FireTwoInV);
             ShootMethods.Add(FireExplosiveShot);
+            ShootMethods.Add(FireMovingShot);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
 
             // Initialize weapon
-            ShootMethods[Action](Position, Direction, 0, null, true);
+            ShootMethods[Action](ship, 0, null, true);
 
             Targets = new List<string>();
 
@@ -81,6 +82,7 @@ namespace Outer_Space
             Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
             Descriptions.Add("Shoot two shots in a V pattern.");
             Descriptions.Add("Fire a shot that has a small chance to explode when in air.");
+            Descriptions.Add("Fire a shot that has a chance to move you.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
@@ -154,50 +156,50 @@ namespace Outer_Space
             return Damage + (tilesMatched - 3) * (Damage / 3);
         }
 
-        public delegate void Shoot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize);
+        public delegate void Shoot(Ship shooter, int tilesMatched, Level level, bool initialize);
 
 
-        public void FireStandard(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireStandard(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance)); 
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance)); 
             }
         }
 
-        public void FireAiming(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireAiming(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, (float)(Math.Atan2((level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).Y, (level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - position).X)), ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, (float)(Math.Atan2((level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).Y, (level.GameObjects.First(item => Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).X)), ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
             }
         }
 
-        public void FireCrit(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireCrit(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitCrit, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitCrit, Targets, ShieldPiercing, Chance));
             }
         }
 
-        public void FireDelayEnemyShot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireDelayEnemyShot(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitEnemyShotDelay, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitEnemyShotDelay, Targets, ShieldPiercing, Chance));
             }
         }
 
-        public void FireDamageOverTime(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireDamageOverTime(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitDamageOverTime, Targets, ShieldPiercing, Chance));
             }
         }
 
-        public void FireChanceToMiss(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireChanceToMiss(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
@@ -206,7 +208,7 @@ namespace Outer_Space
                 {
                     miss = MathHelper.Lerp(-0.5f, 0.5f, (float)Globals.Randomizer.NextDouble());
                 }
-                level.ToAdd.Add(new Shot(position, direction + miss, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + miss, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
             }
             else
             {
@@ -215,14 +217,14 @@ namespace Outer_Space
             }
         }
 
-        public void FireThreeShots(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireThreeShots(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
                 for (int i = 0; i < 2; i++)
                 {
-                    ShotsToShoot.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                    ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
                 }
             }
             else
@@ -231,32 +233,55 @@ namespace Outer_Space
             }
         }
 
-        public void FireMatchFourExtraShot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireMatchFourExtraShot(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
                 if (tilesMatched > 3)
                 {
-                    ShotsToShoot.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                    ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
                 }
             }
         }
 
-        public void FireTwoInV(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireTwoInV(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction + 0.2f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
-                level.ToAdd.Add(new Shot(position, direction - 0.2f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + 0.2f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction - 0.2f, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
             }
         }
 
-        public void FireExplosiveShot(Vector2 position, float direction, int tilesMatched, Level level, bool initialize)
+        public void FireExplosiveShot(Ship shooter, int tilesMatched, Level level, bool initialize)
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(position, direction, ShotDamage(tilesMatched), Shot.UpdateChanceToExplode, Targets, ShieldPiercing, Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.UpdateChanceToExplode, Targets, ShieldPiercing, Chance));
+            }
+        }
+
+        public void FireMovingShot(Ship shooter, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+                int random = Globals.Randomizer.Next(0, 101);
+                if (random < Chance / 2)
+                {
+                    if ((int)shooter.ShipLocation < 2)
+                    {
+                        shooter.ShipLocation++;
+                    }
+                }
+                else if (random < Chance)
+                {
+                    if ((int)shooter.ShipLocation > 0)
+                    {
+                        shooter.ShipLocation--;
+                    }
+                }
             }
         }
     }

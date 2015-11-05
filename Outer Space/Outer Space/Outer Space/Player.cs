@@ -37,7 +37,7 @@ namespace Outer_Space
                 w.Targets.Add("Enemy");
             }
 
-            Inventory[0, 0] = new Weapon();
+            Inventory[0, 0] = new Weapon(this);
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
             Inventory[2, 0] = new Hull(this);
         }
@@ -264,7 +264,7 @@ namespace Outer_Space
 
                 if (tileType == TileType.shoot && Weapons[SelectedWeapon].Disabled < 0)
                 {
-                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](new Vector2(Position.X, Position.Y - Texture.Height / 2), Direction, tilesMatched, level, false); 
+                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](this   , tilesMatched, level, false); 
                 }
 
                 if (tileType == TileType.left && ShipLocation != Location.left)

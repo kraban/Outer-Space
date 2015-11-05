@@ -66,8 +66,8 @@ namespace Outer_Space
                 }
             }
 
-            Inventory[2, 5] = new Weapon();
-            Inventory[3, 5] = new Weapon();
+            Inventory[2, 5] = new Weapon(this);
+            Inventory[3, 5] = new Weapon(this);
 
             this.ShipHull = new Hull(this);
 
