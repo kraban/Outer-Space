@@ -77,7 +77,7 @@ namespace Outer_Space
         {
             Hidden = false;
             Size = 1f;
-            Type = player.TileChance[Globals.Randomizer.Next(0, player.TileChance.Count)];
+            Type = player.ShipHull.TileChance[Globals.Randomizer.Next(0, player.ShipHull.TileChance.Count)];
             Texture = TextureManager.tiles[(int)Type];
             Position = new Vector2(Position.X, -100);
         }

@@ -18,9 +18,6 @@ namespace Outer_Space
 
         public Bar Energy { get; set; }
 
-        // Tiles chances
-        public List<TileType> TileChance { get; set; }
-
         // Inventory
         private Item selectedItem;
         private Point selectedItemArrayPosition;
@@ -34,28 +31,10 @@ namespace Outer_Space
 
             this.Energy = new Bar(new Vector2(450, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
 
-            // Tiles chances
-            TileChance = new List<TileType>();
-            for (int i = 0; i < Enum.GetNames(typeof(TileType)).Length; i++)
-            {
-                for (int j = 0; j < 20; j++)
-                {
-                    TileChance.Add((TileType)i);
-                }
-            }
-
             // Weapontargets
-
-            // BUG NEW EQUIPED WEAPONS DO NOT HAVE TARGETS
             foreach (Weapon w in Weapons)
             {
                 w.Targets.Add("Enemy");
-            }
-
-            // !TEMPORARY! Increase shoot tile chance
-            for (int i = 0; i < 400; i++)
-            {
-                TileChance.Add(TileType.shoot);
             }
 
             Inventory[0, 0] = new Weapon();

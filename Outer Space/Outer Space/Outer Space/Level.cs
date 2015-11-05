@@ -102,7 +102,7 @@ namespace Outer_Space
                     List<TileType> tileChance = new List<TileType>();
                     for (int k = 0; k < avalibleTileType.Count; k++)
                     {
-                        foreach (TileType tileType in Player.TileChance.Where(item => item == avalibleTileType[k]))
+                        foreach (TileType tileType in Player.ShipHull.TileChance.Where(item => item == avalibleTileType[k]))
                         {
                             tileChance.Add(tileType);
                         }

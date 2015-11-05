@@ -23,6 +23,7 @@ namespace Outer_Space
         // Method variable(s)
         public float RockResistance { get; set; }
         public int WeaponChance { get; set; }
+        public List<TileType> TileChance { get; set; }
 
         // Constructor(s)
         public Hull(Ship ship)
@@ -32,6 +33,14 @@ namespace Outer_Space
 
             // Method variables
             RockResistance = 1;
+            this.TileChance = new List<TileType>();
+            for (int i = 0; i < Enum.GetNames(typeof(TileType)).Length; i++)
+            {
+                for (int j = 0; j < 20; j++)
+                {
+                    TileChance.Add((TileType)i);
+                }
+            }
 
             this.Texture = TextureManager.hulls[Globals.Randomizer.Next(0, TextureManager.hulls.Count)];
 
@@ -41,6 +50,9 @@ namespace Outer_Space
             HullMethods.Add(HullStandard);
             HullMethods.Add(HullRockResist);
             HullMethods.Add(HullWeaponChance);
+            HullMethods.Add(HullTileCogChance);
+            HullMethods.Add(HullTileShieldChance);
+            HullMethods.Add(HullTileShootChance);
 
             this.Method = Globals.Randomizer.Next(0, HullMethods.Count);
             HullMethods[Method](ship);
@@ -50,6 +62,9 @@ namespace Outer_Space
             Descriptions.Add("A standard hull.");
             Descriptions.Add("Rocks deals half damage.");
             Descriptions.Add("Increase |255, 70, 0|weapon chance|W| by " + WeaponChance + "%");
+            Descriptions.Add("Increase the chance of cog tiles appearing by 100%");
+            Descriptions.Add("Increase the chance of shield tiles appearing by 100%");
+            Descriptions.Add("Increase the chance of weapon tiles appearing by 100%");
 
             this.Description = "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Descriptions[Method];
         }
@@ -88,6 +103,30 @@ namespace Outer_Space
             {
                 w.Chance += WeaponChance;
                 w.LoadDescriptions();
+            }
+        }
+
+        public void HullTileCogChance(Ship ship)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                TileChance.Add(TileType.cog);
+            }
+        }
+
+        public void HullTileShieldChance(Ship ship)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                TileChance.Add(TileType.shield);
+            }
+        }
+
+        public void HullTileShootChance(Ship ship)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                TileChance.Add(TileType.shoot);
             }
         }
     }
