@@ -281,7 +281,7 @@ namespace Outer_Space
 
                 if (tileType == TileType.shield && ShipShield.Value != ShipShield.Width)
                 {
-                    ShipShield.Change(10 * tilesMatched);
+                    ShipShield.Change(ShipShield.ShieldHeal * tilesMatched);
                 } 
             }
             else

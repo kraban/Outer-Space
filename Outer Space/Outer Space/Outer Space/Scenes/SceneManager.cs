@@ -64,6 +64,14 @@ namespace Outer_Space
             {
                 s.Update();
             }
+
+            for (int i = Stars.Count - 1; i >= 0; i--)
+            {
+                if (Stars[i].Dead)
+                {
+                    Stars.RemoveAt(i);
+                }
+            }
         }
 
         public static void Draw(SpriteBatch spriteBatch)

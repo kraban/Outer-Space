@@ -39,6 +39,7 @@ namespace Outer_Space
         public float DirectionSpeed { get; set; }
         public float StandardDirection { get; set; }
         public int SelectedWeapon { get; set; }
+        public Weapon CurrentWeapon { get { return Weapons[SelectedWeapon]; } set { Weapons[SelectedWeapon] = value; } }
 
         // Damage over time
         public int DamageOverTimeCount { get; private set; }
@@ -107,6 +108,8 @@ namespace Outer_Space
             {
                 damage *= ShipHull.RockResistance;
             }
+
+            ShipShield.ShieldMethods[ShipShield.Method](damage, damageType, this);
 
             // Armor
             damage *= (float)(1 - (float)ShipHull.Armor / 100);

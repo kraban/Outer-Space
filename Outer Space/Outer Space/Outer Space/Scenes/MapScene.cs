@@ -16,6 +16,7 @@ namespace Outer_Space
         public List<Level> Levels { get; set; }
         public Player ThePlayer { get; set; }
         public int SelectedLevel { get; set; }
+        public Level CurrentLevel { get { return Levels[SelectedLevel]; } set { Levels[SelectedLevel] = value; } }
 
         public MapScene()
             : base()

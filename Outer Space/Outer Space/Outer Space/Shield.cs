@@ -19,6 +19,7 @@ namespace Outer_Space
         public List<ShieldMethod> ShieldMethods { get; set; }
         public int Method { get; set; }
         public bool Combat { get; set; }
+        public float ShieldHeal { get; set; }
 
         // Shieldbar
         public float MaxValue { get { return ShieldBar.MaxValue; } set { ShieldBar.MaxValue = value; } }
@@ -31,16 +32,19 @@ namespace Outer_Space
         {
             this.Type = ItemType.shield;
             this.Texture = TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)];
+            this.ShieldHeal = Globals.Randomizer.Next(6, 14);
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);
 
             this.ShieldMethods = new List<ShieldMethod>();
             ShieldMethods.Add(ShieldStandard);
+            ShieldMethods.Add(ShieldReflect);
 
             this.Method = Globals.Randomizer.Next(0, ShieldMethods.Count);
 
             this.Descriptions = new List<string>();
             Descriptions.Add("A standard shield.");
+            Descriptions.Add("Has a 10% chance to reflect a shot.");
 
             this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + Descriptions[Method];
         }
@@ -67,9 +71,19 @@ namespace Outer_Space
             }
         }
 
-        public delegate void ShieldMethod();
+        public delegate void ShieldMethod(float damage, DamageType damageType, Ship ship);
 
-        public void ShieldStandard()
+        public void ShieldStandard(float damage, DamageType damageType, Ship ship)
         { }
+
+        public void ShieldReflect(float damage, DamageType damageType, Ship ship)
+        {
+            if (damageType == DamageType.laser && Globals.Randomizer.Next(0, 10) < 1)
+            {
+                List<string> targets = new List<string>();
+                targets.Add(ship.GetType().Name == "Player" ? "Enemy" : "Player");
+                SceneManager.mapScene.CurrentLevel.ToAdd.Add(new Shot(ship.Position, MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble()), damage, Shot.HitBasic, targets, 0f, 0));
+            }
+        }
     }
 }
