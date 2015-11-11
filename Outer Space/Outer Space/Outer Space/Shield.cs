@@ -20,6 +20,7 @@ namespace Outer_Space
         public int Method { get; set; }
         public bool Combat { get; set; }
         public float ShieldHeal { get; set; }
+        public int Chance { get; set; }
 
         // Shieldbar
         public float MaxValue { get { return ShieldBar.MaxValue; } set { ShieldBar.MaxValue = value; } }
@@ -33,20 +34,27 @@ namespace Outer_Space
             this.Type = ItemType.shield;
             this.Texture = TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)];
             this.ShieldHeal = Globals.Randomizer.Next(6, 14);
+            this.Chance = Globals.Randomizer.Next(10, 21);
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);
 
             this.ShieldMethods = new List<ShieldMethod>();
             ShieldMethods.Add(ShieldStandard);
             ShieldMethods.Add(ShieldReflect);
+            ShieldMethods.Add(ShieldCounterShoot);
+            ShieldMethods.Add(ShieldDamageEnergy);
+            ShieldMethods.Add(ShieldDamageOverTime);
 
             this.Method = Globals.Randomizer.Next(0, ShieldMethods.Count);
 
             this.Descriptions = new List<string>();
             Descriptions.Add("A standard shield.");
-            Descriptions.Add("Has a 10% chance to reflect a shot.");
+            Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to reflect a shot.");
+            Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to fire you current weapon when you are hit.");
+            Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to loose energy instead of Shield/HP when you are hit.");
+            Descriptions.Add("When you are hit, the damage is split up in five and taken over time.");
 
-            this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + Descriptions[Method];
+            this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + "Shield heal on Match: |0,150,255|" + ShieldHeal + "|W|\n" + Descriptions[Method];
         }
 
         // Method(s)
@@ -71,19 +79,49 @@ namespace Outer_Space
             }
         }
 
-        public delegate void ShieldMethod(float damage, DamageType damageType, Ship ship);
+        public delegate void ShieldMethod(float damage, float goThroughShield, DamageType damageType, Ship ship);
 
-        public void ShieldStandard(float damage, DamageType damageType, Ship ship)
+        public void ShieldStandard(float damage, float goThroughShield, DamageType damageType, Ship ship)
         { }
 
-        public void ShieldReflect(float damage, DamageType damageType, Ship ship)
+        public void ShieldReflect(float damage, float goThroughShield, DamageType damageType, Ship ship)
         {
-            if (damageType == DamageType.laser && Globals.Randomizer.Next(0, 10) < 1)
+            if (damageType == DamageType.laser && Globals.Randomizer.Next(0, 101) < Chance)
             {
                 List<string> targets = new List<string>();
                 targets.Add(ship.GetType().Name == "Player" ? "Enemy" : "Player");
-                SceneManager.mapScene.CurrentLevel.ToAdd.Add(new Shot(ship.Position, MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble()), damage, Shot.HitBasic, targets, 0f, 0));
+                SceneManager.mapScene.CurrentLevel.ToAdd.Add(new Shot(ship.Position, MathHelper.Lerp((float)Math.PI + 0.2f, (float)Math.PI * 2 - 0.2f, (float)Globals.Randomizer.NextDouble()), damage, Shot.HitBasic, targets, 0f, 0));
             }
+            else
+            {
+                ship.TakeDamage(damage, goThroughShield, damageType, true);
+            }
+        }
+
+        public void ShieldCounterShoot(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        {
+            if (Globals.Randomizer.Next(0, 101) < Chance)
+            {
+                ship.CurrentWeapon.CurrentMethod(ship, 3, SceneManager.mapScene.CurrentLevel, false);
+            }
+        }
+
+        public void ShieldDamageEnergy(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        {
+            if (Globals.Randomizer.Next(0, 101) < Chance && ship.GetType().Name == "Player")
+            {
+                Player p = (Player)ship;
+                p.Energy.Change(-damage);
+            }
+            else
+            {
+                ship.TakeDamage(damage, goThroughShield, damageType, true);
+            }
+        }
+
+        public void ShieldDamageOverTime(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        {
+            ship.SetDamageOverTime(damage / 5, 5, goThroughShield);
         }
     }
 }

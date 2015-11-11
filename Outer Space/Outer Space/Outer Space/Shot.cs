@@ -76,7 +76,7 @@ namespace Outer_Space
             if (CollisionTarget(level, shot) != null)
             {
                 Ship ship = CollisionTarget(level, shot);
-                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser, false);
                 shot.Dead = true;
             }
         }
@@ -88,12 +88,12 @@ namespace Outer_Space
                 Ship ship = CollisionTarget(level, shot);
                 if (Globals.Randomizer.Next(0, 101) < shot.Chance)
                 {
-                    ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing, DamageType.laser);
+                    ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing, DamageType.laser, false);
                     level.CombatText("CRIT!");
                 }
                 else
                 {
-                    ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                    ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser, false);
                 }
                 shot.Dead = true;
             }
@@ -104,7 +104,7 @@ namespace Outer_Space
             if (CollisionTarget(level, shot) != null)
             {
                 Ship ship = CollisionTarget(level, shot);
-                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser, false);
                 if (Globals.Randomizer.Next(0, 101) < shot.Chance)
                 {
                     ship.Weapons[Globals.Randomizer.Next(0, ship.Weapons.Count)].Disabled = 120;
@@ -119,7 +119,7 @@ namespace Outer_Space
             if (CollisionTarget(level, shot) != null)
             {
                 Ship ship = CollisionTarget(level, shot);
-                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser);
+                ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser, false);
                 ship.SetDamageOverTime(shot.Damage / 6, 6, shot.ShieldPiercing);
                 shot.Dead = true;
             }

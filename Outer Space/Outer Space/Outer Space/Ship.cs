@@ -101,29 +101,35 @@ namespace Outer_Space
             Direction = MathHelper.Lerp(Direction, StandardDirection, 0.1f);
         }
 
-        public void TakeDamage(float damage, float goThroughShield, DamageType damageType)
+
+        public void TakeDamage(float damage, float goThroughShield, DamageType damageType, bool FromShield)
         {
-            // Rock resist hull
-            if (damageType == DamageType.rock)
+            if (FromShield)
             {
-                damage *= ShipHull.RockResistance;
+                // Rock resist hull
+                if (damageType == DamageType.rock)
+                {
+                    damage *= ShipHull.RockResistance;
+                }
+
+                // Armor
+                damage *= (float)(1 - (float)ShipHull.Armor / 100);
+
+                if (ShipShield.Value > 0 && goThroughShield < 1)
+                {
+                    float damageThroughShield = damage * goThroughShield;
+                    damage -= damageThroughShield;
+                    Health.Change(-damageThroughShield);
+                    Health.Change(ShipShield.Change(-damage));
+                }
+                else if (ShipShield.Value <= 0 || goThroughShield >= 1)
+                {
+                    Health.Change(-damage);
+                }
             }
-
-            ShipShield.ShieldMethods[ShipShield.Method](damage, damageType, this);
-
-            // Armor
-            damage *= (float)(1 - (float)ShipHull.Armor / 100);
-
-            if (ShipShield.Value > 0 && goThroughShield < 1)
+            else
             {
-                float damageThroughShield = damage * goThroughShield;
-                damage -= damageThroughShield;
-                Health.Change(-damageThroughShield);
-                Health.Change(ShipShield.Change(-damage));
-            }
-            else if (ShipShield.Value <= 0 || goThroughShield >= 1)
-            {
-                Health.Change(-damage);
+                ShipShield.ShieldMethods[ShipShield.Method](damage, goThroughShield, damageType, this);
             }
         }
 
@@ -141,7 +147,7 @@ namespace Outer_Space
             {
                 damageOverTimeTimer = 10;
                 DamageOverTimeCount--;
-                TakeDamage(DamageOverTimeDamage, shieldPiercing, DamageType.damageOverTime);
+                TakeDamage(DamageOverTimeDamage, shieldPiercing, DamageType.damageOverTime, true);
             }
         }
 

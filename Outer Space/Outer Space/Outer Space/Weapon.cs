@@ -22,6 +22,7 @@ namespace Outer_Space
         public List<String> Descriptions { get; set; }
         public List<String> Targets { get; set; }
         public int Disabled { get; set; }
+        public Shoot CurrentMethod { get { return ShootMethods[Action]; } set { ShootMethods[Action] = value; } }
 
         // Shot delay
         List<Shot> ShotsToShoot { get; set; }
@@ -82,7 +83,7 @@ namespace Outer_Space
             Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
             Descriptions.Add("Shoot two shots in a V pattern.");
             Descriptions.Add("Fire a shot that has a small chance to explode when in air.");
-            Descriptions.Add("Fire a shot that has a chance to move you.");
+            Descriptions.Add("Fire a shot that has a |255,70,0|" + Chance + "|W|% chance to move you.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
