@@ -82,7 +82,9 @@ namespace Outer_Space
         public delegate void ShieldMethod(float damage, float goThroughShield, DamageType damageType, Ship ship);
 
         public void ShieldStandard(float damage, float goThroughShield, DamageType damageType, Ship ship)
-        { }
+        {
+            ship.TakeDamage(damage, goThroughShield, damageType, true);
+        }
 
         public void ShieldReflect(float damage, float goThroughShield, DamageType damageType, Ship ship)
         {
@@ -104,6 +106,7 @@ namespace Outer_Space
             {
                 ship.CurrentWeapon.CurrentMethod(ship, 3, SceneManager.mapScene.CurrentLevel, false);
             }
+            ship.TakeDamage(damage, goThroughShield, damageType, true);
         }
 
         public void ShieldDamageEnergy(float damage, float goThroughShield, DamageType damageType, Ship ship)
