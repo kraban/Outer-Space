@@ -17,11 +17,15 @@ namespace Outer_Space
         public float Damage { get; set; }
         public float ShieldPiercing { get; set; }
         public int Chance { get; set; }
-        public List<String> Targets { get; set; }
+        public List<string> Targets { get; set; }
         public Hit HitTarget { get; set; }
+        public float Speed { get; set; }
+
+        private int timer;
+        private float changeSpeed;
 
         // Constructor(s)
-        public Shot(Vector2 position, float direction, float damage, Hit hit, List<String> targets, float shieldPiercing, int chance)
+        public Shot(Vector2 position, float direction, float damage, Hit hit, List<string> targets, float shieldPiercing, int chance)
         {
             this.Position = position;
             this.Direction = direction;
@@ -32,6 +36,9 @@ namespace Outer_Space
             this.Targets = targets;
             this.ShieldPiercing = shieldPiercing;
             this.Chance = chance;
+            this.timer = 60;
+            this.Speed = 5;
+            this.changeSpeed = 5;
         }
 
         // Method(s)
@@ -40,8 +47,14 @@ namespace Outer_Space
         {
             base.UpdateLevel(level);
 
+            timer--;
+
             // Move
-            Position += new Vector2((float)Math.Cos(Direction) * 5, (float)Math.Sin(Direction) * 5);
+            if (changeSpeed != Speed)
+            {
+                Speed = MathHelper.Lerp(Speed, changeSpeed, 0.1f);
+            }
+            Position += new Vector2((float)Math.Cos(Direction) * Speed, (float)Math.Sin(Direction) * Speed);
 
             // Outside screen
             if (OutsideScreen())
@@ -127,13 +140,27 @@ namespace Outer_Space
 
         public static void UpdateChanceToExplode(Level level, Shot shot)
         {
-            if (Globals.Randomizer.Next(0, 101) < 1)
+            if (Globals.Randomizer.Next(0, 101) < 1 && shot.timer < 0)
             {
                 for (int i = 0; i < 6; i++)
 			    {
                     level.ToAdd.Add(new Shot(shot.Position, (float)(Math.PI * 2 / 6f) * i, shot.Damage, HitBasic, shot.Targets, shot.ShieldPiercing, shot.Chance));
 			    }
                 shot.Dead = true;
+            }
+            HitBasic(level, shot);
+        }
+
+        public static void UpdateBoomerang(Level level, Shot shot)
+        {
+            if (Globals.Randomizer.Next(0, 101) < 3 && shot.timer < 0)
+            {
+                shot.changeSpeed = -shot.changeSpeed;
+                shot.HitTarget = Shot.HitBasic;
+                for (int i = 0; i < shot.Targets.Count; i++)
+                {
+                    shot.Targets[i] = shot.Targets[i] == "Enemy" ? "Player" : "Enemy";
+                }
             }
             HitBasic(level, shot);
         }
