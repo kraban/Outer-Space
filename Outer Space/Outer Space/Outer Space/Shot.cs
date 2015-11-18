@@ -39,6 +39,7 @@ namespace Outer_Space
             this.timer = 60;
             this.Speed = 5;
             this.changeSpeed = 5;
+            this.Colour = Color.Red;
         }
 
         // Method(s)
@@ -161,6 +162,19 @@ namespace Outer_Space
                 {
                     shot.Targets[i] = shot.Targets[i] == "Enemy" ? "Player" : "Enemy";
                 }
+            }
+            HitBasic(level, shot);
+        }
+
+        public static void UpdateExtraDamageCollideShot(Level level, Shot shot)
+        {
+            if (level.GameObjects.Any(item => item != shot && item.GetType().Name == "Shot" && item.Box.Intersects(shot.Box)))
+            {
+                Shot hitShot =  (Shot)level.GameObjects.First(item => item != shot && item.GetType().Name == "Shot" && item.Box.Intersects(shot.Box));
+                shot.Damage += hitShot.Damage * 0.25f;
+                shot.Colour = new Color(0, 255, 255);
+                hitShot.Damage *= 0.75f;
+                hitShot.Colour = hitShot.Colour * 0.75f;
             }
             HitBasic(level, shot);
         }

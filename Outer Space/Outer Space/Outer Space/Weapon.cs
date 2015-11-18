@@ -46,18 +46,20 @@ namespace Outer_Space
             this.Texture = TextureManager.weapons[Globals.Randomizer.Next(0, TextureManager.weapons.Count)];
 
             ShootMethods = new List<Shoot>();
-            //ShootMethods.Add(FireStandard);
-            //ShootMethods.Add(FireAiming);
-            //ShootMethods.Add(FireCrit);
-            //ShootMethods.Add(FireDelayEnemyShot);
-            //ShootMethods.Add(FireDamageOverTime);
-            //ShootMethods.Add(FireChanceToMiss);
-            //ShootMethods.Add(FireThreeShots);
-            //ShootMethods.Add(FireMatchFourExtraShot);
-            //ShootMethods.Add(FireTwoInV);
-            //ShootMethods.Add(FireExplosiveShot);
-            //ShootMethods.Add(FireMovingShot);
+            ShootMethods.Add(FireStandard);
+            ShootMethods.Add(FireAiming);
+            ShootMethods.Add(FireCrit);
+            ShootMethods.Add(FireDelayEnemyShot);
+            ShootMethods.Add(FireDamageOverTime);
+            ShootMethods.Add(FireChanceToMiss);
+            ShootMethods.Add(FireThreeShots);
+            ShootMethods.Add(FireMatchFourExtraShot);
+            ShootMethods.Add(FireTwoInV);
+            ShootMethods.Add(FireExplosiveShot);
+            ShootMethods.Add(FireMovingShot);
             ShootMethods.Add(FireBoomerang);
+            ShootMethods.Add(FireExtraDamageCollideShot);
+            ShootMethods.Add(FireBonusDamageLowerHealth);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
 
@@ -74,18 +76,20 @@ namespace Outer_Space
         public void LoadDescriptions()
         {
             Descriptions = new List<string>();
-            //Descriptions.Add("Shoot a standard shot");
-            //Descriptions.Add("Shoot a shot that aims at a random target");
-            //Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
-            //Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
-            //Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
-            //Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
-            //Descriptions.Add("Shoot a burst with three shots.");
-            //Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
-            //Descriptions.Add("Shoot two shots in a V pattern.");
-            //Descriptions.Add("Fire a shot that has a small chance to explode when in air.");
-            //Descriptions.Add("Fire a shot that has a |255,70,0|" + Chance + "|W|% chance to move you.");
+            Descriptions.Add("Shoot a standard shot");
+            Descriptions.Add("Shoot a shot that aims at a random target");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
+            Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
+            Descriptions.Add("Shoot a burst with three shots.");
+            Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
+            Descriptions.Add("Shoot two shots in a V pattern.");
+            Descriptions.Add("Fire a shot that has a small chance to explode when in air.");
+            Descriptions.Add("Fire a shot that has a |255,70,0|" + Chance + "|W|% chance to move you.");
             Descriptions.Add("Fire a shot that has a small chance to boomerang back to you.");
+            Descriptions.Add("Fire a shot that, when colliding with another shot, will steal 25% damage from it.");
+            Descriptions.Add("Fire a shot that deals 1% extra damage for each percent of missing health.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
@@ -302,6 +306,22 @@ namespace Outer_Space
             else
             {
                 Damage += Globals.Randomizer.Next(5, 10);
+            }
+        }
+
+        public void FireExtraDamageCollideShot(Ship shooter, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched), Shot.UpdateExtraDamageCollideShot, Targets, ShieldPiercing, Chance));
+            }
+        }
+
+        public void FireBonusDamageLowerHealth(Ship shooter, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, Targets, ShieldPiercing, Chance));
             }
         }
     }

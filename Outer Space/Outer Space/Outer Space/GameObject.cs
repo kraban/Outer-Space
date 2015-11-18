@@ -21,6 +21,7 @@ namespace Outer_Space
         public float Direction { get; set; }
         public float Depth { get; set; }
         public bool Dead { get; set; }
+        public Color Colour { get; set; }
 
         // Constructor(s)
         public GameObject()
@@ -28,12 +29,13 @@ namespace Outer_Space
             // Default texture
             this.Texture = TextureManager.none;
             this.Size = 1;
+            this.Colour = Color.White;
         }
 
         // Method(s)
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth);
+            spriteBatch.Draw(Texture, Position, null, Colour, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth);
         }
 
         public virtual void Update()

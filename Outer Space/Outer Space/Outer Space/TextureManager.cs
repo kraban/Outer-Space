@@ -43,7 +43,7 @@ namespace Outer_Space
             player = content.Load<Texture2D>("Ship");
             none = content.Load<Texture2D>("None");
             selected = content.Load<Texture2D>("Selected");
-            shot = content.Load<Texture2D>("ShotRed");
+            shot = content.Load<Texture2D>("Shot");
             rock = content.Load<Texture2D>("Rock");
             jammed = content.Load<Texture2D>("Jammed");
             ship2 = content.Load<Texture2D>("Ship2Game");

@@ -97,8 +97,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ShotRed.png">
-      <Name>ShotRed</Name>
+    <Compile Include="Shot.png">
+      <Name>Shot</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
