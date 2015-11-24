@@ -15,6 +15,8 @@ namespace Outer_Space
     {
         public int MoveLeft { get; set; }
         public int MoveRight { get; set; }
+        public bool Flee { get; set; }
+        public float Speed { get; set; }
 
         public Bar Energy { get; set; }
 
@@ -217,42 +219,51 @@ namespace Outer_Space
 
         public override void UpdateLevel(Level level)
         {
-            base.UpdateLevel(level);
-
-            // Select weapon
-            if (Globals.KState.IsKeyDown(Keys.D1))
+            if (!Flee)
             {
-                SelectedWeapon = 0;
-            }
-            else if (Globals.KState.IsKeyDown(Keys.D2) && Weapons.Count >= 2)
-            {
-                SelectedWeapon = 1;
-            }
-            else if (Globals.KState.IsKeyDown(Keys.D3) && Weapons.Count >= 3)
-            {
-                SelectedWeapon = 2;
-            }
-
-            // Right
-            if (MoveRight > 0)
-            {
-                MoveRight--;
-                if (Globals.KState.IsKeyDown(Keys.D) && Globals.PrevKState.IsKeyUp(Keys.D) && ShipLocation != Location.right)
+                Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Globals.ScreenSize.Y - Texture.Height, 0.1f));
+                base.UpdateLevel(level);
+                // Select weapon
+                if (Globals.KState.IsKeyDown(Keys.D1))
                 {
-                    ShipLocation++;
-                    MoveRight = 0; 
+                    SelectedWeapon = 0;
+                }
+                else if (Globals.KState.IsKeyDown(Keys.D2) && Weapons.Count >= 2)
+                {
+                    SelectedWeapon = 1;
+                }
+                else if (Globals.KState.IsKeyDown(Keys.D3) && Weapons.Count >= 3)
+                {
+                    SelectedWeapon = 2;
+                }
+
+                // Right
+                if (MoveRight > 0)
+                {
+                    MoveRight--;
+                    if (Globals.KState.IsKeyDown(Keys.D) && Globals.PrevKState.IsKeyUp(Keys.D) && ShipLocation != Location.right)
+                    {
+                        ShipLocation++;
+                        MoveRight = 0;
+                    }
+                }
+
+                // Left
+                if (MoveLeft > 0)
+                {
+                    MoveLeft--;
+                    if (Globals.KState.IsKeyDown(Keys.A) && Globals.PrevKState.IsKeyUp(Keys.A) && ShipLocation != Location.left)
+                    {
+                        ShipLocation--;
+                        MoveLeft = 0;
+                    }
                 }
             }
-
-            // Left
-            if (MoveLeft > 0)
+            else
             {
-                MoveLeft--;
-                if (Globals.KState.IsKeyDown(Keys.A) && Globals.PrevKState.IsKeyUp(Keys.A) && ShipLocation != Location.left)
-                {
-                    ShipLocation--;
-                    MoveLeft = 0; 
-                }
+                Direction = MathHelper.Lerp(Direction, (float)Math.PI, 0.03f);
+                Speed += 0.1f;
+                Position += new Vector2((float)Math.Cos(Direction) * Speed, (float)Math.Sin(Direction) * Speed);
             }
         }
 

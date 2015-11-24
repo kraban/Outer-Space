@@ -60,6 +60,7 @@ namespace Outer_Space
             ShootMethods.Add(FireBoomerang);
             ShootMethods.Add(FireExtraDamageCollideShot);
             ShootMethods.Add(FireBonusDamageLowerHealth);
+            ShootMethods.Add(FireChanceToBreak);
 
             Action = Globals.Randomizer.Next(0, ShootMethods.Count);
 
@@ -90,6 +91,7 @@ namespace Outer_Space
             Descriptions.Add("Fire a shot that has a small chance to boomerang back to you.");
             Descriptions.Add("Fire a shot that, when colliding with another shot, will steal 25% damage from it.");
             Descriptions.Add("Fire a shot that deals 1% extra damage for each percent of missing health.");
+            Descriptions.Add("Fire a shot that has a |255,70,0|" + (100 - Chance) + "|W| chance to break and damage yourself.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[Action];
         }
@@ -322,6 +324,24 @@ namespace Outer_Space
             if (!initialize)
             {
                 level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+            }
+        }
+
+        public void FireChanceToBreak(Ship shooter, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                if (Globals.Randomizer.Next(0, 101) < 100 - Chance)
+                {
+                    Disabled = 180;
+                    shooter.TakeDamage(Damage, ShieldPiercing, DamageType.laser, false);
+                }
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, ShotDamage(tilesMatched) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, Targets, ShieldPiercing, Chance));
+            }
+            else
+            {
+                Chance += Globals.Randomizer.Next(30, 50);
+                Damage += Globals.Randomizer.Next(5, 10);
             }
         }
     }

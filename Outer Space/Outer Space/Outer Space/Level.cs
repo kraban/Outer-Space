@@ -19,8 +19,10 @@ namespace Outer_Space
         public Point BoardSize { get { return new Point(8, 8); } }
         public List<GameObject> GameObjects { get; set; }
         public List<GameObject> ToAdd { get; set; }
-        public Player Player { get { return (Player)GameObjects.First(item => item.GetType().Name == "Player"); } }
+        public Player Player { get { return (Player)GameObjects.First(item => item is Player); } }
         public bool Compelete { get; set; }
+        public bool Initialized { get; set; }
+        public Button Flee { get; set; }
 
         public TextureButton EnterLevel { get; set; }
 
@@ -33,28 +35,49 @@ namespace Outer_Space
             this.GameObjects = new List<GameObject>();
             ToAdd = new List<GameObject>();
 
+            this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
+
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
         }
 
         // Method(s)
         public void Initialize(Player player)
         {
-            GameObjects.Clear();
-            GameObjects.Clear();
-            GameObjects.Add(player);
-            Player.ShipHull.Combat = true;
-            Player.ShipShield.Combat = true;
-            ToAdd.Add(new Enemy());
-            InitializeTiles();
+            Started = false;
+            if (!Initialized)
+            {
+                GameObjects.Clear();
+                GameObjects.Add(player);
+                Player.ShipHull.Combat = true;
+                Player.ShipShield.Combat = true;
+                ToAdd.Add(new Enemy());
+                InitializeTiles();
+                Initialized = true;
+            }
+            else
+            {
+                GameObjects.RemoveAll(item => item is Player);
+                GameObjects.Add(player);
+                Player.ShipHull.Combat = true;
+                Player.ShipShield.Combat = true;
+            }
+            Player.Position += new Vector2(0, 70);
         }
 
-        public void LevelComplete()
+        public void LeaveLevel(bool flee)
         {
             Player.ShipHull.Combat = false;
             Player.ShipShield.Combat = false;
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
-            Compelete = true;
+            Compelete = !flee;
+            if (flee)
+            {
+                foreach (Enemy e in GameObjects.Where(item => item is Enemy))
+                {
+                    e.Health.Change(e.Health.MaxValue);
+                }
+            }
         }
 
         public void InitializeTiles()
@@ -133,6 +156,8 @@ namespace Outer_Space
             {
                 Text.TextDifferentColor(spriteBatch, "|W|Press enter to start", new Vector2(Globals.ScreenSize.X / 2, 10), 1.3f, TextureManager.SpriteFont20, true);
             }
+
+            Flee.Draw(spriteBatch);
         }
 
         public void CheckMatch()
@@ -477,7 +502,7 @@ namespace Outer_Space
                             // "New" tile if hidden on top layer
                             if (j == 0)
                             {
-                                Player player = (Player)GameObjects.First(item => item.GetType().Name == "Player");
+                                Player player = (Player)GameObjects.First(item => item is Player);
                                 Tiles[i][j].UnHide(player);
                             }
                         }
@@ -492,6 +517,11 @@ namespace Outer_Space
                      && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item == TileType.left) && !CheckPossibleMatches().Any(item => item == TileType.right)))
                 {
                     ToAdd.Add(new Rock(Player, this));
+                }
+
+                if (Globals.KState.IsKeyDown(Keys.P))
+                {
+                    Started = false;
                 }
             }
             else if (Globals.KState.IsKeyDown(Keys.Enter))
@@ -517,12 +547,27 @@ namespace Outer_Space
             {
                 if (GameObjects[i].Dead)
                 {
-                    if (GameObjects[i].GetType().Name == "Enemy")
+                    if (GameObjects[i] is Enemy)
                     {
-                        LevelComplete();
+                        LeaveLevel(false);
                     }
                     GameObjects.RemoveAt(i);
                 }
+            }
+
+            // Flee
+            Flee.Update();
+            if (Flee.Press())
+            {
+                Player.Flee = true;
+            }
+            if (Player.OutsideScreen())
+            {
+                Player.Flee = false;
+                Player.Speed = 0;
+                Player.Position = new Vector2(300, Globals.ScreenSize.Y - Player.Texture.Height);
+                Player.Direction = Player.StandardDirection;
+                LeaveLevel(true);
             }
         }
     }
