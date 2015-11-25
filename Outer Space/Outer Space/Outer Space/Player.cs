@@ -264,6 +264,9 @@ namespace Outer_Space
                 Direction = MathHelper.Lerp(Direction, (float)Math.PI, 0.03f);
                 Speed += 0.1f;
                 Position += new Vector2((float)Math.Cos(Direction) * Speed, (float)Math.Sin(Direction) * Speed);
+                ShipLocation = Location.middle;
+                MoveLeft = 0;
+                MoveRight = 0;
             }
         }
 

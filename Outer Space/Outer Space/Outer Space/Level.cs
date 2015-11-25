@@ -56,7 +56,7 @@ namespace Outer_Space
             }
             else
             {
-                GameObjects.RemoveAll(item => item is Player);
+                GameObjects.RemoveAll(item => !(item is Enemy));
                 GameObjects.Add(player);
                 Player.ShipHull.Combat = true;
                 Player.ShipShield.Combat = true;
