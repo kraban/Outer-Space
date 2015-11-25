@@ -15,7 +15,7 @@ namespace Outer_Space
     {
         public int MoveLeft { get; set; }
         public int MoveRight { get; set; }
-        public bool Flee { get; set; }
+        public bool Move { get; set; }
         public float Speed { get; set; }
 
         public Bar Energy { get; set; }
@@ -219,7 +219,7 @@ namespace Outer_Space
 
         public override void UpdateLevel(Level level)
         {
-            if (!Flee)
+            if (!Move)
             {
                 Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Globals.ScreenSize.Y - Texture.Height, 0.1f));
                 base.UpdateLevel(level);
@@ -264,9 +264,6 @@ namespace Outer_Space
                 Direction = MathHelper.Lerp(Direction, (float)Math.PI, 0.03f);
                 Speed += 0.1f;
                 Position += new Vector2((float)Math.Cos(Direction) * Speed, (float)Math.Sin(Direction) * Speed);
-                ShipLocation = Location.middle;
-                MoveLeft = 0;
-                MoveRight = 0;
             }
         }
 

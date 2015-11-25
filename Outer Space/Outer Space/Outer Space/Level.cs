@@ -62,6 +62,9 @@ namespace Outer_Space
                 Player.ShipShield.Combat = true;
             }
             Player.Position += new Vector2(0, 70);
+            Player.ShipLocation = Location.middle;
+            Player.MoveLeft = 0;
+            Player.MoveRight = 0;
         }
 
         public void LeaveLevel(bool flee)
@@ -549,7 +552,7 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
-                        LeaveLevel(false);
+                        Player.Move = true;
                     }
                     GameObjects.RemoveAt(i);
                 }
@@ -559,15 +562,15 @@ namespace Outer_Space
             Flee.Update();
             if (Flee.Press())
             {
-                Player.Flee = true;
+                Player.Move = true;
             }
             if (Player.OutsideScreen())
             {
-                Player.Flee = false;
+                Player.Move = false;
                 Player.Speed = 0;
                 Player.Position = new Vector2(300, Globals.ScreenSize.Y - Player.Texture.Height);
                 Player.Direction = Player.StandardDirection;
-                LeaveLevel(true);
+                LeaveLevel(GameObjects.Any(item => item is Enemy));
             }
         }
     }

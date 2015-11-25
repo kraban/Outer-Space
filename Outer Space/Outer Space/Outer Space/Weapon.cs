@@ -344,5 +344,12 @@ namespace Outer_Space
                 Damage += Globals.Randomizer.Next(5, 10);
             }
         }
+
+        public void FireRam(Ship shooter, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+            }
+        }
     }
 }
