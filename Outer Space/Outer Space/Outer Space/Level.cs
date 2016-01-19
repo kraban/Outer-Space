@@ -24,6 +24,8 @@ namespace Outer_Space
         public bool Initialized { get; set; }
         public Button Flee { get; set; }
         public bool PlayerOnStar { get; set; }
+        private float playerDirection;
+        private Vector2 playerPosition;
 
         public TextureButton EnterLevel { get; set; }
 
@@ -39,6 +41,7 @@ namespace Outer_Space
             this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
 
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
+            playerPosition = new Vector2(positionOnMap.X + 20, positionOnMap.Y);
         }
 
         // Method(s)
@@ -48,6 +51,11 @@ namespace Outer_Space
             {
                 EnterLevel.Update();
             }
+            if (PlayerOnStar)
+            {
+                playerDirection += 0.01f;
+                playerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(playerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(playerDirection) * 20);
+            }
         }
         
         public void DrawMap(SpriteBatch spriteBatch)
@@ -55,7 +63,7 @@ namespace Outer_Space
             EnterLevel.Draw(spriteBatch);
             if (PlayerOnStar)
             {
-                spriteBatch.Draw(TextureManager.player, EnterLevel.Position, null, Color.White, 0f, new Vector2(TextureManager.player.Width / 2, TextureManager.player.Height / 2), 0.5f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(TextureManager.player, playerPosition, null, Color.White, playerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.player.Width / 2, TextureManager.player.Height / 2), 0.5f, SpriteEffects.None, 0f);
             }
         }
 

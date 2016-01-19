@@ -21,6 +21,7 @@ namespace Outer_Space
         public List<Level> Levels { get; set; }
         public Player ThePlayer { get; set; }
         public int SelectedLevel { get; set; }
+        private int playerPosition;
         public Level CurrentLevel { get { return Levels[SelectedLevel]; } set { Levels[SelectedLevel] = value; } }
 
         public MapScene()
@@ -32,6 +33,7 @@ namespace Outer_Space
             Levels.Add(new Level(new Vector2(20, Globals.ScreenSize.Y / 2)));
             Levels[0].PlayerOnStar = true;
             Levels[0].Compelete = true;
+            playerPosition = 0;
 
             for (int i = 0; i < 40; i++)
             {
@@ -48,24 +50,38 @@ namespace Outer_Space
             }
         }
 
+        public void PlayerMove(int toLevel)
+        {
+            Levels[playerPosition].PlayerOnStar = false;
+            playerPosition = toLevel;
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
 
             if (SelectedLevel == -1)
             {
-                foreach (Level level in Levels.Where(item => item.EnterLevel.HoverOver() || item.PlayerOnStar))
+                if (Levels.Any(item => item != Levels[playerPosition] && Globals.Distance(Levels[playerPosition].EnterLevel.Position, item.EnterLevel.Position) < 150))
                 {
-                    foreach (Level nextTo in Levels.Where(item => item != level && Globals.Distance(level.EnterLevel.Position, item.EnterLevel.Position) < 150))
+                    foreach (Level nextTo in Levels.Where(item => item != Levels[playerPosition] && Globals.Distance(Levels[playerPosition].EnterLevel.Position, item.EnterLevel.Position) < 150))
                     {
-                        Vector2 linePosition = nextTo.EnterLevel.Position - level.EnterLevel.Position;
-                        float distance = Globals.Distance(level.EnterLevel.Position, nextTo.EnterLevel.Position) / 4;
+                        Vector2 linePosition = nextTo.EnterLevel.Position - Levels[playerPosition].EnterLevel.Position;
+                        float distance = Globals.Distance(Levels[playerPosition].EnterLevel.Position, nextTo.EnterLevel.Position) / 4;
                         for (float i = 0; i < distance; i++)
                         {
-                            spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(level.EnterLevel.Position.X + linePosition.X * (i / distance)), (int)(level.EnterLevel.Position.Y + linePosition.Y * (i / distance)), 1, 1), Color.White);
+                            spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(Levels[playerPosition].EnterLevel.Position.X + linePosition.X * (i / distance)), (int)(Levels[playerPosition].EnterLevel.Position.Y + linePosition.Y * (i / distance)), 1, 1), Color.White);
                         }
                     }
                 }
+                else
+	            {
+                    List<float> distances = new List<float>();
+                    foreach (Level level in Levels.Where(item => item != Levels[playerPosition]))
+                    {
+                        distances.Add(Globals.Distance(level.EnterLevel.Position, Levels[playerPosition].EnterLevel.Position));
+                    }
+	            }
 
                 foreach (Level l in Levels)
                 {
@@ -92,6 +108,7 @@ namespace Outer_Space
                     {
                         SelectedLevel = i;
                         Levels[i].Initialize(ThePlayer);
+                        PlayerMove(i);
                     }
                 }
             }
