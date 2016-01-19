@@ -38,6 +38,15 @@ namespace Outer_Space
             }
         }
 
+        public bool HoverOver()
+        {
+            if (Globals.MRectangle.Intersects(Box))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public bool Pressed()
         {
             if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0)

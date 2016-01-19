@@ -35,6 +35,11 @@ namespace Outer_Space
             Randomizer = new Random();
         }
 
+        public static float Distance(Vector2 v1, Vector2 v2)
+        {
+            return (v2 - v1).Length();
+        }
+
         // Update
         public static void Update()
         {

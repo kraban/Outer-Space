@@ -23,6 +23,7 @@ namespace Outer_Space
         public bool Compelete { get; set; }
         public bool Initialized { get; set; }
         public Button Flee { get; set; }
+        public bool PlayerOnStar { get; set; }
 
         public TextureButton EnterLevel { get; set; }
 
@@ -41,6 +42,23 @@ namespace Outer_Space
         }
 
         // Method(s)
+        public void UpdateMap()
+        {
+            if (!Compelete)
+            {
+                EnterLevel.Update();
+            }
+        }
+        
+        public void DrawMap(SpriteBatch spriteBatch)
+        {
+            EnterLevel.Draw(spriteBatch);
+            if (PlayerOnStar)
+            {
+                spriteBatch.Draw(TextureManager.player, EnterLevel.Position, null, Color.White, 0f, new Vector2(TextureManager.player.Width / 2, TextureManager.player.Height / 2), 0.5f, SpriteEffects.None, 0f);
+            }
+        }
+
         public void Initialize(Player player)
         {
             Started = false;
@@ -53,6 +71,7 @@ namespace Outer_Space
                 ToAdd.Add(new Enemy());
                 InitializeTiles();
                 Initialized = true;
+                PlayerOnStar = true;
             }
             else
             {
