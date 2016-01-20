@@ -282,7 +282,8 @@ namespace Outer_Space
 
                 if (tileType == TileType.shoot && Weapons[SelectedWeapon].Disabled < 0)
                 {
-                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](this   , tilesMatched, level, false); 
+                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](this, tilesMatched, level, false);
+                    KnockBack = 3;
                 }
 
                 if (tileType == TileType.left && ShipLocation != Location.left)

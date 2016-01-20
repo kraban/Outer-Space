@@ -40,6 +40,7 @@ namespace Outer_Space
         public float StandardDirection { get; set; }
         public int SelectedWeapon { get; set; }
         public Weapon CurrentWeapon { get { return Weapons[SelectedWeapon]; } set { Weapons[SelectedWeapon] = value; } }
+        public float KnockBack { get; set; }
 
         // Damage over time
         public int DamageOverTimeCount { get; private set; }
@@ -92,6 +93,8 @@ namespace Outer_Space
             // Move
             Vector2 move = new Vector2((int)ShipLocation * 100 + 200, Position.Y) - Position;
             Position += move * 0.05f;
+            Position += new Vector2(0, KnockBack);
+            KnockBack = MathHelper.Lerp(KnockBack, 0, 0.1f);
 
             // Ship tilt
             if (move.Length() > 10)

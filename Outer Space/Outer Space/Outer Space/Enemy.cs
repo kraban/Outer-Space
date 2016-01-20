@@ -20,7 +20,7 @@ namespace Outer_Space
         public Enemy()
             : base((float)Math.PI * 0.5f)
         {
-            this.Position = new Vector2((int)ShipLocation * 100 + 200, 100);
+            this.Position = new Vector2((int)ShipLocation * 100 + 200, -100);
             this.Texture = TextureManager.player;
 
             this.Health = new Bar(new Vector2(0, 10), 100, 10, 100, Color.Red);
@@ -65,6 +65,9 @@ namespace Outer_Space
         {
             base.UpdateLevel(level);
 
+            // Move to normal position after knockback
+            Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Texture.Height, 0.1f));
+
             if (level.Started)
             {
                 // Shoot
@@ -73,6 +76,7 @@ namespace Outer_Space
                 {
                     ShootTimer = 180;
                     Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](this, 0, level, false);
+                    KnockBack = -3;
                 }
 
                 // Move
