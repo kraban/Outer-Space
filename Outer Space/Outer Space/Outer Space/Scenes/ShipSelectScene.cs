@@ -24,9 +24,9 @@ namespace Outer_Space
 
             // Ship buttons
             ShipButtons = new List<TextureButton>();
-            ShipButtons.Add(new TextureButton(new Vector2(Globals.ScreenSize.X / 2 - 200, Globals.ScreenSize.Y / 2), TextureManager.player));
+            ShipButtons.Add(new TextureButton(new Vector2(Globals.ScreenSize.X / 2 - 200, Globals.ScreenSize.Y / 2), TextureManager.ship1));
             ShipButtons.Add(new TextureButton(new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2), TextureManager.ship2));
-            ShipButtons.Add(new TextureButton(new Vector2(Globals.ScreenSize.X / 2 + 200, Globals.ScreenSize.Y / 2), TextureManager.player));
+            ShipButtons.Add(new TextureButton(new Vector2(Globals.ScreenSize.X / 2 + 200, Globals.ScreenSize.Y / 2), TextureManager.ship1));
         }
 
         public override void Update()

@@ -11,11 +11,6 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    // ATT GÖRA
-    /* Ta bort spelare från gammal stjärna
-     * Alla stjärnor måste ha minst en annan stjärna som den når
-     */
-
     public class MapScene : Scene
     {
         public List<Level> Levels { get; set; }
@@ -23,6 +18,7 @@ namespace Outer_Space
         public int SelectedLevel { get; set; }
         private int playerPosition;
         public Level CurrentLevel { get { return Levels[SelectedLevel]; } set { Levels[SelectedLevel] = value; } }
+        private List<Level> nearestLevels;
 
         public MapScene()
             : base()
@@ -33,11 +29,15 @@ namespace Outer_Space
             Levels.Add(new Level(new Vector2(20, Globals.ScreenSize.Y / 2)));
             Levels[0].PlayerOnStar = true;
             Levels[0].Compelete = true;
+            Levels[0].PlayerPosition = new Vector2(Levels[0].EnterLevel.Position.X + (float)Math.Cos(Levels[0].PlayerDirection) * 20, Levels[0].EnterLevel.Position.Y + (float)Math.Sin(Levels[0].PlayerDirection) * 20);
             playerPosition = 0;
+            nearestLevels = new List<Level>();
 
             for (int i = 0; i < 40; i++)
             {
                 Levels.Add(new Level(new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100))));
+                // For test only, makes every level completed
+                Levels[i].Compelete = true;
             }
 
             // Remove overlapping levels
@@ -48,12 +48,42 @@ namespace Outer_Space
                     Levels.RemoveAt(i);
                 }
             }
+            nearestLevels = FindNearestLevels(Levels[playerPosition]);
         }
 
         public void PlayerMove(int toLevel)
         {
             Levels[playerPosition].PlayerOnStar = false;
+            Levels[toLevel].PlayerOnStar = true;
+            Levels[toLevel].PlayerDirection = (float)Math.Atan2(Levels[toLevel].EnterLevel.Position.Y - Levels[playerPosition].PlayerPosition.Y, Levels[toLevel].EnterLevel.Position.X - Levels[playerPosition].PlayerPosition.X);
+            Levels[toLevel].PlayerPosition = Levels[playerPosition].PlayerPosition;
+            nearestLevels = FindNearestLevels(Levels[toLevel]);
             playerPosition = toLevel;
+        }
+
+        public List<Level> FindNearestLevels(Level startingLevel)
+        {
+            List<Level> nearestLevels = new List<Level>();
+            if (Levels.Any(item => item != startingLevel && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
+            {
+                foreach (Level nextTo in Levels.Where(item => item != startingLevel && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
+                {
+                    nearestLevels.Add(nextTo);
+                }
+            }
+            else
+            {
+                // If no star within range, search for the two closest
+                List<Level> distances = new List<Level>();
+                foreach (Level level in Levels)
+                {
+                    distances.Add(level);
+                }
+                distances = distances.OrderBy(item => Globals.Distance(item.EnterLevel.Position, Levels[playerPosition].EnterLevel.Position)).ToList();
+                nearestLevels.Add(distances[1]);
+                nearestLevels.Add(distances[2]);
+            }
+            return nearestLevels;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -62,26 +92,16 @@ namespace Outer_Space
 
             if (SelectedLevel == -1)
             {
-                if (Levels.Any(item => item != Levels[playerPosition] && Globals.Distance(Levels[playerPosition].EnterLevel.Position, item.EnterLevel.Position) < 150))
+                // Draw lines to close stars
+                foreach (Level level in nearestLevels)
                 {
-                    foreach (Level nextTo in Levels.Where(item => item != Levels[playerPosition] && Globals.Distance(Levels[playerPosition].EnterLevel.Position, item.EnterLevel.Position) < 150))
+                    Vector2 linePosition = level.EnterLevel.Position - Levels[playerPosition].EnterLevel.Position;
+                    float distance = Globals.Distance(Levels[playerPosition].EnterLevel.Position, level.EnterLevel.Position) / 4;
+                    for (float i = 0; i < distance; i++)
                     {
-                        Vector2 linePosition = nextTo.EnterLevel.Position - Levels[playerPosition].EnterLevel.Position;
-                        float distance = Globals.Distance(Levels[playerPosition].EnterLevel.Position, nextTo.EnterLevel.Position) / 4;
-                        for (float i = 0; i < distance; i++)
-                        {
-                            spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(Levels[playerPosition].EnterLevel.Position.X + linePosition.X * (i / distance)), (int)(Levels[playerPosition].EnterLevel.Position.Y + linePosition.Y * (i / distance)), 1, 1), Color.White);
-                        }
+                        spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(Levels[playerPosition].EnterLevel.Position.X + linePosition.X * (i / distance)), (int)(Levels[playerPosition].EnterLevel.Position.Y + linePosition.Y * (i / distance)), 1, 1), Color.White);
                     }
                 }
-                else
-	            {
-                    List<float> distances = new List<float>();
-                    foreach (Level level in Levels.Where(item => item != Levels[playerPosition]))
-                    {
-                        distances.Add(Globals.Distance(level.EnterLevel.Position, Levels[playerPosition].EnterLevel.Position));
-                    }
-	            }
 
                 foreach (Level l in Levels)
                 {
@@ -104,10 +124,13 @@ namespace Outer_Space
 			    {
                     Levels[i].UpdateMap();
 
-                    if (!Levels[i].Compelete && Levels[i].EnterLevel.Pressed())
+                    if (nearestLevels.Any(item => item == Levels[i]) && Levels[i].EnterLevel.Pressed())
                     {
-                        SelectedLevel = i;
-                        Levels[i].Initialize(ThePlayer);
+                        if (!Levels[i].Compelete)
+                        {
+                            SelectedLevel = i;
+                            Levels[i].Initialize(ThePlayer);
+                        }
                         PlayerMove(i);
                     }
                 }

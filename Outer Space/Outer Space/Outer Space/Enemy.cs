@@ -21,10 +21,10 @@ namespace Outer_Space
             : base((float)Math.PI * 0.5f)
         {
             this.Position = new Vector2((int)ShipLocation * 100 + 200, -100);
-            this.Texture = TextureManager.player;
+            this.Texture = TextureManager.ship1;
 
-            this.Health = new Bar(new Vector2(0, 10), 100, 10, 100, Color.Red);
-            this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 100);
+            this.Health = new Bar(new Vector2(0, 10), 100, 10, 10, Color.Red);
+            this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 10);
             this.ShipHull.Combat = true;
             this.ShipShield.Combat = true;
 

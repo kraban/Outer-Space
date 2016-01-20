@@ -14,7 +14,7 @@ namespace Outer_Space
     class TextureManager
     {
         public static Texture2D
-            player,
+            ship1,
             none,
             selected,
             shot,
@@ -40,7 +40,7 @@ namespace Outer_Space
         // Initialize
         public static void Initialize(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            player = content.Load<Texture2D>("Ship");
+            ship1 = content.Load<Texture2D>("Ship");
             none = content.Load<Texture2D>("None");
             selected = content.Load<Texture2D>("Selected");
             shot = content.Load<Texture2D>("Shot");

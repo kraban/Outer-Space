@@ -24,8 +24,9 @@ namespace Outer_Space
         public bool Initialized { get; set; }
         public Button Flee { get; set; }
         public bool PlayerOnStar { get; set; }
-        private float playerDirection;
-        private Vector2 playerPosition;
+        public float PlayerDirection { get; set; }
+        public Vector2 PlayerPosition { get; set; }
+        public float PlayerSize { get; set; }
 
         public TextureButton EnterLevel { get; set; }
 
@@ -41,30 +42,29 @@ namespace Outer_Space
             this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
 
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
-            playerPosition = new Vector2(positionOnMap.X + 20, positionOnMap.Y);
+            this.PlayerSize = 0.5f;
         }
 
         // Method(s)
         public void UpdateMap()
         {
-            if (!Compelete)
-            {
-                EnterLevel.Update();
-            }
+            EnterLevel.Update();
             if (PlayerOnStar)
             {
-                playerDirection += 0.01f;
-                playerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(playerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(playerDirection) * 20);
+                PlayerDirection += 0.01f;
+                PlayerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(PlayerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(PlayerDirection) * 20);
+                PlayerSize = MathHelper.Lerp(PlayerSize, 0.5f, 0.1f);
+            }
+            else
+            {
+                PlayerSize = MathHelper.Lerp(PlayerSize, 0, 0.1f);
             }
         }
         
         public void DrawMap(SpriteBatch spriteBatch)
         {
             EnterLevel.Draw(spriteBatch);
-            if (PlayerOnStar)
-            {
-                spriteBatch.Draw(TextureManager.player, playerPosition, null, Color.White, playerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.player.Width / 2, TextureManager.player.Height / 2), 0.5f, SpriteEffects.None, 0f);
-            }
+            spriteBatch.Draw(SceneManager.mapScene.ThePlayer.Texture, PlayerPosition, null, Color.White, PlayerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.ship1.Width / 2, TextureManager.ship1.Height / 2), PlayerSize, SpriteEffects.None, 0f);
         }
 
         public void Initialize(Player player)
@@ -79,7 +79,6 @@ namespace Outer_Space
                 ToAdd.Add(new Enemy());
                 InitializeTiles();
                 Initialized = true;
-                PlayerOnStar = true;
             }
             else
             {
