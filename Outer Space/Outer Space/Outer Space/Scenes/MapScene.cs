@@ -19,10 +19,12 @@ namespace Outer_Space
         private int playerPosition;
         public Level CurrentLevel { get { return Levels[SelectedLevel]; } set { Levels[SelectedLevel] = value; } }
         private List<Level> nearestLevels;
+        private List<SpaceObject> spaceObjects;
 
         public MapScene()
             : base()
         {
+            this.spaceObjects = new List<SpaceObject>();
             this.Levels = new List<Level>();
             this.ThePlayer = new Player();
             this.SelectedLevel = -1;
@@ -49,6 +51,25 @@ namespace Outer_Space
                 }
             }
             nearestLevels = FindNearestLevels(Levels[playerPosition]);
+
+            // Add modifiers
+            for (int i = 0; i < Globals.Randomizer.Next(1, 4); i++)
+            {
+                Vector2 modifierPosition = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
+                Modifier randomModifier = (Modifier)Enum.GetValues(typeof(Modifier)).GetValue(Globals.Randomizer.Next(0, Enum.GetValues(typeof(Modifier)).Length));
+                foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPosition) < 100))
+                {
+                    level.LevelModifier = randomModifier;
+                    if (randomModifier == Modifier.Sun)
+                    {
+                        spaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPosition)); 
+                    }
+                    else if (randomModifier == Modifier.Asteriod)
+                    {
+                        spaceObjects.Add(new SpaceObject(TextureManager.rock, modifierPosition)); 
+                    }
+                }
+            }
         }
 
         public void PlayerMove(int toLevel)
@@ -92,6 +113,12 @@ namespace Outer_Space
 
             if (SelectedLevel == -1)
             {
+                // Space objects
+                foreach (SpaceObject spaceObject in spaceObjects)
+                {
+                    spaceObject.Draw(spriteBatch);
+                }
+
                 // Draw lines to close stars
                 foreach (Level level in nearestLevels)
                 {

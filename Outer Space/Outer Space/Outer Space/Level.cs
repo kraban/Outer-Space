@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
+    public enum Modifier { Sun, Asteriod }
     public class Level
     {
         // Public properties
@@ -27,6 +28,7 @@ namespace Outer_Space
         public float PlayerDirection { get; set; }
         public Vector2 PlayerPosition { get; set; }
         public float PlayerSize { get; set; }
+        public Modifier LevelModifier { get; set; }
 
         public TextureButton EnterLevel { get; set; }
 
@@ -43,6 +45,7 @@ namespace Outer_Space
 
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
             this.PlayerSize = 0.5f;
+            this.LevelModifier = Modifier.Asteriod;
         }
 
         // Method(s)

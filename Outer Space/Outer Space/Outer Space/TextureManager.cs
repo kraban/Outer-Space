@@ -26,7 +26,8 @@ namespace Outer_Space
             slideButton,
             inventory,
             inventorySlot,
-            level;
+            level,
+            sun;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -52,6 +53,7 @@ namespace Outer_Space
             inventory = content.Load<Texture2D>("Inventory");
             inventorySlot = content.Load<Texture2D>("InventorySlot");
             level = content.Load<Texture2D>("Level");
+            sun = content.Load<Texture2D>("SunBig");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

@@ -130,6 +130,7 @@
     <Compile Include="Rock.cs" />
     <Compile Include="Scenes\Scene.cs" />
     <Compile Include="Scenes\SceneManager.cs" />
+    <Compile Include="SpaceObject.cs" />
     <Compile Include="Slider.cs" />
     <Compile Include="Shield.cs" />
     <Compile Include="Ship.cs" />
