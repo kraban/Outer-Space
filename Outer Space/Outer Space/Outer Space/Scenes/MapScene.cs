@@ -28,29 +28,8 @@ namespace Outer_Space
             this.Levels = new List<Level>();
             this.ThePlayer = new Player();
             this.SelectedLevel = -1;
-            Levels.Add(new Level(new Vector2(20, Globals.ScreenSize.Y / 2)));
-            Levels[0].PlayerOnStar = true;
-            Levels[0].Compelete = true;
-            Levels[0].PlayerPosition = new Vector2(Levels[0].EnterLevel.Position.X + (float)Math.Cos(Levels[0].PlayerDirection) * 20, Levels[0].EnterLevel.Position.Y + (float)Math.Sin(Levels[0].PlayerDirection) * 20);
-            playerPosition = 0;
             nearestLevels = new List<Level>();
-
-            for (int i = 0; i < 40; i++)
-            {
-                Levels.Add(new Level(new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100))));
-                // For test only, makes every level completed
-                Levels[i].Compelete = true;
-            }
-
-            // Remove overlapping levels
-            for (int i = Levels.Count - 1; i >= 1; i--)
-            {
-                if (Levels.Any(item => item != Levels[i] && Globals.Distance(Levels[i].EnterLevel.Position, item.EnterLevel.Position) < 20))
-                {
-                    Levels.RemoveAt(i);
-                }
-            }
-            nearestLevels = FindNearestLevels(Levels[playerPosition]);
+            GenerateMap();
 
             // Add modifiers
             for (int i = 0; i < Globals.Randomizer.Next(1, 4); i++)
@@ -62,12 +41,68 @@ namespace Outer_Space
                     level.LevelModifier = randomModifier;
                     if (randomModifier == Modifier.Sun)
                     {
-                        spaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPosition)); 
+                        spaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPosition, 1)); 
                     }
                     else if (randomModifier == Modifier.Asteriod)
                     {
-                        spaceObjects.Add(new SpaceObject(TextureManager.rock, modifierPosition)); 
+                        for (int j = 0; j < Globals.Randomizer.Next(3, 7); j++)
+                        {
+                            spaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(modifierPosition.X + Globals.Randomizer.Next(-100, 100), modifierPosition.Y + Globals.Randomizer.Next(-100, 100)), 0.2f));
+                        } 
                     }
+                }
+            }
+        }
+
+        public void GenerateMap()
+        {
+            while (true)
+            {
+                Levels.Clear();
+                // Generate levels
+                Levels.Add(new Level(new Vector2(50, Globals.ScreenSize.Y / 2)));
+                for (int i = 0; i < 30; i++)
+                {
+                    Levels.Add(new Level(new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100))));
+                    //Levels[i].Compelete = true;
+                }
+
+                // Remove overlapping levels
+                for (int i = 0; i < Levels.Count(); i++)
+                {
+                    for (int j = Levels.Count() - 1; j >= 1; j--)
+                    {
+                        if (Levels[i] != Levels[j] && Levels[i].Distance(Levels[j].EnterLevel.Position) < 20)
+                        {
+                            Levels.RemoveAt(j);
+                        }
+                    }
+                }
+
+                // Check if possible map
+                List<Level> reachable = new List<Level>();
+                reachable.Add(Levels[0]);
+                for (int i = 0; i < reachable.Count(); i++)
+                {
+                    foreach (Level level in Levels.Where(item => !reachable.Any(item2 => item == item2) && item.Distance(reachable[i].EnterLevel.Position) < 150))
+                    {
+                        reachable.Add(level);
+                    }
+                }
+
+                if (reachable.Count() / Levels.Count() > 0.9f)
+                {
+                    // Map succeded test, set first level to player startposition
+                    Levels[0].PlayerOnStar = true;
+                    Levels[0].Compelete = true;
+                    Levels[0].PlayerPosition = new Vector2(Levels[0].EnterLevel.Position.X + (float)Math.Cos(Levels[0].PlayerDirection) * 20, Levels[0].EnterLevel.Position.Y + (float)Math.Sin(Levels[0].PlayerDirection) * 20);
+                    playerPosition = 0;
+                    nearestLevels = FindNearestLevels(Levels[playerPosition]);
+                    break;
+                }
+                else
+                {
+                    continue;
                 }
             }
         }

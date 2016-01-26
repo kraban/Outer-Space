@@ -28,7 +28,7 @@ namespace Outer_Space
         public Player()
             : base((float)Math.PI * 1.5f)
         {
-            this.Texture = TextureManager.ship2;
+            this.Texture = TextureManager.boss;
             this.Position = new Vector2(300, Globals.ScreenSize.Y - Texture.Height);
 
             this.Energy = new Bar(new Vector2(450, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);

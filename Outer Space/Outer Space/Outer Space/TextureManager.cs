@@ -27,7 +27,8 @@ namespace Outer_Space
             inventory,
             inventorySlot,
             level,
-            sun;
+            sun,
+            boss;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -54,6 +55,7 @@ namespace Outer_Space
             inventorySlot = content.Load<Texture2D>("InventorySlot");
             level = content.Load<Texture2D>("Level");
             sun = content.Load<Texture2D>("SunBig");
+            boss = content.Load<Texture2D>("OuterSpaceBossCut");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

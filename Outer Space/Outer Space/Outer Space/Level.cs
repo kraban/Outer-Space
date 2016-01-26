@@ -70,6 +70,11 @@ namespace Outer_Space
             spriteBatch.Draw(SceneManager.mapScene.ThePlayer.Texture, PlayerPosition, null, Color.White, PlayerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.ship1.Width / 2, TextureManager.ship1.Height / 2), PlayerSize, SpriteEffects.None, 0f);
         }
 
+        public float Distance(Vector2 v)
+        {
+            return (v - EnterLevel.Position).Length();
+        }
+
         public void Initialize(Player player)
         {
             Started = false;

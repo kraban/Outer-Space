@@ -13,10 +13,11 @@ namespace Outer_Space
 {
     class SpaceObject : GameObject
     {
-        public SpaceObject(Texture2D texture, Vector2 position)
+        public SpaceObject(Texture2D texture, Vector2 position, float size)
         {
             this.Texture = texture;
             this.Position = position;
+            this.Size = size;
         }
     }
 }
