@@ -11,13 +11,19 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class SpaceObject : GameObject
+    public class SpaceObject : GameObject
     {
         public SpaceObject(Texture2D texture, Vector2 position, float size)
         {
             this.Texture = texture;
             this.Position = position;
             this.Size = size;
+            this.Direction = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
+        }
+
+        public override void Update()
+        {
+            base.Update();
         }
     }
 }

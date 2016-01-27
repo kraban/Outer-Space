@@ -19,15 +19,19 @@ namespace Outer_Space
         private int playerPosition;
         public Level CurrentLevel { get { return Levels[SelectedLevel]; } set { Levels[SelectedLevel] = value; } }
         private List<Level> nearestLevels;
-        private List<SpaceObject> spaceObjects;
+        public List<SpaceObject> SpaceObjects;
+        private int delay;
+        private int levelToBeSelected;
 
         public MapScene()
             : base()
         {
-            this.spaceObjects = new List<SpaceObject>();
+            this.SpaceObjects = new List<SpaceObject>();
             this.Levels = new List<Level>();
             this.ThePlayer = new Player();
             this.SelectedLevel = -1;
+            this.levelToBeSelected = -1;
+            this.delay = -1;
             nearestLevels = new List<Level>();
             GenerateMap();
 
@@ -35,19 +39,19 @@ namespace Outer_Space
             for (int i = 0; i < Globals.Randomizer.Next(1, 4); i++)
             {
                 Vector2 modifierPosition = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
-                Modifier randomModifier = (Modifier)Enum.GetValues(typeof(Modifier)).GetValue(Globals.Randomizer.Next(0, Enum.GetValues(typeof(Modifier)).Length));
+                Modifier randomModifier = (Modifier)Enum.GetValues(typeof(Modifier)).GetValue(Globals.Randomizer.Next(1, Enum.GetValues(typeof(Modifier)).Length));
                 foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPosition) < 100))
                 {
                     level.LevelModifier = randomModifier;
                     if (randomModifier == Modifier.Sun)
                     {
-                        spaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPosition, 1)); 
+                        SpaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPosition, 1));
                     }
                     else if (randomModifier == Modifier.Asteriod)
                     {
-                        for (int j = 0; j < Globals.Randomizer.Next(3, 7); j++)
+                        for (int j = 0; j < Globals.Randomizer.Next(7, 15); j++)
                         {
-                            spaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(modifierPosition.X + Globals.Randomizer.Next(-100, 100), modifierPosition.Y + Globals.Randomizer.Next(-100, 100)), 0.2f));
+                            SpaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(modifierPosition.X + Globals.Randomizer.Next(-100, 100), modifierPosition.Y + Globals.Randomizer.Next(-100, 100)), 0.3f));
                         } 
                     }
                 }
@@ -94,7 +98,7 @@ namespace Outer_Space
                 {
                     // Map succeded test, set first level to player startposition
                     Levels[0].PlayerOnStar = true;
-                    Levels[0].Compelete = true;
+                    Levels[0].Complete = true;
                     Levels[0].PlayerPosition = new Vector2(Levels[0].EnterLevel.Position.X + (float)Math.Cos(Levels[0].PlayerDirection) * 20, Levels[0].EnterLevel.Position.Y + (float)Math.Sin(Levels[0].PlayerDirection) * 20);
                     playerPosition = 0;
                     nearestLevels = FindNearestLevels(Levels[playerPosition]);
@@ -107,6 +111,7 @@ namespace Outer_Space
             }
         }
 
+        // Move player from one star to another
         public void PlayerMove(int toLevel)
         {
             Levels[playerPosition].PlayerOnStar = false;
@@ -117,6 +122,7 @@ namespace Outer_Space
             playerPosition = toLevel;
         }
 
+        // Find all levels within 150 pixels to a specifik level
         public List<Level> FindNearestLevels(Level startingLevel)
         {
             List<Level> nearestLevels = new List<Level>();
@@ -126,18 +132,6 @@ namespace Outer_Space
                 {
                     nearestLevels.Add(nextTo);
                 }
-            }
-            else
-            {
-                // If no star within range, search for the two closest
-                List<Level> distances = new List<Level>();
-                foreach (Level level in Levels)
-                {
-                    distances.Add(level);
-                }
-                distances = distances.OrderBy(item => Globals.Distance(item.EnterLevel.Position, Levels[playerPosition].EnterLevel.Position)).ToList();
-                nearestLevels.Add(distances[1]);
-                nearestLevels.Add(distances[2]);
             }
             return nearestLevels;
         }
@@ -149,7 +143,7 @@ namespace Outer_Space
             if (SelectedLevel == -1)
             {
                 // Space objects
-                foreach (SpaceObject spaceObject in spaceObjects)
+                foreach (SpaceObject spaceObject in SpaceObjects)
                 {
                     spaceObject.Draw(spriteBatch);
                 }
@@ -182,16 +176,30 @@ namespace Outer_Space
 
             if (SelectedLevel == -1)
             {
+                // Delay after klick on level to entering it
+                delay--;
+                if (delay == 0)
+                {
+                    SelectedLevel = levelToBeSelected;
+                    levelToBeSelected = -1;
+                    Levels[SelectedLevel].Initialize(ThePlayer);
+                }
+                // SpaceObjects
+                foreach (SpaceObject spaceObject in SpaceObjects)
+                {
+                    spaceObject.Update();
+                }
+
                 for (int i = 0; i < Levels.Count; i++)
 			    {
                     Levels[i].UpdateMap();
 
                     if (nearestLevels.Any(item => item == Levels[i]) && Levels[i].EnterLevel.Pressed())
                     {
-                        if (!Levels[i].Compelete)
+                        if (!Levels[i].Complete)
                         {
-                            SelectedLevel = i;
-                            Levels[i].Initialize(ThePlayer);
+                            levelToBeSelected = i;
+                            delay = 65;
                         }
                         PlayerMove(i);
                     }

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public enum Modifier { Sun, Asteriod }
+    public enum Modifier { None, Sun, Asteriod }
     public class Level
     {
         // Public properties
@@ -21,7 +21,7 @@ namespace Outer_Space
         public List<GameObject> GameObjects { get; set; }
         public List<GameObject> ToAdd { get; set; }
         public Player Player { get { return (Player)GameObjects.First(item => item is Player); } }
-        public bool Compelete { get; set; }
+        public bool Complete { get; set; }
         public bool Initialized { get; set; }
         public Button Flee { get; set; }
         public bool PlayerOnStar { get; set; }
@@ -45,7 +45,7 @@ namespace Outer_Space
 
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
             this.PlayerSize = 0.5f;
-            this.LevelModifier = Modifier.Asteriod;
+            this.LevelModifier = Modifier.None;
         }
 
         // Method(s)
@@ -56,7 +56,7 @@ namespace Outer_Space
             {
                 PlayerDirection += 0.01f;
                 PlayerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(PlayerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(PlayerDirection) * 20);
-                PlayerSize = MathHelper.Lerp(PlayerSize, 0.5f, 0.1f);
+                PlayerSize = MathHelper.Lerp(PlayerSize, 0.5f, 0.05f);
             }
             else
             {
@@ -68,6 +68,12 @@ namespace Outer_Space
         {
             EnterLevel.Draw(spriteBatch);
             spriteBatch.Draw(SceneManager.mapScene.ThePlayer.Texture, PlayerPosition, null, Color.White, PlayerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.ship1.Width / 2, TextureManager.ship1.Height / 2), PlayerSize, SpriteEffects.None, 0f);
+            if (EnterLevel.HoverOver())
+            {
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Difficulty: ", new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Modifier: " + LevelModifier.ToString(), new Vector2(0, 30), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Completed: " + Complete, new Vector2(0, 60), Color.White);
+            }
         }
 
         public float Distance(Vector2 v)
@@ -107,7 +113,7 @@ namespace Outer_Space
             Player.ShipShield.Combat = false;
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
-            Compelete = !flee;
+            Complete = !flee;
             if (flee)
             {
                 foreach (Enemy e in GameObjects.Where(item => item is Enemy))
