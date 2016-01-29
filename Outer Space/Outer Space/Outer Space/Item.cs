@@ -15,6 +15,9 @@ namespace Outer_Space
         public string Description { get; set; }
 
         public ItemType Type { get; set; }
+        public bool RecentlyAcquired;
+        private float recentlyAcquiredOpacity;
+        private bool recentlyAcquiredflip;
 
         public Item()
             : base()
@@ -28,6 +31,7 @@ namespace Outer_Space
         {
             if (Globals.MRectangle.Intersects(Box))
             {
+                RecentlyAcquired = false;
                 return true;
             }
             return false;
@@ -46,6 +50,24 @@ namespace Outer_Space
         {
             Position = position;
             Draw(spriteBatch);
+
+            if (RecentlyAcquired)
+            {
+                if (recentlyAcquiredOpacity > 0.95f || recentlyAcquiredOpacity < 0.05f)
+                {
+                    recentlyAcquiredflip = !recentlyAcquiredflip;
+                }
+                if (recentlyAcquiredflip == false)
+                {
+                    recentlyAcquiredOpacity = MathHelper.Lerp(recentlyAcquiredOpacity, 1, 0.05f);
+                }
+                else
+                {
+                    recentlyAcquiredOpacity = MathHelper.Lerp(recentlyAcquiredOpacity, 0, 0.05f);
+                }
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "NEW", Position, Color.White * recentlyAcquiredOpacity);
+
+            }
 
             if (HoverOver())
             {

@@ -47,6 +47,7 @@ namespace Outer_Space
                 for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
                 {
                     Inventory[i, j] = new Weapon(this);
+                    Inventory[i, j].RecentlyAcquired = true;
                 }
             }
         }
