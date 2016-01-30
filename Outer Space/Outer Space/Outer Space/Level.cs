@@ -29,6 +29,7 @@ namespace Outer_Space
         public Vector2 PlayerPosition { get; set; }
         public float PlayerSize { get; set; }
         public Modifier LevelModifier { get; set; }
+        public List<Item> Rewards { get; set; }
 
         public TextureButton EnterLevel { get; set; }
 
@@ -39,7 +40,8 @@ namespace Outer_Space
         {
             this.Tiles = new List<List<Tile>>();
             this.GameObjects = new List<GameObject>();
-            ToAdd = new List<GameObject>();
+            this.ToAdd = new List<GameObject>();
+            this.Rewards = new List<Item>();
 
             this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
 
@@ -88,9 +90,23 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                Player.ShipHull.Combat = true;
-                Player.ShipShield.Combat = true;
-                ToAdd.Add(new Enemy());
+                GameObjects.Add(new Enemy());
+                // Reward for defeating enemy
+                Enemy e = (Enemy)GameObjects.First(item => item is Enemy);
+                List<Item> enemyItems = new List<Item>();
+                foreach (Item item in e.Inventory)
+                {
+                    if (item.Type != ItemType.nothing)
+                    {
+                        enemyItems.Add(item);
+                    }
+                }
+                for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
+			    {
+                    int random = Globals.Randomizer.Next(0, enemyItems.Count());
+                    Rewards.Add(enemyItems[random]);
+                    enemyItems.RemoveAt(random);
+                }
                 InitializeTiles();
                 Initialized = true;
             }
@@ -98,8 +114,6 @@ namespace Outer_Space
             {
                 GameObjects.RemoveAll(item => !(item is Enemy));
                 GameObjects.Add(player);
-                Player.ShipHull.Combat = true;
-                Player.ShipShield.Combat = true;
             }
             Player.Position += new Vector2(0, 70);
             Player.ShipLocation = Location.middle;
@@ -109,8 +123,6 @@ namespace Outer_Space
 
         public void LeaveLevel(bool flee)
         {
-            Player.ShipHull.Combat = false;
-            Player.ShipShield.Combat = false;
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
             Complete = !flee;
@@ -592,6 +604,16 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
+                        if (Rewards.Count() > 0)
+                        {
+                            foreach (Item reward in Rewards)
+                            {
+                                Point firstEmptyInventorySlot = Player.FirstEmpty;
+                                Player.Inventory[firstEmptyInventorySlot.X, firstEmptyInventorySlot.Y] = reward;
+                                Player.Inventory[firstEmptyInventorySlot.X, firstEmptyInventorySlot.Y].RecentlyAcquired = true;
+                            }
+                            SceneManager.mapScene.SpaceObjects.Add(new Text(new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2), "New items acquired! Go to inventory to check them out", Color.White, 180, 2f));
+                        }
                         Player.Move = true;
                     }
                     GameObjects.RemoveAt(i);

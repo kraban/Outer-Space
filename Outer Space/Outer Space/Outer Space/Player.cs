@@ -23,6 +23,22 @@ namespace Outer_Space
         // Inventory
         private Item selectedItem;
         private Point selectedItemArrayPosition;
+        public Point FirstEmpty { 
+            get 
+            {
+                for (int i = 0; i < Inventory.GetLength(1) - 1; i++)
+                {
+                    for (int j = 0; j < Inventory.GetLength(0); j++)
+                    {
+                        if (Inventory[j, i].Type == ItemType.nothing)
+                        {
+                            return new Point(j, i);
+                        }
+                    }
+                }
+                return new Point(-1, -1); // Inventory full
+            }
+        }
 
         // Constructor(s)
         public Player()
@@ -42,14 +58,14 @@ namespace Outer_Space
             Inventory[0, 0] = new Weapon(this);
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
             Inventory[2, 0] = new Hull(this);
-            for (int i = 0; i < Inventory.GetLength(0); i++)
-            {
-                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
-                {
-                    Inventory[i, j] = new Weapon(this);
-                    Inventory[i, j].RecentlyAcquired = true;
-                }
-            }
+            //for (int i = 0; i < Inventory.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+            //    {
+            //        Inventory[i, j] = new Weapon(this);
+            //        Inventory[i, j].RecentlyAcquired = true;
+            //    }
+            //}
         }
 
         // Method(s)
@@ -76,7 +92,7 @@ namespace Outer_Space
 			{
                 for (int j = 0; j < Inventory.GetLength(1); j++)
                 {
-                    if (Inventory[i, j].Pressed() && Inventory[i, j].Type != ItemType.trash)
+                    if (Inventory[i, j].Pressed() && Inventory[i, j].Type != ItemType.nothing)
                     {
                         selectedItem = Inventory[i, j];
                         selectedItemArrayPosition = new Point(i, j);

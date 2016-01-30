@@ -19,14 +19,17 @@ namespace Outer_Space
         private int playerPosition;
         public Level CurrentLevel { get { return Levels[SelectedLevel]; } set { Levels[SelectedLevel] = value; } }
         private List<Level> nearestLevels;
-        public List<SpaceObject> SpaceObjects;
+        public List<GameObject> SpaceObjects;
         private int delay;
         private int levelToBeSelected;
+
+        public Button Inventory { get; set; }
 
         public MapScene()
             : base()
         {
-            this.SpaceObjects = new List<SpaceObject>();
+            this.Inventory = new Button(new Vector2(200, 30), "Inventory", TextureManager.SpriteFont20);
+            this.SpaceObjects = new List<GameObject>();
             this.Levels = new List<Level>();
             this.ThePlayer = new Player();
             this.SelectedLevel = -1;
@@ -143,10 +146,12 @@ namespace Outer_Space
             if (SelectedLevel == -1)
             {
                 // Space objects
-                foreach (SpaceObject spaceObject in SpaceObjects)
+                foreach (GameObject spaceObject in SpaceObjects)
                 {
                     spaceObject.Draw(spriteBatch);
                 }
+
+                Inventory.Draw(spriteBatch);
 
                 // Draw lines to close stars
                 foreach (Level level in nearestLevels)
@@ -185,16 +190,22 @@ namespace Outer_Space
                     Levels[SelectedLevel].Initialize(ThePlayer);
                 }
                 // SpaceObjects
-                foreach (SpaceObject spaceObject in SpaceObjects)
+                foreach (GameObject spaceObject in SpaceObjects)
                 {
                     spaceObject.Update();
+                }
+
+                Inventory.Update();
+                if (Inventory.Press())
+                {
+                    SceneManager.ChangeScene(SceneManager.inventoryScene);
                 }
 
                 for (int i = 0; i < Levels.Count; i++)
 			    {
                     Levels[i].UpdateMap();
 
-                    if (nearestLevels.Any(item => item == Levels[i]) && Levels[i].EnterLevel.Pressed())
+                    if (nearestLevels.Any(item => item == Levels[i]) && Levels[i].EnterLevel.Pressed() && delay < 0)
                     {
                         if (!Levels[i].Complete)
                         {

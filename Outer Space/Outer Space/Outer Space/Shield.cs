@@ -18,7 +18,6 @@ namespace Outer_Space
         public List<string> Descriptions { get; set; }
         public List<ShieldMethod> ShieldMethods { get; set; }
         public int Method { get; set; }
-        public bool Combat { get; set; }
         public float ShieldHeal { get; set; }
         public int Chance { get; set; }
 
@@ -67,13 +66,13 @@ namespace Outer_Space
         {
             base.Draw(spriteBatch);
 
-            if (Combat)
+            if (SceneManager.CurrentScene == SceneManager.mapScene)
             {
                 ShieldBar.Draw(spriteBatch); 
             }
 
             // Description
-            if (Globals.MRectangle.Intersects(Box) && Combat)
+            if (Globals.MRectangle.Intersects(Box) && SceneManager.CurrentScene == SceneManager.mapScene)
             {
                 Text.TextDifferentColor(spriteBatch, Description, new Vector2(Position.X + Texture.Width / 2 + 84, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
             }

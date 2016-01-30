@@ -38,7 +38,7 @@ namespace Outer_Space
             Back.Update();
             if (Back.Press())
             {
-                SceneManager.ChangeScene(SceneManager.menuScene);
+                SceneManager.ChangeScene(SceneManager.mapScene);
             }
         }
     }

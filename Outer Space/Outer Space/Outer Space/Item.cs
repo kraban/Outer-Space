@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Outer_Space
 {
-    public enum ItemType { trash, weapon, shield, hull }
+    public enum ItemType { nothing, weapon, shield, hull }
 
     public class Item : GameObject
     {
@@ -24,7 +24,7 @@ namespace Outer_Space
         {
             Description = "";
 
-            this.Type = ItemType.trash;
+            this.Type = ItemType.nothing;
         }
 
         public bool HoverOver()
