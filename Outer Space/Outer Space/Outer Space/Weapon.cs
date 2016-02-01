@@ -43,7 +43,7 @@ namespace Outer_Space
             this.Depth = 0.5f;
             this.ShotsToShoot = new List<Shot>();
 
-            this.textureBackground = TextureManager.weapons[0];
+            this.TextureBackground = TextureManager.weapons[0];
             this.Texture = TextureManager.weapons[1];
 
             ShootMethods = new List<Shoot>();

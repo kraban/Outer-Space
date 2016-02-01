@@ -156,7 +156,8 @@ namespace Outer_Space
             // Selected item
             if (selectedItem != null)
             {
-                spriteBatch.Draw(selectedItem.Texture, new Vector2(Globals.MState.X - 32, Globals.MState.Y - 32), Color.White * 0.5f); 
+                spriteBatch.Draw(selectedItem.Texture, new Vector2(Globals.MState.X - 32, Globals.MState.Y - 32), null, selectedItem.Colour * 0.5f, 0f, Vector2.Zero, 1f, SpriteEffects.None, selectedItem.Depth);
+                spriteBatch.Draw(selectedItem.TextureBackground, new Vector2(Globals.MState.X - 32, Globals.MState.Y - 32), null, Color.White * 0.5f, 0f, Vector2.Zero, 1f, SpriteEffects.None, selectedItem.Depth + 0.1f); 
             }
 
             // Weapons

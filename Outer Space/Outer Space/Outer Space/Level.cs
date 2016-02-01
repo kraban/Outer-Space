@@ -31,18 +31,20 @@ namespace Outer_Space
         public Modifier LevelModifier { get; set; }
         public List<Item> Rewards { get; set; }
         private int timeSinceLastMatch;
+        public Difficulty EnemyDifficulty { get; set; }
 
         public TextureButton EnterLevel { get; set; }
 
         public bool Started { get; set; }
 
         // Constructor(s)
-        public Level(Vector2 positionOnMap)
+        public Level(Vector2 positionOnMap, Difficulty difficulty)
         {
             this.Tiles = new List<List<Tile>>();
             this.GameObjects = new List<GameObject>();
             this.ToAdd = new List<GameObject>();
             this.Rewards = new List<Item>();
+            this.EnemyDifficulty = difficulty;
 
             this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
 
@@ -73,7 +75,7 @@ namespace Outer_Space
             spriteBatch.Draw(SceneManager.mapScene.ThePlayer.Texture, PlayerPosition, null, Color.White, PlayerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.ship1.Width / 2, TextureManager.ship1.Height / 2), PlayerSize, SpriteEffects.None, 0f);
             if (EnterLevel.HoverOver())
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, "Difficulty: ", new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Difficulty: " + EnemyDifficulty, new Vector2(0, 0), Color.White);
                 spriteBatch.DrawString(TextureManager.SpriteFont15, "Modifier: " + LevelModifier.ToString(), new Vector2(0, 30), Color.White);
                 spriteBatch.DrawString(TextureManager.SpriteFont15, "Completed: " + Complete, new Vector2(0, 60), Color.White);
             }
@@ -578,12 +580,27 @@ namespace Outer_Space
 
                 CheckMatch();
 
-                // spawn rock if possible to move
-                if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))
-                     && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item.Type == TileType.left))
-                     && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item.Type == TileType.left) && !CheckPossibleMatches().Any(item => item.Type == TileType.right)))
+                // Modifiers
+
+                if (LevelModifier == Modifier.Asteriod)
                 {
-                    ToAdd.Add(new Rock(Player, this));
+                    // spawn rock if possible to move
+                    if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))
+                         && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item.Type == TileType.left))
+                         && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item.Type == TileType.left) && !CheckPossibleMatches().Any(item => item.Type == TileType.right)))
+                    {
+                        ToAdd.Add(new Rock(Player, this));
+                    }
+                }
+                else if (LevelModifier == Modifier.None)
+                {
+                    if (Globals.Randomizer.Next(0, 1001) < 4)
+                    {
+                        CombatText("The sun is heating up!");
+                        Player.SetDamageOverTime(5, 5, 0);
+                        Enemy enemy = (Enemy)GameObjects.First(item => item is Enemy);
+                        enemy.SetDamageOverTime(5, 5, 0);
+                    }
                 }
 
                 if (Globals.KState.IsKeyDown(Keys.P))

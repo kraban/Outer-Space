@@ -31,7 +31,7 @@ namespace Outer_Space
             this.Position = new Vector2(TilePosition.X * 64 + (Globals.ScreenSize.X - 64 * 8), TilePosition.Y * 64 + 100);
             this.Type = type;
             this.Texture = TextureManager.tiles[(int)type];
-            this.Depth = 1f;
+            this.Depth = 0.8f;
         }
 
         // Method(s)

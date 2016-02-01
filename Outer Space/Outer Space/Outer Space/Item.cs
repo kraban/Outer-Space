@@ -18,7 +18,6 @@ namespace Outer_Space
         public bool RecentlyAcquired;
         private float recentlyAcquiredOpacity;
         private bool recentlyAcquiredflip;
-        internal Texture2D textureBackground;
 
         public Item()
             : base()
@@ -28,7 +27,6 @@ namespace Outer_Space
             this.Depth = 0.1f;
 
             this.Type = ItemType.nothing;
-            this.textureBackground = TextureManager.none;
         }
 
         public bool HoverOver()
@@ -53,7 +51,6 @@ namespace Outer_Space
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            spriteBatch.Draw(textureBackground, Position, null, Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth + 0.1f);
         }
 
         public void DrawInventory(SpriteBatch spriteBatch, Vector2 position)

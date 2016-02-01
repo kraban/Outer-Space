@@ -67,11 +67,11 @@ namespace Outer_Space
             {
                 Levels.Clear();
                 // Generate levels
-                Levels.Add(new Level(new Vector2(50, Globals.ScreenSize.Y / 2)));
+                Levels.Add(new Level(new Vector2(50, Globals.ScreenSize.Y / 2), Difficulty.Easy));
                 for (int i = 0; i < 30; i++)
                 {
-                    Levels.Add(new Level(new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100))));
-                    //Levels[i].Compelete = true;
+                    Vector2 position = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
+                    Levels.Add(new Level(position, position.X < Globals.ScreenSize.X / 3 ? Difficulty.Easy : position.X < Globals.ScreenSize.X * (2f/3f) ? Difficulty.Medium : Difficulty.Hard));
                 }
 
                 // Remove overlapping levels
