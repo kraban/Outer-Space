@@ -58,14 +58,14 @@ namespace Outer_Space
             Inventory[0, 0] = new Weapon(this);
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
             Inventory[2, 0] = new Hull(this);
-            //for (int i = 0; i < Inventory.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
-            //    {
-            //        Inventory[i, j] = new Weapon(this);
-            //        Inventory[i, j].RecentlyAcquired = true;
-            //    }
-            //}
+            for (int i = 0; i < Inventory.GetLength(0); i++)
+            {
+                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+                {
+                    Inventory[i, j] = new Hull(this);
+                    Inventory[i, j].RecentlyAcquired = true;
+                }
+            }
         }
 
         // Method(s)

@@ -23,6 +23,7 @@ namespace Outer_Space
         public float RockResistance { get; set; }
         public int WeaponChance { get; set; }
         public List<TileType> TileChance { get; set; }
+        public bool FlashPossibleTiles { get; set; }
 
         // Constructor(s)
         public Hull(Ship ship)
@@ -52,6 +53,7 @@ namespace Outer_Space
             HullMethods.Add(HullTileCogChance);
             HullMethods.Add(HullTileShieldChance);
             HullMethods.Add(HullTileShootChance);
+            HullMethods.Add(HullFlashPossibleTiles);
 
             this.Method = Globals.Randomizer.Next(0, HullMethods.Count);
             HullMethods[Method](ship);
@@ -64,6 +66,7 @@ namespace Outer_Space
             Descriptions.Add("Increase the chance of cog tiles appearing by 100%");
             Descriptions.Add("Increase the chance of shield tiles appearing by 100%");
             Descriptions.Add("Increase the chance of weapon tiles appearing by 100%");
+            Descriptions.Add("Flash a random possible tilematch when there has been no match for a few seconds.");
 
             this.Description = "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Descriptions[Method];
         }
@@ -127,6 +130,11 @@ namespace Outer_Space
             {
                 TileChance.Add(TileType.shoot);
             }
+        }
+
+        public void HullFlashPossibleTiles(Ship ship)
+        {
+            FlashPossibleTiles = true;
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Outer_Space
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
+            base.Update();
 
             if (ManuallyMoved >= 0)
             {

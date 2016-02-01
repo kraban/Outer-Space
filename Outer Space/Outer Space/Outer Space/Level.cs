@@ -30,6 +30,7 @@ namespace Outer_Space
         public float PlayerSize { get; set; }
         public Modifier LevelModifier { get; set; }
         public List<Item> Rewards { get; set; }
+        private int timeSinceLastMatch;
 
         public TextureButton EnterLevel { get; set; }
 
@@ -266,8 +267,9 @@ namespace Outer_Space
                             }
                         }
 
-                        if (number >= 3)
+                        if (number >= 3) // Match
                         {
+                            timeSinceLastMatch = 0;
                             // Player action
                             Player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.Y == j && tile.TilePosition.X >= i && tile.TilePosition.X <= i + number)));
                             for (int k = 0; k < number; k++)
@@ -287,9 +289,9 @@ namespace Outer_Space
             }
         }
 
-        public List<TileType> CheckPossibleMatches()
+        public List<Tile> CheckPossibleMatches()
         {
-            List<TileType> tileTypes = new List<TileType>();
+            List<Tile> possibleMatches = new List<Tile>();
 
             // Creates a copy of TileBoard
             List<List<Tile>> tempTiles = new List<List<Tile>>();
@@ -330,7 +332,7 @@ namespace Outer_Space
                     }
 
                     // Move every tile in every possible direction and check if match with CheckSingleMatch() Method
-                    // then add match type to list
+                    // then add that tile to list of possible matches
                     for (int k = 0; k < adjacentTiles.Count; k++)
                     {
                         Tile temp = tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y];
@@ -338,7 +340,7 @@ namespace Outer_Space
                         tempTiles[i][j] = temp;
                         if (CheckSingleMatch(i + adjacentTiles[k].X, j + adjacentTiles[k].Y, tempTiles))
                         {
-                            tileTypes.Add(tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y].Type);
+                            possibleMatches.Add(tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y]);
                         }
                         tempTiles[i][j] = tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y];
                         tempTiles[i + adjacentTiles[k].X][j + adjacentTiles[k].Y] = temp;
@@ -346,7 +348,7 @@ namespace Outer_Space
                 }
             }
 
-            return tileTypes;
+            return possibleMatches;
         }
 
         public bool CheckSingleMatch(int x, int y, List<List<Tile>> tiles)
@@ -485,6 +487,15 @@ namespace Outer_Space
             // Update tiles
             if (Started)
             {
+                // Hull flash possible match
+                timeSinceLastMatch++;
+                if (Player.ShipHull.FlashPossibleTiles && timeSinceLastMatch > 240)
+                {
+                    timeSinceLastMatch = 0;
+                    List<Tile> possibleMatches = CheckPossibleMatches();
+                    possibleMatches[Globals.Randomizer.Next(0, possibleMatches.Count())].Flash = 120;
+                }
+
                 bool canSelect = true;
                 for (int i = 0; i < Tiles.Count; i++)
                 {
@@ -567,9 +578,9 @@ namespace Outer_Space
                 CheckMatch();
 
                 // spawn rock if possible to move
-                if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item == TileType.right))
-                     && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item == TileType.left))
-                     && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item == TileType.left) && !CheckPossibleMatches().Any(item => item == TileType.right)))
+                if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))
+                     && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item.Type == TileType.left))
+                     && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item.Type == TileType.left) && !CheckPossibleMatches().Any(item => item.Type == TileType.right)))
                 {
                     ToAdd.Add(new Rock(Player, this));
                 }
