@@ -58,14 +58,14 @@ namespace Outer_Space
             Inventory[0, 0] = new Weapon(this);
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
             Inventory[2, 0] = new Hull(this);
-            for (int i = 0; i < Inventory.GetLength(0); i++)
-            {
-                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
-                {
-                    Inventory[i, j] = new Hull(this);
-                    Inventory[i, j].RecentlyAcquired = true;
-                }
-            }
+            //for (int i = 0; i < Inventory.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+            //    {
+            //        Inventory[i, j] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
+            //        Inventory[i, j].RecentlyAcquired = true;
+            //    }
+            //}
         }
 
         // Method(s)
@@ -160,27 +160,27 @@ namespace Outer_Space
             }
 
             // Weapons
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Weapons", new Vector2(100, 100), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Weapons", new Vector2(40, 130), Color.White);
             for (int i = 0; i < 3; i++)
             {
-                Inventory[2 + i, 5].DrawInventory(spriteBatch, new Vector2(i * 64 + 32, 164));
-                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 - 32 + 32, 164 - 32), Color.White);
+                Inventory[2 + i, 5].DrawInventory(spriteBatch, new Vector2(i * 64 + 32, 200));
+                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 - 32 + 32, 200 - 32), Color.White);
             }
 
             // Shield
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield", new Vector2(100, 250), Color.White);
-            ShipShield.DrawInventory(spriteBatch, new Vector2(100, 314));
-            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 314 - 32), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield", new Vector2(60, 258), Color.White);
+            ShipShield.DrawInventory(spriteBatch, new Vector2(100, 328));
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 328 - 32), Color.White);
 
             // Hull
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Hull", new Vector2(100, 400), Color.White);
-            ShipHull.DrawInventory(spriteBatch, new Vector2(100, 464));
-            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 464 - 32), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Hull", new Vector2(70, 386), Color.White);
+            ShipHull.DrawInventory(spriteBatch, new Vector2(100, 456));
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 456 - 32), Color.White);
 
             // Inventory
             spriteBatch.Draw(TextureManager.inventory, new Vector2(300 - 32, 200 - 32), Color.White);
 
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(400, 100), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(360, 100), Color.White);
             for (int i = 0; i < Inventory.GetLength(0); i++)
             {
                 for (int j = 0; j < Inventory.GetLength(1) - 1; j++)

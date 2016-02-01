@@ -132,8 +132,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Weapons\Weapon1.png">
-      <Name>Weapon1</Name>
+    <Compile Include="Weapons\WeaponBackground.png">
+      <Name>WeaponBackground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -197,6 +197,20 @@
   <ItemGroup>
     <Compile Include="OuterSpaceBossCut.png">
       <Name>OuterSpaceBossCut</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shields\ShieldRecolor.png">
+      <Name>ShieldRecolor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Weapons\WeaponForeground.png">
+      <Name>WeaponForeground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

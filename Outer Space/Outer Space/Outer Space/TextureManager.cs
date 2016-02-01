@@ -78,11 +78,12 @@ namespace Outer_Space
 
             // Shields
             shields = new List<Texture2D>();
-            shields.Add(content.Load<Texture2D>("Shields/Shield1"));
+            shields.Add(content.Load<Texture2D>("Shields/ShieldRecolor"));
 
             // Weapons
             weapons = new List<Texture2D>();
-            weapons.Add(content.Load<Texture2D>("Weapons/Weapon1"));
+            weapons.Add(content.Load<Texture2D>("Weapons/WeaponBackground"));
+            weapons.Add(content.Load<Texture2D>("Weapons/WeaponForeground"));
         }
     }
 }

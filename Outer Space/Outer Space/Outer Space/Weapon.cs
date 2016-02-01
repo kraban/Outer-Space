@@ -43,7 +43,8 @@ namespace Outer_Space
             this.Depth = 0.5f;
             this.ShotsToShoot = new List<Shot>();
 
-            this.Texture = TextureManager.weapons[Globals.Randomizer.Next(0, TextureManager.weapons.Count)];
+            this.textureBackground = TextureManager.weapons[0];
+            this.Texture = TextureManager.weapons[1];
 
             ShootMethods = new List<Shoot>();
             ShootMethods.Add(FireStandard);
