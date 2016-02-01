@@ -22,6 +22,8 @@ namespace Outer_Space
             rock,
             jammed,
             ship2,
+            ship3,
+            enemyShip,
             slider,
             slideButton,
             inventory,
@@ -49,6 +51,8 @@ namespace Outer_Space
             rock = content.Load<Texture2D>("Rock");
             jammed = content.Load<Texture2D>("Jammed");
             ship2 = content.Load<Texture2D>("Ship2Game");
+            ship3 = content.Load<Texture2D>("Ship3");
+            enemyShip = content.Load<Texture2D>("EnemyShip1");
             slider = content.Load<Texture2D>("Slider");
             slideButton = content.Load<Texture2D>("SlideButton");
             inventory = content.Load<Texture2D>("Inventory");

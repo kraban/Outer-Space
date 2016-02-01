@@ -93,20 +93,21 @@ namespace Outer_Space
                 GameObjects.Add(player);
                 GameObjects.Add(new Enemy());
                 // Reward for defeating enemy
-                Enemy e = (Enemy)GameObjects.First(item => item is Enemy);
-                List<Item> enemyItems = new List<Item>();
-                foreach (Item item in e.Inventory)
-                {
-                    if (item.Type != ItemType.nothing)
-                    {
-                        enemyItems.Add(item);
-                    }
-                }
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {
-                    int random = Globals.Randomizer.Next(0, enemyItems.Count());
-                    Rewards.Add(enemyItems[random]);
-                    enemyItems.RemoveAt(random);
+                    int random = Globals.Randomizer.Next(0, 3);
+                    if (random == 0)
+                    {
+                        Rewards.Add(new Weapon(Player));
+                    }
+                    else if (random == 1)
+                    {
+                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20));
+                    }
+                    if (random == 2)
+                    {
+                        Rewards.Add(new Hull(Player));
+                    }
                 }
                 InitializeTiles();
                 Initialized = true;
