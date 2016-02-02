@@ -55,6 +55,27 @@ namespace Outer_Space
             }
             if (level.Started)
             {
+                // Place mine in tiles
+                if (Globals.Randomizer.Next(0, 1001) < 10)
+                {
+                    int mineCount = 0;
+                    for (int i = 0; i < level.Tiles.Count(); i++)
+                    {
+                        for (int j = 0; j < level.Tiles[i].Count(); j++)
+                        {
+                            if (level.Tiles[i][j].Mine)
+                            {
+                                mineCount++;
+                            }
+                        }
+                    }
+                    if (mineCount < 5)
+                    {
+                        int random = Globals.Randomizer.Next(0, level.Tiles.Count());
+                        level.Tiles[random][Globals.Randomizer.Next(0, level.Tiles[random].Count() - 2)].Mine = true;
+                    }
+                }
+
                 // Shield
                 if (charge == ChargeState.NotCharging && dodge == DodgeState.NotDodging)
                 {

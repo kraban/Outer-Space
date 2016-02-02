@@ -246,6 +246,11 @@ namespace Outer_Space
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i][j + k].Hide();
+                                // Mine
+                                if (Tiles[i][j + k].Mine && Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.X == i && tile.TilePosition.Y >= j && tile.TilePosition.Y <= j + number)))
+                                {
+                                    Player.TakeDamage(20, 0, DamageType.laser, false);
+                                }
 
                                 // Create pieces and text
                                 if (k == 0)
@@ -278,6 +283,11 @@ namespace Outer_Space
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i + k][j].Hide();
+                                // Mine
+                                if (Tiles[i + k][j].Mine && Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.Y == j && tile.TilePosition.X >= i && tile.TilePosition.X <= i + number)))
+                                {
+                                    Player.TakeDamage(20, 0, DamageType.laser, false);
+                                }
 
                                 // Create pieces and text
                                 if (k == 0)
@@ -513,6 +523,11 @@ namespace Outer_Space
                             // Above hidden
                             if (j < BoardSize.Y - 1 && Tiles[i][j + 1].Hidden && Tiles[i][j + 1].Size < 0.1)
                             {
+                                if (Tiles[i][j].Mine)
+                                {
+                                    Tiles[i][j].Mine = false;
+                                }
+
                                 Tile temp = Tiles[i][j];
                                 Tiles[i][j] = Tiles[i][j + 1];
                                 Tiles[i][j + 1] = temp;
@@ -592,7 +607,7 @@ namespace Outer_Space
                         ToAdd.Add(new Rock(Player, this));
                     }
                 }
-                else if (LevelModifier == Modifier.None)
+                else if (LevelModifier == Modifier.Sun)
                 {
                     if (Globals.Randomizer.Next(0, 1001) < 4)
                     {

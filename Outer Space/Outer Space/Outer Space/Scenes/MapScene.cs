@@ -125,7 +125,7 @@ namespace Outer_Space
             playerPosition = toLevel;
         }
 
-        // Find all levels within 150 pixels to a specifik level
+        // Find all levels within 150 pixels to a specific level
         public List<Level> FindNearestLevels(Level startingLevel)
         {
             List<Level> nearestLevels = new List<Level>();
