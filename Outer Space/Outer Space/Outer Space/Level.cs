@@ -93,7 +93,7 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                GameObjects.Add(new Enemy());
+                GameObjects.Add(new Boss());
                 // Reward for defeating enemy
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {

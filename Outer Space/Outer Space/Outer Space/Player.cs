@@ -53,6 +53,7 @@ namespace Outer_Space
             foreach (Weapon w in Weapons)
             {
                 w.Targets.Add("Enemy");
+                w.Targets.Add("Boss");
             }
 
             Inventory[0, 0] = new Weapon(this);
