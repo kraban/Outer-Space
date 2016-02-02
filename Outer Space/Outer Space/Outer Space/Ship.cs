@@ -68,13 +68,13 @@ namespace Outer_Space
                 }
             }
 
-            Inventory[2, 5] = new Weapon(this);
-            Inventory[3, 5] = new Weapon(this);
+            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
+            Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
 
-            this.ShipHull = new Hull(this);
+            this.ShipHull = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
 
             this.Health = new Bar(new Vector2(200, Globals.ScreenSize.Y - 20), 100, 10, 140, Color.Red);
-            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100);
+            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
         }
 
         // Method(s)
@@ -105,7 +105,7 @@ namespace Outer_Space
         }
 
 
-        public void TakeDamage(float damage, float goThroughShield, DamageType damageType, bool FromShield)
+        public virtual void TakeDamage(float damage, float goThroughShield, DamageType damageType, bool FromShield)
         {
             if (FromShield)
             {
@@ -132,7 +132,7 @@ namespace Outer_Space
             }
             else
             {
-                ShipShield.ShieldMethods[ShipShield.Method](damage, goThroughShield, damageType, this);
+                ShipShield.Method(damage, goThroughShield, damageType, this, ShipShield);
             }
         }
 

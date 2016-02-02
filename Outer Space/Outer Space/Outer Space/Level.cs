@@ -100,15 +100,15 @@ namespace Outer_Space
                     int random = Globals.Randomizer.Next(0, 3);
                     if (random == 0)
                     {
-                        Rewards.Add(new Weapon(Player));
+                        Rewards.Add(new Weapon(Player, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
                     }
                     else if (random == 1)
                     {
-                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20));
+                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count())));
                     }
                     if (random == 2)
                     {
-                        Rewards.Add(new Hull(Player));
+                        Rewards.Add(new Hull(Player, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count())));
                     }
                 }
                 InitializeTiles();

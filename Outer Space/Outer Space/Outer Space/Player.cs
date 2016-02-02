@@ -56,20 +56,21 @@ namespace Outer_Space
                 w.Targets.Add("Boss");
             }
 
-            Inventory[0, 0] = new Weapon(this);
-            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
-            Inventory[2, 0] = new Hull(this);
-            //for (int i = 0; i < Inventory.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
-            //    {
-            //        Inventory[i, j] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20);
-            //        Inventory[i, j].RecentlyAcquired = true;
-            //    }
-            //}
+            Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
+            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
+            Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
+            for (int i = 0; i < Inventory.GetLength(0); i++)
+            {
+                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+                {
+                    Inventory[i, j] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
+                    Inventory[i, j].RecentlyAcquired = true;
+                }
+            }
         }
 
         // Method(s)
+
         public void EquipItem(Item item)
         {
             if (item.Type == ItemType.weapon)
@@ -301,7 +302,7 @@ namespace Outer_Space
 
                 if (tileType == TileType.shoot && Weapons[SelectedWeapon].Disabled < 0)
                 {
-                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](this, tilesMatched, level, false);
+                    Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], tilesMatched, level, false);
                     KnockBack = 3;
                 }
 

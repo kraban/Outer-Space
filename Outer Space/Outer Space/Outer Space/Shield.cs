@@ -16,8 +16,7 @@ namespace Outer_Space
         // Public properties
         public Bar ShieldBar { get; set; }
         public List<string> Descriptions { get; set; }
-        public List<ShieldMethod> ShieldMethods { get; set; }
-        public int Method { get; set; }
+        public ShieldMethod Method { get; set; }
         public float ShieldHeal { get; set; }
         public int Chance { get; set; }
 
@@ -27,7 +26,7 @@ namespace Outer_Space
         public float Width { get { return ShieldBar.Width; } }
 
         // Constructor(s)
-        public Shield(Vector2 position, int width, int height, float shieldValue)
+        public Shield(Vector2 position, int width, int height, float shieldValue, int method)
             : base()
         {
             this.Type = ItemType.shield;
@@ -37,14 +36,7 @@ namespace Outer_Space
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);
 
-            this.ShieldMethods = new List<ShieldMethod>();
-            ShieldMethods.Add(ShieldStandard);
-            ShieldMethods.Add(ShieldReflect);
-            ShieldMethods.Add(ShieldCounterShoot);
-            ShieldMethods.Add(ShieldDamageEnergy);
-            ShieldMethods.Add(ShieldDamageOverTime);
-
-            this.Method = Globals.Randomizer.Next(0, ShieldMethods.Count);
+            this.Method = ListOfShieldMethods()[method];
 
             this.Descriptions = new List<string>();
             Descriptions.Add("A standard shield.");
@@ -53,10 +45,21 @@ namespace Outer_Space
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to loose energy instead of Shield/HP when you are hit.");
             Descriptions.Add("When you are hit, the damage is split up in five and taken over time.");
 
-            this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + "Shield heal on Match: |0,150,255|" + ShieldHeal + "|W|\n" + Descriptions[Method];
+            this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + "Shield heal on Match: |0,150,255|" + ShieldHeal + "|W|\n" + Descriptions[method];
         }
 
         // Method(s)
+        public static List<ShieldMethod> ListOfShieldMethods()
+        {
+            List<ShieldMethod> methods = new List<ShieldMethod>();
+            methods.Add(ShieldStandard);
+            methods.Add(ShieldReflect);
+            methods.Add(ShieldCounterShoot);
+            methods.Add(ShieldDamageEnergy);
+            methods.Add(ShieldDamageOverTime);
+            return methods;
+        }
+
         public float Change(float value)
         {
             return ShieldBar.Change(value);
@@ -78,16 +81,16 @@ namespace Outer_Space
             }
         }
 
-        public delegate void ShieldMethod(float damage, float goThroughShield, DamageType damageType, Ship ship);
+        public delegate void ShieldMethod(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield);
 
-        public void ShieldStandard(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        public static void ShieldStandard(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
             ship.TakeDamage(damage, goThroughShield, damageType, true);
         }
 
-        public void ShieldReflect(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        public static void ShieldReflect(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
-            if (damageType == DamageType.laser && Globals.Randomizer.Next(0, 101) < Chance)
+            if (damageType == DamageType.laser && Globals.Randomizer.Next(0, 101) < shield.Chance)
             {
                 List<string> targets = new List<string>();
                 targets.Add(ship.GetType().Name == "Player" ? "Enemy" : "Player");
@@ -99,18 +102,18 @@ namespace Outer_Space
             }
         }
 
-        public void ShieldCounterShoot(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        public static void ShieldCounterShoot(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
-            if (Globals.Randomizer.Next(0, 101) < Chance)
+            if (Globals.Randomizer.Next(0, 101) < shield.Chance)
             {
-                ship.CurrentWeapon.CurrentMethod(ship, 3, SceneManager.mapScene.CurrentLevel, false);
+                ship.CurrentWeapon.Method(ship, ship.CurrentWeapon, 3, SceneManager.mapScene.CurrentLevel, false);
             }
             ship.TakeDamage(damage, goThroughShield, damageType, true);
         }
 
-        public void ShieldDamageEnergy(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        public static void ShieldDamageEnergy(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
-            if (Globals.Randomizer.Next(0, 101) < Chance && ship.GetType().Name == "Player")
+            if (Globals.Randomizer.Next(0, 101) < shield.Chance && ship.GetType().Name == "Player")
             {
                 Player p = (Player)ship;
                 p.Energy.Change(-damage);
@@ -121,7 +124,7 @@ namespace Outer_Space
             }
         }
 
-        public void ShieldDamageOverTime(float damage, float goThroughShield, DamageType damageType, Ship ship)
+        public static void ShieldDamageOverTime(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
             ship.SetDamageOverTime(damage / 5, 5, goThroughShield);
         }

@@ -25,7 +25,7 @@ namespace Outer_Space
             this.Texture = TextureManager.enemyShip;
 
             this.Health = new Bar(new Vector2(0, 10), 100, 10, 100, Color.Red);
-            this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 10);
+            this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 10, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
 
             // Weapontargets
             foreach (Weapon w in Weapons)
@@ -34,7 +34,7 @@ namespace Outer_Space
             }
 
             // enemy hull
-            ShipHull.Method = 0;
+            ShipHull = new Hull(this, 0);
         }
 
         // Method(s)
@@ -74,7 +74,7 @@ namespace Outer_Space
                 if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation && Weapons[SelectedWeapon].Disabled < 0)
                 {
                     ShootTimer = 180;
-                    Weapons[SelectedWeapon].ShootMethods[Weapons[SelectedWeapon].Action](this, 0, level, false);
+                    Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], 0, level, false);
                     KnockBack = -3;
                 }
 

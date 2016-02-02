@@ -15,9 +15,8 @@ namespace Outer_Space
     {
         // Public properties
         public int Armor { get; set; }
-        public List<HullMethod> HullMethods { get; set; }
         public List<string> Descriptions { get; set; }
-        public int Method { get; set; }
+        public HullMethod Method { get; set; }
         
         // Method variable(s)
         public float RockResistance { get; set; }
@@ -26,7 +25,7 @@ namespace Outer_Space
         public bool FlashPossibleTiles { get; set; }
 
         // Constructor(s)
-        public Hull(Ship ship)
+        public Hull(Ship ship, int method)
             : base()
         {
             this.Type = ItemType.hull;
@@ -46,17 +45,8 @@ namespace Outer_Space
 
             this.Armor = Globals.Randomizer.Next(5, 10);
 
-            this.HullMethods = new List<HullMethod>();
-            HullMethods.Add(HullStandard);
-            HullMethods.Add(HullRockResist);
-            HullMethods.Add(HullWeaponChance);
-            HullMethods.Add(HullTileCogChance);
-            HullMethods.Add(HullTileShieldChance);
-            HullMethods.Add(HullTileShootChance);
-            HullMethods.Add(HullFlashPossibleTiles);
-
-            this.Method = Globals.Randomizer.Next(0, HullMethods.Count);
-            HullMethods[Method](ship);
+            this.Method = ListOfHullMethods()[method];
+            Method(ship, this);
 
             this.Descriptions = new List<string>();
 
@@ -68,10 +58,23 @@ namespace Outer_Space
             Descriptions.Add("Increase the chance of weapon tiles appearing by 100%");
             Descriptions.Add("Flash a random possible tilematch when there has been no match for a few seconds.");
 
-            this.Description = "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Descriptions[Method];
+            this.Description = "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Descriptions[method];
         }
 
         // Method(s)
+        public static List<HullMethod> ListOfHullMethods()
+        {
+            List<HullMethod> methods = new List<HullMethod>();
+            methods.Add(HullStandard);
+            methods.Add(HullRockResist);
+            methods.Add(HullWeaponChance);
+            methods.Add(HullTileCogChance);
+            methods.Add(HullTileShieldChance);
+            methods.Add(HullTileShootChance);
+            methods.Add(HullFlashPossibleTiles);
+            return methods;
+        }
+
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
@@ -88,53 +91,53 @@ namespace Outer_Space
             }
         }
 
-        public delegate void HullMethod(Ship ship);
+        public delegate void HullMethod(Ship ship, Hull hull);
 
-        public void HullStandard(Ship ship)
+        public static void HullStandard(Ship ship, Hull hull)
         { }
 
-        public void HullRockResist(Ship ship)
+        public static void HullRockResist(Ship ship, Hull hull)
         {
-            RockResistance = 0.5f;
+            hull.RockResistance = 0.5f;
         }
 
-        public void HullWeaponChance(Ship ship)
+        public static void HullWeaponChance(Ship ship, Hull hull)
         {
-            WeaponChance = Globals.Randomizer.Next(10, 21);
+            hull.WeaponChance = Globals.Randomizer.Next(10, 21);
             foreach (Weapon w in ship.Weapons)
             {
-                w.Chance += WeaponChance;
+                w.Chance += hull.WeaponChance;
                 w.LoadDescriptions();
             }
         }
 
-        public void HullTileCogChance(Ship ship)
+        public static void HullTileCogChance(Ship ship, Hull hull)
         {
             for (int i = 0; i < 20; i++)
             {
-                TileChance.Add(TileType.cog);
+                hull.TileChance.Add(TileType.cog);
             }
         }
 
-        public void HullTileShieldChance(Ship ship)
+        public static void HullTileShieldChance(Ship ship, Hull hull)
         {
             for (int i = 0; i < 20; i++)
             {
-                TileChance.Add(TileType.shield);
+                hull.TileChance.Add(TileType.shield);
             }
         }
 
-        public void HullTileShootChance(Ship ship)
+        public static void HullTileShootChance(Ship ship, Hull hull)
         {
             for (int i = 0; i < 20; i++)
             {
-                TileChance.Add(TileType.shoot);
+                hull.TileChance.Add(TileType.shoot);
             }
         }
 
-        public void HullFlashPossibleTiles(Ship ship)
+        public static void HullFlashPossibleTiles(Ship ship, Hull hull)
         {
-            FlashPossibleTiles = true;
+            hull.FlashPossibleTiles = true;
         }
     }
 }

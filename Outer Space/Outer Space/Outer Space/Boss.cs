@@ -12,9 +12,14 @@ using Microsoft.Xna.Framework.Media;
 namespace Outer_Space
 {
     public enum ChargeState { Initialize, Beginning, Charge, Finished, NotCharging }
-    public enum DodgeState { Begin, Dodge, NotDodging }
+    public enum DodgeState { Dodge, NotDodging }
     class Boss : Enemy
     {
+        // Shoot
+        private Vector2 leftShootPosition { get { return new Vector2(Position.X - 50, Position.Y + 50); } }
+        private Vector2 rightShootPosition { get { return new Vector2(Position.X + 50, Position.Y + 50); } }
+        private int shootTimer;
+
         // Charge
         private ChargeState charge;
         private float accelerate;
@@ -30,6 +35,37 @@ namespace Outer_Space
             this.charge = ChargeState.NotCharging;
             this.dodge = DodgeState.NotDodging;
             this.Depth = 0.5f;
+
+            // Modules
+            ShipShield = new Shield(ShipShield.Position, (int)ShipShield.Width, 10, 200, 0);
+            ShipShield.Description = "|W|Shield: |0,0,255|" + ShipShield.MaxValue + "|W|\nWill teleport to another location just before being hit.";
+            ShipHull = new Hull(this, 0);
+            ShipHull.Description = "|W|Armor: |255,255,0|" + ShipHull.Armor + "|255,255,100|\nPlaces mines on tiles in the tileboard.\nThe Player will take 20 damage when matching tiles with mines.\nMines will be disarmed when matched or then falling.";
+            Weapons[0].Description = "|W|Charges forward and deals massive damage if it hits the Player.\nThe Boss is vurnerable when charging.";
+            Weapons[1].Description = "|W|Shoot two shots, eighter in a X pattern or a V patterns.";
+            Weapons[1].Method = Weapon.ListOfMethods()[0];
+        }
+
+        public override void TakeDamage(float damage, float goThroughShield, DamageType damageType, bool FromShield)
+        {
+            if (charge != ChargeState.NotCharging)
+            {
+                charge = ChargeState.Finished;
+                base.TakeDamage(damage, goThroughShield, damageType, FromShield);
+            }
+            else if (damageType == DamageType.laser)
+            {
+                dodge = DodgeState.Dodge;
+                List<int> possibleLocations = new List<int>();
+                for (int i = 0; i < 3; i++)
+                {
+                    if (i != (int)ShipLocation)
+                    {
+                        possibleLocations.Add(i);
+                    }
+                }
+                ShipLocation = (Location)possibleLocations[Globals.Randomizer.Next(0, possibleLocations.Count())];
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -48,6 +84,12 @@ namespace Outer_Space
 
         public override void UpdateLevel(Level level)
         {
+            DamageOverTime();
+            // Weapons
+            foreach (Weapon w in Weapons)
+            {
+                w.UpdateLevel(level);
+            }
             // Move to normal position after knockback
             if (charge == ChargeState.NotCharging)
             {
@@ -55,6 +97,25 @@ namespace Outer_Space
             }
             if (level.Started)
             {
+                // Shoot
+                shootTimer--;
+                if (shootTimer < 0 && dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && Globals.Randomizer.Next(0, 101) < 1)
+                {
+                    shootTimer = 60;
+                    List<string> targets = new List<string>();
+                    targets.Add("Player");
+                    if (ShipLocation == level.Player.ShipLocation)
+                    {
+                        level.ToAdd.Add(new Shot(rightShootPosition, (float)Math.Atan2(level.Player.Position.Y - rightShootPosition.Y, level.Player.Position.X - rightShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
+                        level.ToAdd.Add(new Shot(leftShootPosition, (float)Math.Atan2(level.Player.Position.Y - leftShootPosition.Y, level.Player.Position.X - leftShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
+                    }
+                    else
+                    {
+                        level.ToAdd.Add(new Shot(rightShootPosition, (float)Math.Atan2(level.Player.Position.Y - rightShootPosition.Y, (int)ShipLocation * 100 + 100 - rightShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
+                        level.ToAdd.Add(new Shot(leftShootPosition, (float)Math.Atan2(level.Player.Position.Y - leftShootPosition.Y, (int)ShipLocation * 100 + 300 - leftShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
+                    }
+                }
+
                 // Place mine in tiles
                 if (Globals.Randomizer.Next(0, 1001) < 10)
                 {
@@ -77,31 +138,6 @@ namespace Outer_Space
                 }
 
                 // Shield
-                if (charge == ChargeState.NotCharging && dodge == DodgeState.NotDodging)
-                {
-                    bool shotAt = false;
-                    foreach (Shot shot in level.GameObjects.Where(item => item is Shot))
-                    {
-                        if (shot.Targets.Any(item => item == "Boss") && shot.Position.Y < 300 && shot.Position.X < Position.X + 10 && shot.Position.X > Position.Y - 10)
-                        {
-                            shotAt = true;
-                            break;
-                        }
-                    }
-                    if (shotAt)
-                    {
-                        dodge = DodgeState.Dodge;
-                        List<int> possibleLocations = new List<int>();
-                        for (int i = 0; i < 3; i++)
-                        {
-                            if (i != (int)ShipLocation)
-                            {
-                                possibleLocations.Add(i);
-                            }
-                        }
-                        ShipLocation = (Location)possibleLocations[Globals.Randomizer.Next(0, possibleLocations.Count())];
-                    }
-                }
                 if (dodge == DodgeState.Dodge)
                 {
                     Size = MathHelper.Lerp(Size, 0, 0.1f);
@@ -115,7 +151,7 @@ namespace Outer_Space
 
                 // Start charging
                 // Will only charge is the player has a chance to avoid it
-                if (charge == ChargeState.NotCharging && dodge == DodgeState.NotDodging && Globals.Randomizer.Next(0, 1001) < 0 && level.CheckPossibleMatches().Any(item => item.Type == TileType.left || item.Type == TileType.right || item.Type == TileType.shoot))
+                if (ShipLocation == level.Player.ShipLocation && charge == ChargeState.NotCharging && dodge == DodgeState.NotDodging && Globals.Randomizer.Next(0, 1001) < 3 && level.CheckPossibleMatches().Any(item => item.Type == TileType.left || item.Type == TileType.right || item.Type == TileType.shoot))
                 {
                     charge = ChargeState.Initialize;
                 }
@@ -129,7 +165,7 @@ namespace Outer_Space
                 if (charge == ChargeState.Beginning)
                 {
                     Position += new Vector2((float)Math.Cos(Direction) * accelerate, (float)Math.Sin(Direction) * accelerate);
-                    accelerate += 0.01f;
+                    accelerate += 0.03f;
                     if (accelerate > 0)
                     {
                         charge = ChargeState.Charge;
@@ -144,10 +180,14 @@ namespace Outer_Space
                 }
                 else if (charge == ChargeState.Finished) // Return to normal position
                 {
+                    if (accelerate < 4)
+                    {
+                        accelerate = 4;
+                    }
                     Position += new Vector2((float)Math.Cos(Direction) * accelerate, (float)Math.Sin(Direction) * accelerate);
-                    Vector2 afterChargeTarget = new Vector2((int)ShipLocation * 100 + 200, -200);
+                    Vector2 afterChargeTarget = new Vector2((int)ShipLocation * 100 + 200, -400);
                     Direction = MathHelper.Lerp(Direction, (float)Math.Atan2(afterChargeTarget.Y - Position.Y, afterChargeTarget.X - Position.X), 0.03f);
-                    if (Position.Y < -180)
+                    if (Position.Y < -300)
                     {
                         charge = ChargeState.NotCharging;
                         Direction = StandardDirection;
@@ -156,24 +196,14 @@ namespace Outer_Space
                     }
                 }
                 // Hit player with charge
-                if (level.Player.Box.Intersects(chargeRectangle))
+                if (level.Player.Box.Intersects(chargeRectangle) && charge == ChargeState.Charge)
                 {
                     charge = ChargeState.Finished;
                     level.Player.KnockBack = 10;
+                    level.Player.TakeDamage(50, 0, DamageType.rock, false);
                     Camera.ScreenShakeTimer = 30;
                 }
 
-                // Shot hit
-                if (charge != ChargeState.NotCharging)
-                {
-                    foreach (Shot shot in level.GameObjects.Where(item => item is Shot))
-                    {
-                        if (shot.Targets.Any(item => item == "Boss") && shot.Box.Intersects(Box))
-                        {
-                            charge = ChargeState.Finished;
-                        }
-                    }
-                }
                 // Miss
                 if (Position.Y > Globals.ScreenSize.Y)
                 {
