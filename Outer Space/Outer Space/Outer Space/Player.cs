@@ -47,7 +47,7 @@ namespace Outer_Space
             this.Texture = TextureManager.boss;
             this.Position = new Vector2(300, Globals.ScreenSize.Y - Texture.Height);
 
-            this.Energy = new Bar(new Vector2(450, Globals.ScreenSize.Y - 30), 100, 20, 100, Color.OrangeRed);
+            this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.OrangeRed);
 
             // Weapontargets
             foreach (Weapon w in Weapons)
@@ -57,7 +57,7 @@ namespace Outer_Space
             }
 
             Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
-            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
+            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
             Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
             for (int i = 0; i < Inventory.GetLength(0); i++)
             {

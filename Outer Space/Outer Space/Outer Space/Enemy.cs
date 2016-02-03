@@ -24,8 +24,8 @@ namespace Outer_Space
             this.Position = new Vector2((int)ShipLocation * 100 + 200, -100);
             this.Texture = TextureManager.enemyShip;
 
-            this.Health = new Bar(new Vector2(0, 10), 100, 10, 100, Color.Red);
-            this.ShipShield = new Shield(new Vector2(0, 0), 100, 10, 10, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
+            this.Health = new Bar(new Vector2(70, 10), 100, 20, 100, Color.Red);
+            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 10, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
 
             // Weapontargets
             foreach (Weapon w in Weapons)
