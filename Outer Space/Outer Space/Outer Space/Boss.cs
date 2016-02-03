@@ -40,6 +40,10 @@ namespace Outer_Space
             this.Depth = 0.5f;
             this.opacity = 0f;
             this.possibleAttacks = new List<int>();
+            this.engineAnimation = TextureManager.bossEngineAnimation;
+            this.maxFrame = 3;
+            this.frameWidth = 163;
+            this.frameHeight = 139;
 
             // Modules
             ShipShield = new Shield(new Vector2(270, 10), (int)ShipShield.Width, 20, 200, 0);
@@ -89,6 +93,21 @@ namespace Outer_Space
 
         public override void UpdateLevel(Level level)
         {
+            // Animation
+            animationTimer++;
+            if (animationTimer > 7)
+            {
+                animationTimer = 0;
+                if (frame < maxFrame)
+                {
+                    frame++;
+                }
+                else
+                {
+                    frame = 0;
+                }
+            }
+
             // Renew attacks
             if (possibleAttacks.Count() == 0)
             {
@@ -114,7 +133,7 @@ namespace Outer_Space
             if (level.Started)
             {
                 // Choose attack
-                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 1001) < 6)
+                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 1001) < 8)
                 {
                     int attack = possibleAttacks[Globals.Randomizer.Next(0, possibleAttacks.Count())];
                     possibleAttacks.Remove(attack);

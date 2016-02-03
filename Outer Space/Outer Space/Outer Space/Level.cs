@@ -72,7 +72,7 @@ namespace Outer_Space
         public void DrawMap(SpriteBatch spriteBatch)
         {
             EnterLevel.Draw(spriteBatch);
-            spriteBatch.Draw(SceneManager.mapScene.ThePlayer.Texture, PlayerPosition, null, Color.White, PlayerDirection + (float)Math.PI * 0.5f, new Vector2(TextureManager.ship1.Width / 2, TextureManager.ship1.Height / 2), PlayerSize, SpriteEffects.None, 0f);
+            SceneManager.mapScene.ThePlayer.DrawMap(spriteBatch, PlayerPosition, PlayerSize, PlayerDirection + (float)Math.PI * 0.5f);
             if (EnterLevel.HoverOver())
             {
                 spriteBatch.DrawString(TextureManager.SpriteFont15, "Difficulty: " + EnemyDifficulty, new Vector2(0, 0), Color.White);
@@ -93,7 +93,7 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                GameObjects.Add(new Enemy());
+                GameObjects.Add(new Boss());
                 // Reward for defeating enemy
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {

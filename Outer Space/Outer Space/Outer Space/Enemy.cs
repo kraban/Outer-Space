@@ -67,7 +67,7 @@ namespace Outer_Space
             base.UpdateLevel(level);
 
             // Move to normal position after knockback
-            Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Texture.Height, 0.1f));
+            Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Texture.Height + 40, 0.1f));
 
             if (level.Started)
             {

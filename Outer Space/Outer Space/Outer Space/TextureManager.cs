@@ -33,7 +33,10 @@ namespace Outer_Space
             boss,
             bossForeground,
             enemyShipEngineAnimation,
-            ship1EngineAnimation;
+            ship1EngineAnimation,
+            ship2EngineAnimation,
+            ship3EngineAnimation,
+            bossEngineAnimation;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -66,6 +69,9 @@ namespace Outer_Space
             bossForeground = content.Load<Texture2D>("OuterSpaceBossForeground");
             enemyShipEngineAnimation = content.Load<Texture2D>("EnemyShipEngineAnimation");
             ship1EngineAnimation = content.Load<Texture2D>("ship1EngineAnimation");
+            ship2EngineAnimation = content.Load<Texture2D>("ship2EngineAnimation");
+            ship3EngineAnimation = content.Load<Texture2D>("ship3EngineAnimation");
+            bossEngineAnimation = content.Load<Texture2D>("bossEngineAnimation");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

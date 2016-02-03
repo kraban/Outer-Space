@@ -40,15 +40,31 @@ namespace Outer_Space
 
             Back.Update();
 
-            foreach (TextureButton shipButton in ShipButtons)
-            {
-                shipButton.Update();
-                if (shipButton.Pressed())
+            for (int i = 0; i < ShipButtons.Count(); i++)
+			{
+                ShipButtons[i].Update();
+                if (ShipButtons[i].Pressed())
                 {
-                    SceneManager.mapScene.ThePlayer.Texture = shipButton.Texture;
-                    SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship1EngineAnimation;
-                    SceneManager.mapScene.ThePlayer.maxFrame = 3;
                     SceneManager.ChangeScene(SceneManager.mapScene);
+                    SceneManager.mapScene.ThePlayer.Texture = ShipButtons[i].Texture;
+                    if (i == 0)
+                    {
+                        SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship1EngineAnimation;
+                        SceneManager.mapScene.ThePlayer.maxFrame = 3;
+                        break;
+                    }
+                    else if (i == 1)
+                    {
+                        SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship2EngineAnimation;
+                        SceneManager.mapScene.ThePlayer.maxFrame = 3;
+                        break;
+                    }
+                    else if (i == 2)
+                    {
+                        SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship3EngineAnimation;
+                        SceneManager.mapScene.ThePlayer.maxFrame = 1;
+                        break;
+                    }
                 }
             }
         }

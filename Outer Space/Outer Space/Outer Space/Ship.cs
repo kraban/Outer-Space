@@ -44,9 +44,11 @@ namespace Outer_Space
 
         // Engine animation
         internal Texture2D engineAnimation;
-        private int frame;
-        private int animationTimer;
+        internal int frame;
+        internal int animationTimer;
         internal int maxFrame;
+        internal int frameWidth;
+        internal int frameHeight;
 
         // Damage over time
         public int DamageOverTimeCount { get; private set; }
@@ -65,6 +67,8 @@ namespace Outer_Space
             this.Direction = StandardDirection;
             this.engineAnimation = TextureManager.none;
             this.Depth = 0.3f;
+            this.frameWidth = 64;
+            this.frameHeight = 64;
 
             this.Inventory = new Item[5, 6];
             // Fill inventory
@@ -180,7 +184,7 @@ namespace Outer_Space
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * 64, 0, 64, 64), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, Depth - 0.1f);
+            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, Depth - 0.1f);
 
             Health.Draw(spriteBatch);
             ShipShield.Draw(spriteBatch);
