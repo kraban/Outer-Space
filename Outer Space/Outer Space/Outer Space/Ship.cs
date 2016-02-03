@@ -42,6 +42,12 @@ namespace Outer_Space
         public Weapon CurrentWeapon { get { return Weapons[SelectedWeapon]; } set { Weapons[SelectedWeapon] = value; } }
         public float KnockBack { get; set; }
 
+        // Engine animation
+        internal Texture2D engineAnimation;
+        private int frame;
+        private int animationTimer;
+        internal int maxFrame;
+
         // Damage over time
         public int DamageOverTimeCount { get; private set; }
         public float DamageOverTimeDamage { get; private set; }
@@ -57,6 +63,8 @@ namespace Outer_Space
             this.ShipLocation = Location.middle;
             this.StandardDirection = standardDirection;
             this.Direction = StandardDirection;
+            this.engineAnimation = TextureManager.none;
+            this.Depth = 0.3f;
 
             this.Inventory = new Item[5, 6];
             // Fill inventory
@@ -81,6 +89,20 @@ namespace Outer_Space
         public override void UpdateLevel(Level level)
         {
             base.UpdateLevel(level);
+
+            animationTimer++;
+            if (animationTimer > 5)
+            {
+                animationTimer = 0;
+                if (frame < maxFrame)
+                {
+                    frame++;
+                }
+                else
+                {
+                    frame = 0;
+                }
+            }
 
             DamageOverTime();
 
@@ -157,6 +179,8 @@ namespace Outer_Space
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+
+            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * 64, 0, 64, 64), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, Depth - 0.1f);
 
             Health.Draw(spriteBatch);
             ShipShield.Draw(spriteBatch);

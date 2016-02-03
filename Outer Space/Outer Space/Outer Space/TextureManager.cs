@@ -31,7 +31,9 @@ namespace Outer_Space
             level,
             sun,
             boss,
-            bossForeground;
+            bossForeground,
+            enemyShipEngineAnimation,
+            ship1EngineAnimation;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -62,6 +64,8 @@ namespace Outer_Space
             sun = content.Load<Texture2D>("SunBig");
             boss = content.Load<Texture2D>("OuterSpaceBossCut");
             bossForeground = content.Load<Texture2D>("OuterSpaceBossForeground");
+            enemyShipEngineAnimation = content.Load<Texture2D>("EnemyShipEngineAnimation");
+            ship1EngineAnimation = content.Load<Texture2D>("ship1EngineAnimation");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

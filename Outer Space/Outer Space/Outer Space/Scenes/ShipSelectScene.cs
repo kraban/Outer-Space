@@ -46,6 +46,8 @@ namespace Outer_Space
                 if (shipButton.Pressed())
                 {
                     SceneManager.mapScene.ThePlayer.Texture = shipButton.Texture;
+                    SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship1EngineAnimation;
+                    SceneManager.mapScene.ThePlayer.maxFrame = 3;
                     SceneManager.ChangeScene(SceneManager.mapScene);
                 }
             }

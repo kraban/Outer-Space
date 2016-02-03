@@ -156,6 +156,11 @@ namespace Outer_Space
         public void DrawInventory(SpriteBatch spriteBatch)
         {
             // Selected item
+
+            // Health
+            Health.Draw(spriteBatch);
+            spriteBatch.DrawString(TextureManager.SpriteFont15, "Current Health:", new Vector2(Health.Position.X + 15, Health.Position.Y - 30), Color.White);
+
             if (selectedItem != null)
             {
                 spriteBatch.Draw(selectedItem.Texture, new Vector2(Globals.MState.X - 32, Globals.MState.Y - 32), null, selectedItem.Colour * 0.5f, 0f, Vector2.Zero, 1f, SpriteEffects.None, selectedItem.Depth);

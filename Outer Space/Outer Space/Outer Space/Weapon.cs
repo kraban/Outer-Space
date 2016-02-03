@@ -97,7 +97,7 @@ namespace Outer_Space
             Descriptions.Add("Fire a shot that has a small chance to boomerang back to you.");
             Descriptions.Add("Fire a shot that, when colliding with another shot, will steal 25% damage from it.");
             Descriptions.Add("Fire a shot that deals 1% extra damage for each percent of missing health.");
-            Descriptions.Add("Fire a shot that has a |255,70,0|" + (100 - Chance) + "|W| chance to break and damage yourself.");
+            Descriptions.Add("Fire a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to break and damage yourself.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[method];
         }

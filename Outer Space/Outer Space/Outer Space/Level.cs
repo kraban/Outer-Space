@@ -93,7 +93,7 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                GameObjects.Add(new Boss());
+                GameObjects.Add(new Enemy());
                 // Reward for defeating enemy
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {
@@ -616,11 +616,6 @@ namespace Outer_Space
                         Enemy enemy = (Enemy)GameObjects.First(item => item is Enemy);
                         enemy.SetDamageOverTime(5, 5, 0);
                     }
-                }
-
-                if (Globals.KState.IsKeyDown(Keys.P))
-                {
-                    Started = false;
                 }
             }
             else if (Globals.KState.IsKeyDown(Keys.Enter))
