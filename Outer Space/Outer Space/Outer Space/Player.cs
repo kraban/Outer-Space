@@ -200,19 +200,6 @@ namespace Outer_Space
 
         public void DrawMap(SpriteBatch spriteBatch, Vector2 position, float size, float direction)
         {
-            animationTimer++;
-            if (animationTimer > 40)
-            {
-                animationTimer = 0;
-                if (frame < maxFrame)
-                {
-                    frame++;
-                }
-                else
-                {
-                    frame = 0;
-                }
-            }
             spriteBatch.Draw(Texture, position, null, Color.White, direction, new Vector2(Texture.Width / 2, Texture.Height / 2), size, SpriteEffects.None, Depth);
             spriteBatch.Draw(engineAnimation, position, new Rectangle(frame * 64, 0, 64, 64), Color.White, direction, new Vector2(Texture.Width / 2, Texture.Height / 2), size, SpriteEffects.None, Depth - 0.1f);
         }

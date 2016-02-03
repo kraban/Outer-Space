@@ -75,6 +75,8 @@ namespace Outer_Space
 
             Back.Draw(spriteBatch);
 
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Choose a ship", new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont20.MeasureString("Choose a ship").X * (1.5f / 2f), 200), new Color(0, 255, 255), 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+
             foreach (TextureButton shipButton in ShipButtons)
             {
                 shipButton.Draw(spriteBatch);

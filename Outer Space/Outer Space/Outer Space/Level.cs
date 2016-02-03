@@ -59,6 +59,7 @@ namespace Outer_Space
             EnterLevel.Update();
             if (PlayerOnStar)
             {
+                SceneManager.mapScene.ThePlayer.Animation();
                 PlayerDirection += 0.01f;
                 PlayerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(PlayerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(PlayerDirection) * 20);
                 PlayerSize = MathHelper.Lerp(PlayerSize, 0.5f, 0.05f);

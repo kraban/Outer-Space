@@ -85,7 +85,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ship.png">
+    <Compile Include="ShipTextures\Ship.png">
       <Name>Ship</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -141,7 +141,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ship2Game.png">
+    <Compile Include="ShipTextures\Ship2Game.png">
       <Name>Ship2Game</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -190,7 +190,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OuterSpaceBossCut.png">
+    <Compile Include="ShipTextures\OuterSpaceBossCut.png">
       <Name>OuterSpaceBossCut</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -211,14 +211,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ship3.png">
+    <Compile Include="ShipTextures\Ship3.png">
       <Name>Ship3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnemyShip1.png">
+    <Compile Include="ShipTextures\EnemyShip1.png">
       <Name>EnemyShip1</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -232,42 +232,42 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OuterSpaceBossForeground.png">
+    <Compile Include="ShipTextures\OuterSpaceBossForeground.png">
       <Name>OuterSpaceBossForeground</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnemyShipEngineAnimation.png">
+    <Compile Include="ShipTextures\EnemyShipEngineAnimation.png">
       <Name>EnemyShipEngineAnimation</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ship1EngineAnimation.png">
+    <Compile Include="ShipTextures\ship1EngineAnimation.png">
       <Name>ship1EngineAnimation</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ship3EngineAnimation.png">
+    <Compile Include="ShipTextures\ship3EngineAnimation.png">
       <Name>ship3EngineAnimation</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ship2EngineAnimation.png">
+    <Compile Include="ShipTextures\ship2EngineAnimation.png">
       <Name>ship2EngineAnimation</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bossEngineAnimation.png">
+    <Compile Include="ShipTextures\bossEngineAnimation.png">
       <Name>bossEngineAnimation</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>

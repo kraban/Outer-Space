@@ -44,6 +44,7 @@ namespace Outer_Space
             this.maxFrame = 3;
             this.frameWidth = 163;
             this.frameHeight = 139;
+            this.Colour = Color.Red;
 
             // Modules
             ShipShield = new Shield(new Vector2(270, 10), (int)ShipShield.Width, 20, 200, 0);
@@ -51,7 +52,7 @@ namespace Outer_Space
             ShipHull = new Hull(this, 0);
             ShipHull.Description = "|W|Armor: |255,255,0|" + ShipHull.Armor + "|255,255,100|\nPlaces mines on tiles in the tileboard.\nThe Player will take 20 damage when matching tiles with mines.\nMines will be disarmed when matched or then falling.";
             Weapons[0].Description = "|W|Charges forward and deals massive damage if it hits the Player.\nThe Boss is vurnerable when charging.";
-            Weapons[1].Description = "|W|Shoot two shots, eighter in a X pattern or a V patterns.";
+            Weapons[1].Description = "|W|Shoot several shots, eighter in a X pattern or a V patterns.";
             Weapons[1].Method = Weapon.ListOfMethods()[0];
         }
 
@@ -83,11 +84,16 @@ namespace Outer_Space
 
             if (dodge == DodgeState.Dodge)
             {
+                frameWidth = 0;
                 for (int i = 0; i < 3; i++)
                 {
                     spriteBatch.Draw(TextureBackground, Position, null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size + 0.2f * (float)i, SpriteEffects.None, ((float)i / 10f));
                     spriteBatch.Draw(TextureBackground, new Vector2((int)ShipLocation * 100 + 200, Position.Y), null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1 - Size + 0.1f * (float)i, SpriteEffects.None, ((float)i / 10f));
                 }
+            }
+            else
+            {
+                frameWidth = 163;
             }
         }
 
@@ -152,7 +158,8 @@ namespace Outer_Space
                     }
                     else if (attack == 1)
                     {
-                        shootTimer = 180;
+                        shootTimer = 200;
+                        opacity = 0;
                     }
                     else if (attack == 2)
                     {
@@ -166,17 +173,15 @@ namespace Outer_Space
                 shootTimer--;
                 if (shootTimer > 0)
                 {
-                    if (shootTimer > 90)
+                    if (shootTimer > 100)
                     {
-                        opacity += 0.02f;
-                        Colour = new Color(MathHelper.Lerp(Colour.R, 255, 0.02f), 0, 0);
+                        opacity += 0.015f;
                     }
-                    else if (shootTimer < 30)
+                    else if (shootTimer < 20)
                     {
-                        opacity -= 0.06f;
-                        Colour = new Color(MathHelper.Lerp(Colour.R, 0, 0.06f), 0, 0);
+                        opacity -= 0.07f;
                     }
-                    if (shootTimer == 90)
+                    if (shootTimer == 100)
                     {
                         if (ShipLocation == level.Player.ShipLocation)
                         {
@@ -211,7 +216,7 @@ namespace Outer_Space
                 if (charge == ChargeState.Beginning)
                 {
                     Position += new Vector2((float)Math.Cos(Direction) * accelerate, (float)Math.Sin(Direction) * accelerate);
-                    accelerate += 0.03f;
+                    accelerate += 0.023f;
                     if (accelerate > 0)
                     {
                         charge = ChargeState.Charge;

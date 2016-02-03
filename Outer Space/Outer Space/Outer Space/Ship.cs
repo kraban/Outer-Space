@@ -90,10 +90,8 @@ namespace Outer_Space
         }
 
         // Method(s)
-        public override void UpdateLevel(Level level)
+        public void Animation()
         {
-            base.UpdateLevel(level);
-
             animationTimer++;
             if (animationTimer > 5)
             {
@@ -107,8 +105,14 @@ namespace Outer_Space
                     frame = 0;
                 }
             }
+        }
+
+        public override void UpdateLevel(Level level)
+        {
+            base.UpdateLevel(level);
 
             DamageOverTime();
+            Animation();
 
             // Weapons
             foreach (Weapon w in Weapons)

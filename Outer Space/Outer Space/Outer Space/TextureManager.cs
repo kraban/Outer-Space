@@ -50,28 +50,28 @@ namespace Outer_Space
         // Initialize
         public static void Initialize(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            ship1 = content.Load<Texture2D>("Ship");
+            ship1 = content.Load<Texture2D>("ShipTextures/Ship");
             none = content.Load<Texture2D>("None");
             selected = content.Load<Texture2D>("Selected");
             shot = content.Load<Texture2D>("Shot");
             rock = content.Load<Texture2D>("Rock");
             jammed = content.Load<Texture2D>("Jammed");
-            ship2 = content.Load<Texture2D>("Ship2Game");
-            ship3 = content.Load<Texture2D>("Ship3");
-            enemyShip = content.Load<Texture2D>("EnemyShip1");
+            ship2 = content.Load<Texture2D>("ShipTextures/Ship2Game");
+            ship3 = content.Load<Texture2D>("ShipTextures/Ship3");
+            enemyShip = content.Load<Texture2D>("ShipTextures/EnemyShip1");
             slider = content.Load<Texture2D>("Slider");
             slideButton = content.Load<Texture2D>("SlideButton");
             inventory = content.Load<Texture2D>("Inventory");
             inventorySlot = content.Load<Texture2D>("InventorySlot");
             level = content.Load<Texture2D>("Level");
             sun = content.Load<Texture2D>("SunBig");
-            boss = content.Load<Texture2D>("OuterSpaceBossCut");
-            bossForeground = content.Load<Texture2D>("OuterSpaceBossForeground");
-            enemyShipEngineAnimation = content.Load<Texture2D>("EnemyShipEngineAnimation");
-            ship1EngineAnimation = content.Load<Texture2D>("ship1EngineAnimation");
-            ship2EngineAnimation = content.Load<Texture2D>("ship2EngineAnimation");
-            ship3EngineAnimation = content.Load<Texture2D>("ship3EngineAnimation");
-            bossEngineAnimation = content.Load<Texture2D>("bossEngineAnimation");
+            boss = content.Load<Texture2D>("ShipTextures/OuterSpaceBossCut");
+            bossForeground = content.Load<Texture2D>("ShipTextures/OuterSpaceBossForeground");
+            enemyShipEngineAnimation = content.Load<Texture2D>("ShipTextures/EnemyShipEngineAnimation");
+            ship1EngineAnimation = content.Load<Texture2D>("ShipTextures/ship1EngineAnimation");
+            ship2EngineAnimation = content.Load<Texture2D>("ShipTextures/ship2EngineAnimation");
+            ship3EngineAnimation = content.Load<Texture2D>("ShipTextures/ship3EngineAnimation");
+            bossEngineAnimation = content.Load<Texture2D>("ShipTextures/bossEngineAnimation");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

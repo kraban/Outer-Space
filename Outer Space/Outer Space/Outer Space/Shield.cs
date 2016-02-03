@@ -128,5 +128,14 @@ namespace Outer_Space
         {
             ship.SetDamageOverTime(damage / 5, 5, goThroughShield);
         }
+
+        public static void ShieldBarrier(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
+        {
+            if (Globals.Randomizer.Next(0, 101) < shield.Chance)
+            {
+                
+            }
+            ship.TakeDamage(damage, goThroughShield, damageType, true);
+        }
     }
 }
