@@ -23,7 +23,7 @@ namespace Outer_Space
         public Shoot Method { get; set; }
 
         // Shot delay
-        List<Shot> ShotsToShoot { get; set; }
+        public List<Shot> ShotsToShoot { get; set; }
         private int shotsToShootTimer;
 
         // Private variables
@@ -342,12 +342,42 @@ namespace Outer_Space
                     weapon.Disabled = 180;
                     shooter.TakeDamage(weapon.Damage, weapon.ShieldPiercing, DamageType.laser, false);
                 }
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
             else
             {
                 weapon.Chance += Globals.Randomizer.Next(30, 50);
                 weapon.Damage += Globals.Randomizer.Next(5, 10);
+            }
+        }
+
+        public static void FireBossV(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
+        {
+            Boss boss = (Boss)shooter;
+            float directionRight = (float)Math.Atan2(level.Player.Position.Y - boss.RightShootPosition.Y, level.Player.Position.X - boss.RightShootPosition.X);
+            float directionLeft = (float)Math.Atan2(level.Player.Position.Y - boss.LeftShootPosition.Y, level.Player.Position.X - boss.LeftShootPosition.X);
+            if (!initialize)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    weapon.ShotsToShoot.Add(new Shot(boss.RightShootPosition, directionRight, 5, Shot.HitBasic, weapon.Targets, 0, 0));
+                    weapon.ShotsToShoot.Add(new Shot(boss.LeftShootPosition, directionLeft, 5, Shot.HitBasic, weapon.Targets, 0, 0));
+                }
+            }
+        }
+
+        public static void FireBossX(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
+        {
+            Boss boss = (Boss)shooter;
+            float directionRight = (float)Math.Atan2(level.Player.Position.Y - boss.RightShootPosition.Y, (int)boss.ShipLocation * 100 + 100 - boss.RightShootPosition.X);
+            float directionLeft = (float)Math.Atan2(level.Player.Position.Y - boss.LeftShootPosition.Y, (int)boss.ShipLocation * 100 + 300 - boss.LeftShootPosition.X);
+            if (!initialize)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    weapon.ShotsToShoot.Add(new Shot(boss.RightShootPosition, directionRight, 5, Shot.HitBasic, weapon.Targets, 0, 0));
+                    weapon.ShotsToShoot.Add(new Shot(boss.LeftShootPosition, directionLeft, 5, Shot.HitBasic, weapon.Targets, 0, 0));
+                }
             }
         }
     }

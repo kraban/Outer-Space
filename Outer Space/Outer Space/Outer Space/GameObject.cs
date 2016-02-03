@@ -26,7 +26,7 @@ namespace Outer_Space
 
         // Flash
         public int Flash { get; set; }
-        private float opacity;
+        internal float opacity;
         private bool flip;
 
         // Constructor(s)

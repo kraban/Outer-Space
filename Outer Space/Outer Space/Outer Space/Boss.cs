@@ -15,9 +15,11 @@ namespace Outer_Space
     public enum DodgeState { Dodge, NotDodging }
     class Boss : Enemy
     {
+        private List<int> possibleAttacks;
+
         // Shoot
-        private Vector2 leftShootPosition { get { return new Vector2(Position.X - 50, Position.Y + 50); } }
-        private Vector2 rightShootPosition { get { return new Vector2(Position.X + 50, Position.Y + 50); } }
+        public Vector2 LeftShootPosition { get { return new Vector2(Position.X - 50, Position.Y + 50); } }
+        public Vector2 RightShootPosition { get { return new Vector2(Position.X + 50, Position.Y + 50); } }
         private int shootTimer;
 
         // Charge
@@ -31,10 +33,13 @@ namespace Outer_Space
         public Boss()
             : base()
         {
-            this.Texture = TextureManager.boss;
+            this.TextureBackground = TextureManager.boss;
+            this.Texture = TextureManager.bossForeground;
             this.charge = ChargeState.NotCharging;
             this.dodge = DodgeState.NotDodging;
             this.Depth = 0.5f;
+            this.opacity = 0f;
+            this.possibleAttacks = new List<int>();
 
             // Modules
             ShipShield = new Shield(ShipShield.Position, (int)ShipShield.Width, 10, 200, 0);
@@ -76,14 +81,25 @@ namespace Outer_Space
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    spriteBatch.Draw(Texture, Position, null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size + 0.2f * (float)i, SpriteEffects.None, ((float)i / 10f));
-                    spriteBatch.Draw(Texture, new Vector2((int)ShipLocation * 100 + 200, Position.Y), null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1 - Size + 0.1f * (float)i, SpriteEffects.None, ((float)i / 10f));
+                    spriteBatch.Draw(TextureBackground, Position, null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size + 0.2f * (float)i, SpriteEffects.None, ((float)i / 10f));
+                    spriteBatch.Draw(TextureBackground, new Vector2((int)ShipLocation * 100 + 200, Position.Y), null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1 - Size + 0.1f * (float)i, SpriteEffects.None, ((float)i / 10f));
                 }
             }
         }
 
         public override void UpdateLevel(Level level)
         {
+            // Renew attacks
+            if (possibleAttacks.Count() == 0)
+            {
+                possibleAttacks.Add(0);
+                possibleAttacks.Add(1);
+                possibleAttacks.Add(1);
+                possibleAttacks.Add(2);
+                possibleAttacks.Add(2);
+                possibleAttacks.Add(2);
+            }
+
             DamageOverTime();
             // Weapons
             foreach (Weapon w in Weapons)
@@ -97,49 +113,67 @@ namespace Outer_Space
             }
             if (level.Started)
             {
-                // Shoot
-                shootTimer--;
-                if (shootTimer < 0 && dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && Globals.Randomizer.Next(0, 101) < 1)
+                // Choose attack
+                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 1001) < 6)
                 {
-                    shootTimer = 60;
-                    List<string> targets = new List<string>();
-                    targets.Add("Player");
-                    if (ShipLocation == level.Player.ShipLocation)
+                    int attack = possibleAttacks[Globals.Randomizer.Next(0, possibleAttacks.Count())];
+                    possibleAttacks.Remove(attack);
+                    if (attack == 0)
                     {
-                        level.ToAdd.Add(new Shot(rightShootPosition, (float)Math.Atan2(level.Player.Position.Y - rightShootPosition.Y, level.Player.Position.X - rightShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
-                        level.ToAdd.Add(new Shot(leftShootPosition, (float)Math.Atan2(level.Player.Position.Y - leftShootPosition.Y, level.Player.Position.X - leftShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
+                        if (ShipLocation == level.Player.ShipLocation)
+                        {
+                            charge = ChargeState.Initialize;
+                        }
+                        else
+                        {
+                            dodge = DodgeState.Dodge;
+                            ShipLocation = level.Player.ShipLocation;
+                            possibleAttacks.Add(0);
+                        }
                     }
-                    else
+                    else if (attack == 1)
                     {
-                        level.ToAdd.Add(new Shot(rightShootPosition, (float)Math.Atan2(level.Player.Position.Y - rightShootPosition.Y, (int)ShipLocation * 100 + 100 - rightShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
-                        level.ToAdd.Add(new Shot(leftShootPosition, (float)Math.Atan2(level.Player.Position.Y - leftShootPosition.Y, (int)ShipLocation * 100 + 300 - leftShootPosition.X), 20, Shot.HitBasic, targets, 0f, 0));
+                        shootTimer = 180;
+                    }
+                    else if (attack == 2)
+                    {
+                        // Place mine in tiles
+                        int random = Globals.Randomizer.Next(0, level.Tiles.Count());
+                        level.Tiles[random][Globals.Randomizer.Next(0, level.Tiles[random].Count() - 2)].Mine = true;
                     }
                 }
 
-                // Place mine in tiles
-                if (Globals.Randomizer.Next(0, 1001) < 10)
+                // Shoot
+                shootTimer--;
+                if (shootTimer > 0)
                 {
-                    int mineCount = 0;
-                    for (int i = 0; i < level.Tiles.Count(); i++)
+                    if (shootTimer > 90)
                     {
-                        for (int j = 0; j < level.Tiles[i].Count(); j++)
-                        {
-                            if (level.Tiles[i][j].Mine)
-                            {
-                                mineCount++;
-                            }
-                        }
+                        opacity += 0.02f;
+                        Colour = new Color(MathHelper.Lerp(Colour.R, 255, 0.02f), 0, 0);
                     }
-                    if (mineCount < 5)
+                    else if (shootTimer < 30)
                     {
-                        int random = Globals.Randomizer.Next(0, level.Tiles.Count());
-                        level.Tiles[random][Globals.Randomizer.Next(0, level.Tiles[random].Count() - 2)].Mine = true;
+                        opacity -= 0.06f;
+                        Colour = new Color(MathHelper.Lerp(Colour.R, 0, 0.06f), 0, 0);
+                    }
+                    if (shootTimer == 90)
+                    {
+                        if (ShipLocation == level.Player.ShipLocation)
+                        {
+                            Weapon.FireBossV(this, Weapons[1], 0, level, false);
+                        }
+                        else
+                        {
+                            Weapon.FireBossX(this, Weapons[1], 0, level, false);
+                        }
                     }
                 }
 
                 // Shield
                 if (dodge == DodgeState.Dodge)
                 {
+                    Weapons[1].ShotsToShoot.Clear();
                     Size = MathHelper.Lerp(Size, 0, 0.1f);
                     if (Size < 0.1f)
                     {
@@ -147,13 +181,6 @@ namespace Outer_Space
                         Position = new Vector2((int)ShipLocation * 100 + 200, Position.Y);
                         Size = 1;
                     }
-                }
-
-                // Start charging
-                // Will only charge is the player has a chance to avoid it
-                if (ShipLocation == level.Player.ShipLocation && charge == ChargeState.NotCharging && dodge == DodgeState.NotDodging && Globals.Randomizer.Next(0, 1001) < 3 && level.CheckPossibleMatches().Any(item => item.Type == TileType.left || item.Type == TileType.right || item.Type == TileType.shoot))
-                {
-                    charge = ChargeState.Initialize;
                 }
 
                 // Back away to gain more power for charge

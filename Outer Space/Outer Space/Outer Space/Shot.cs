@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    class Shot : GameObject
+    public class Shot : GameObject
     {
         // Public properties
         public float Damage { get; set; }
