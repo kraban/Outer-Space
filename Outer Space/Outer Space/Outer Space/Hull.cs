@@ -26,7 +26,7 @@ namespace Outer_Space
 
         // Constructor(s)
         public Hull(Ship ship, int method)
-            : base(Item.Nothing, ItemType.hull, TextureManager.hulls[Globals.Randomizer.Next(0, TextureManager.hulls.Count)], "")
+            : base(Item.Nothing, ItemType.hull, TextureManager.hulls[Globals.Randomizer.Next(0, TextureManager.hulls.Count)], "", "Hull")
         {
             this.Type = ItemType.hull;
 

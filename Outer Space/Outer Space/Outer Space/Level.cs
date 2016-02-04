@@ -94,7 +94,7 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                GameObjects.Add(new Boss());
+                GameObjects.Add(new Enemy());
                 // Reward for defeating enemy
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {
@@ -648,9 +648,7 @@ namespace Outer_Space
                         {
                             foreach (Item reward in Rewards)
                             {
-                                Point firstEmptyInventorySlot = Player.FirstEmpty;
-                                Player.Inventory[firstEmptyInventorySlot.X, firstEmptyInventorySlot.Y] = reward;
-                                Player.Inventory[firstEmptyInventorySlot.X, firstEmptyInventorySlot.Y].RecentlyAcquired = true;
+                                Player.AddItem(reward);
                             }
                             SceneManager.mapScene.SpaceObjects.Add(new Text(new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2), "New items acquired! Go to inventory to check them out", Color.White, 180, 2f));
                         }
@@ -664,7 +662,10 @@ namespace Outer_Space
             Flee.Update();
             if (Flee.Press())
             {
-                Player.Move = true;
+                if (Player.ItemInInventory("Flee"))
+                {
+                    Player.GetItemInInventory("Flee").UseItem(Player, Player.GetItemInInventory("Flee"));
+                }
             }
             if (Player.OutsideScreen())
             {

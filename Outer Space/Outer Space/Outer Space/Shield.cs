@@ -27,7 +27,7 @@ namespace Outer_Space
 
         // Constructor(s)
         public Shield(Vector2 position, int width, int height, float shieldValue, int method)
-            : base(Item.Nothing, ItemType.shield, TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)], "")
+            : base(Item.Nothing, ItemType.shield, TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)], "", "Shield")
         {
             this.Type = ItemType.shield;
             this.ShieldHeal = Globals.Randomizer.Next(6, 14);

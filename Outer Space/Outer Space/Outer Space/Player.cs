@@ -23,23 +23,6 @@ namespace Outer_Space
         // Inventory
         private Item selectedItem;
         private Point selectedItemArrayPosition;
-        public Point FirstEmpty
-        {
-            get
-            {
-                for (int i = 0; i < Inventory.GetLength(1) - 1; i++)
-                {
-                    for (int j = 0; j < Inventory.GetLength(0); j++)
-                    {
-                        if (Inventory[j, i].Type == ItemType.nothing)
-                        {
-                            return new Point(j, i);
-                        }
-                    }
-                }
-                return new Point(-1, -1); // Inventory full
-            }
-        }
 
         // Constructor(s)
         public Player()
@@ -62,7 +45,8 @@ namespace Outer_Space
             Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
             for (int i = 0; i < 5; i++)
             {
-                AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Use item to regain 10 % health."));
+                AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
+                //AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
             }
             //for (int i = 0; i < Inventory.GetLength(0); i++)
             //{
@@ -75,6 +59,30 @@ namespace Outer_Space
         }
 
         // Method(s)
+        public bool ItemInInventory(string name)
+        {
+            foreach (Item item in Inventory)
+            {
+                if (item.Name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public Item GetItemInInventory(string name)
+        {
+            foreach (Item item in Inventory)
+            {
+                if (item.Name == name)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
         public void AddItem(Item item)
         {
             bool done = false;
@@ -86,8 +94,8 @@ namespace Outer_Space
                     {
                         if (Inventory[j, i].Type == ItemType.nothing)
                         {
-                            Inventory[j, i].RecentlyAcquired = true;
                             Inventory[j, i] = item;
+                            Inventory[j, i].RecentlyAcquired = true;
                             done = true;
                             break;
                         }
@@ -96,12 +104,12 @@ namespace Outer_Space
                     {
                         if (Inventory[j, i].Type == ItemType.nothing )
                         {
-                            Inventory[j, i].RecentlyAcquired = true;
                             Inventory[j, i] = item;
+                            Inventory[j, i].RecentlyAcquired = true;
                             done = true;
                             break;
                         }
-                        else if (Inventory[j, i].Type == item.Type && Inventory[j, i].UseItem == item.UseItem)
+                        else if (Inventory[j, i].Type == item.Type && Inventory[j, i].Name == item.Name)
                         {
                             Inventory[j, i].RecentlyAcquired = true;
                             Inventory[j, i].NumberOfItems++;
@@ -210,7 +218,7 @@ namespace Outer_Space
                     {
                         if (Inventory[i, j].Dead)
                         {
-                            Inventory[i, j] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "");
+                            Inventory[i, j] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
                         }
                     }
                 }
@@ -354,6 +362,7 @@ namespace Outer_Space
             }
             else
             {
+                Animation();
                 Direction = MathHelper.Lerp(Direction, (float)Math.PI, 0.03f);
                 Speed += 0.1f;
                 Position += new Vector2((float)Math.Cos(Direction) * Speed, (float)Math.Sin(Direction) * Speed);

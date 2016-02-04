@@ -37,7 +37,8 @@ namespace Outer_Space
             ship2EngineAnimation,
             ship3EngineAnimation,
             bossEngineAnimation,
-            wrench;
+            wrench,
+            flee;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -74,6 +75,7 @@ namespace Outer_Space
             ship3EngineAnimation = content.Load<Texture2D>("ShipTextures/ship3EngineAnimation");
             bossEngineAnimation = content.Load<Texture2D>("ShipTextures/bossEngineAnimation");
             wrench = content.Load<Texture2D>("Wrench");
+            flee = content.Load<Texture2D>("Flee");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

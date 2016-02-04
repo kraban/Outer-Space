@@ -20,8 +20,9 @@ namespace Outer_Space
         private bool recentlyAcquiredflip;
         public Use UseItem { get; set; }
         public int NumberOfItems { get; set; }
+        public string Name { get; set; }
 
-        public Item(Use useItem, ItemType type, Texture2D texture, string description)
+        public Item(Use useItem, ItemType type, Texture2D texture, string description, string name)
             : base()
         {
             if (type != ItemType.misc)
@@ -34,6 +35,7 @@ namespace Outer_Space
             this.Texture = texture;
             Description = description;
             this.NumberOfItems = 1;
+            this.Name = name;
         }
 
         public delegate void Use(Player player, Item item);
@@ -46,6 +48,22 @@ namespace Outer_Space
             if (player.Health.Value < player.Health.MaxValue)
             {
                 player.Health.Change(player.Health.MaxValue / 10);
+                if (item.NumberOfItems > 1)
+                {
+                    item.NumberOfItems--;
+                }
+                else
+                {
+                    item.Dead = true;
+                }
+            }
+        }
+
+        public static void Flee(Player player, Item item)
+        {
+            if (SceneManager.CurrentScene == SceneManager.mapScene)
+            {
+                player.Move = true;
                 if (item.NumberOfItems > 1)
                 {
                     item.NumberOfItems--;
