@@ -25,7 +25,7 @@ namespace Outer_Space
 
         public MenuScene()
         {
-            this.Start = new Button(new Vector2(200, 200), "Start", TextureManager.SpriteFont20);
+            this.Start = new Button(new Vector2(200, 200), "New Game", TextureManager.SpriteFont20);
             this.Continue = new Button(new Vector2(200, 250), "Continue", TextureManager.SpriteFont20);
             this.Options = new Button(new Vector2(200, 300), "Options", TextureManager.SpriteFont20);
             this.Quit = new Button(new Vector2(200, 350), "Quit", TextureManager.SpriteFont20);
@@ -106,7 +106,7 @@ namespace Outer_Space
             // Warning
             if (Start.Hover() && SceneManager.started)
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, "Warning!\nIf you start a new game you will loose all previous progress!", new Vector2(355, 170), Color.Red);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Warning!\nIf you start a new game you will lose all previous progress!", new Vector2(430, 170), Color.Red);
             }
 
             foreach (GameObject go in GameObjects)

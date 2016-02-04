@@ -113,6 +113,7 @@ namespace Outer_Space
 
             DamageOverTime();
             Animation();
+            Size = MathHelper.Lerp(Size, 1, 0.05f);
 
             // Weapons
             foreach (Weapon w in Weapons)
@@ -188,7 +189,7 @@ namespace Outer_Space
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, Depth - 0.1f);
+            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth - 0.1f);
 
             Health.Draw(spriteBatch);
             ShipShield.Draw(spriteBatch);

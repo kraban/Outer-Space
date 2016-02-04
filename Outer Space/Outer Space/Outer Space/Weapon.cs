@@ -74,6 +74,7 @@ namespace Outer_Space
             methods.Add(FireExtraDamageCollideShot);
             methods.Add(FireBonusDamageLowerHealth);
             methods.Add(FireChanceToBreak);
+            methods.Add(FireEveryOther);
             return methods;
 
         }
@@ -96,6 +97,7 @@ namespace Outer_Space
             Descriptions.Add("Fire a shot that, when colliding with another shot, will steal 25% damage from it.");
             Descriptions.Add("Fire a shot that deals 1% extra damage for each percent of missing health.");
             Descriptions.Add("Fire a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to break and damage yourself.");
+            Descriptions.Add("Only fires every other tile match.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[method];
         }
@@ -346,6 +348,28 @@ namespace Outer_Space
             {
                 weapon.Chance += Globals.Randomizer.Next(30, 50);
                 weapon.Damage += Globals.Randomizer.Next(5, 10);
+            }
+        }
+
+        public static void FireEveryOther(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                if (weapon.Chance == 100)
+                {
+                    weapon.Chance = 0;
+                    level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                }
+                else
+                {
+                    shooter.KnockBack = 0;
+                    weapon.Chance = 100;
+                }
+            }
+            else
+            {
+                weapon.Chance = 0;
+                weapon.Damage *= 3;
             }
         }
 

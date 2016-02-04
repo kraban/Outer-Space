@@ -76,8 +76,8 @@ namespace Outer_Space
                 if (ShootTimer < 0 && ShipLocation == level.Player.ShipLocation && Weapons[SelectedWeapon].Disabled < 0)
                 {
                     ShootTimer = 180;
-                    Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], 0, level, false);
                     KnockBack = -3;
+                    Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], 0, level, false);
                 }
 
                 // Move

@@ -41,21 +41,17 @@ namespace Outer_Space
             }
 
             Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
-            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
+            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
             Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
             for (int i = 0; i < 5; i++)
             {
                 AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
-                //AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
+                AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
             }
-            //for (int i = 0; i < Inventory.GetLength(0); i++)
-            //{
-            //    for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
-            //    {
-            //        Inventory[i, j] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
-            //        Inventory[i, j].RecentlyAcquired = true;
-            //    }
-            //}
+            for (int i = 0; i < 20; i++)
+            {
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+            }
         }
 
         // Method(s)
@@ -384,8 +380,8 @@ namespace Outer_Space
 
                 if (tileType == TileType.shoot && Weapons[SelectedWeapon].Disabled < 0)
                 {
-                    Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], tilesMatched, level, false);
                     KnockBack = 3;
+                    Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], tilesMatched, level, false);
                 }
 
                 if (tileType == TileType.left && ShipLocation != Location.left)

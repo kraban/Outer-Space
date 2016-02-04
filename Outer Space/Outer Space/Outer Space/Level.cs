@@ -598,7 +598,7 @@ namespace Outer_Space
 
                 // Modifiers
 
-                if (LevelModifier == Modifier.Asteriod)
+                if (LevelModifier == Modifier.None)
                 {
                     // spawn rock if possible to move
                     if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))

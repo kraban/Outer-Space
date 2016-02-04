@@ -43,6 +43,7 @@ namespace Outer_Space
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to fire you current weapon when you are hit.");
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to loose energy instead of Shield/HP when you are hit.");
             Descriptions.Add("When you are hit, the damage is split up in five and taken over time.");
+            Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to teleport to another location just before being hit.");
 
             this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + "Shield heal on Match: |0,150,255|" + ShieldHeal + "|W|\n" + Descriptions[method];
         }
@@ -56,6 +57,7 @@ namespace Outer_Space
             methods.Add(ShieldCounterShoot);
             methods.Add(ShieldDamageEnergy);
             methods.Add(ShieldDamageOverTime);
+            methods.Add(ShieldChanceToTeleport);
             return methods;
         }
 
@@ -128,13 +130,22 @@ namespace Outer_Space
             ship.SetDamageOverTime(damage / 5, 5, goThroughShield);
         }
 
-        public static void ShieldBarrier(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
+        public static void ShieldChanceToTeleport(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
             if (Globals.Randomizer.Next(0, 101) < shield.Chance)
             {
-                
+                List<int> locations = new List<int>();
+                for (int i = 0; i < 3; i++)
+			    {
+                    if (i != (int)ship.ShipLocation)
+	                {
+		                locations.Add(i); 
+	                }
+			    }
+                ship.ShipLocation = (Location)locations[Globals.Randomizer.Next(0, locations.Count())];
+                ship.Size = 0;
+                ship.Position = new Vector2((int)ship.ShipLocation * 100 + 200, ship.Position.Y);
             }
-            ship.TakeDamage(damage, goThroughShield, damageType, true);
         }
     }
 }
