@@ -33,9 +33,8 @@ namespace Outer_Space
 
         // Constructor(s)
         public Weapon(Ship ship, int method)
-            : base()
+            : base(Item.Nothing, ItemType.weapon, TextureManager.weapons[1], "")
         {
-            this.Type = ItemType.weapon;
             this.Damage = Globals.Randomizer.Next(10, 20);
             this.ShieldPiercing = (float)Math.Round(Globals.Randomizer.NextDouble(), 2);
             this.Chance = Globals.Randomizer.Next(20, 30);
@@ -44,7 +43,6 @@ namespace Outer_Space
             this.method = method;
 
             this.TextureBackground = TextureManager.weapons[0];
-            this.Texture = TextureManager.weapons[1];
 
             Method = ListOfMethods()[method];
 

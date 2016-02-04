@@ -23,8 +23,9 @@ namespace Outer_Space
         // Inventory
         private Item selectedItem;
         private Point selectedItemArrayPosition;
-        public Point FirstEmpty { 
-            get 
+        public Point FirstEmpty
+        {
+            get
             {
                 for (int i = 0; i < Inventory.GetLength(1) - 1; i++)
                 {
@@ -59,17 +60,62 @@ namespace Outer_Space
             Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
             Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
-            for (int i = 0; i < Inventory.GetLength(0); i++)
+            for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
-                {
-                    Inventory[i, j] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
-                    Inventory[i, j].RecentlyAcquired = true;
-                }
+                AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Use item to regain 10 % health."));
             }
+            //for (int i = 0; i < Inventory.GetLength(0); i++)
+            //{
+            //    for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+            //    {
+            //        Inventory[i, j] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
+            //        Inventory[i, j].RecentlyAcquired = true;
+            //    }
+            //}
         }
 
         // Method(s)
+        public void AddItem(Item item)
+        {
+            bool done = false;
+            for (int i = 0; i < Inventory.GetLength(1) - 1; i++)
+            {
+                for (int j = 0; j < Inventory.GetLength(0); j++)
+                {
+                    if (item.Type != ItemType.misc)
+                    {
+                        if (Inventory[j, i].Type == ItemType.nothing)
+                        {
+                            Inventory[j, i].RecentlyAcquired = true;
+                            Inventory[j, i] = item;
+                            done = true;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (Inventory[j, i].Type == ItemType.nothing )
+                        {
+                            Inventory[j, i].RecentlyAcquired = true;
+                            Inventory[j, i] = item;
+                            done = true;
+                            break;
+                        }
+                        else if (Inventory[j, i].Type == item.Type && Inventory[j, i].UseItem == item.UseItem)
+                        {
+                            Inventory[j, i].RecentlyAcquired = true;
+                            Inventory[j, i].NumberOfItems++;
+                            done = true;
+                            break;
+                        }
+                    }
+                }
+                if (done)
+                {
+                    break;
+                }
+            }
+        }
 
         public void EquipItem(Item item)
         {
@@ -98,7 +144,13 @@ namespace Outer_Space
                     {
                         selectedItem = Inventory[i, j];
                         selectedItemArrayPosition = new Point(i, j);
-                    } 
+                    }
+
+                    // Right click
+                    if (Inventory[i, j].PressedRight() && Inventory[i, j].Type != ItemType.nothing)
+                    {
+                        Inventory[i, j].UseItem(this, Inventory[i, j]);
+                    }
                 }
             }
 
@@ -150,13 +202,23 @@ namespace Outer_Space
 
                 selectedItem = null;
                 selectedItemArrayPosition = new Point(0, 0);
+
+                // remove
+                for (int i = Inventory.GetLength(0) - 1; i >= 0; i--)
+                {
+                    for (int j = Inventory.GetLength(1) - 1; j >= 0; j--)
+                    {
+                        if (Inventory[i, j].Dead)
+                        {
+                            Inventory[i, j] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "");
+                        }
+                    }
+                }
             }
         }
 
         public void DrawInventory(SpriteBatch spriteBatch)
         {
-            // Selected item
-
             // Health
             Health.Draw(spriteBatch);
             spriteBatch.DrawString(TextureManager.SpriteFont15, "Current Health:", new Vector2(Health.Position.X + 15, Health.Position.Y - 30), Color.White);

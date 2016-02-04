@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Outer_Space
 {
-    public enum ItemType { nothing, weapon, shield, hull }
+    public enum ItemType { nothing, weapon, shield, hull, misc }
 
     public class Item : GameObject
     {
@@ -18,15 +18,52 @@ namespace Outer_Space
         public bool RecentlyAcquired;
         private float recentlyAcquiredOpacity;
         private bool recentlyAcquiredflip;
+        public Use UseItem { get; set; }
+        public int NumberOfItems { get; set; }
 
-        public Item()
+        public Item(Use useItem, ItemType type, Texture2D texture, string description)
             : base()
         {
-            Description = "";
-            this.Colour = new Color(Globals.Randomizer.Next(50, 255), Globals.Randomizer.Next(50, 255), Globals.Randomizer.Next(50, 255));
+            if (type != ItemType.misc)
+            {
+                this.Colour = new Color(Globals.Randomizer.Next(50, 255), Globals.Randomizer.Next(50, 255), Globals.Randomizer.Next(50, 255));
+            }
             this.Depth = 0.1f;
+            this.UseItem = useItem;
+            this.Type = type;
+            this.Texture = texture;
+            Description = description;
+            this.NumberOfItems = 1;
+        }
 
-            this.Type = ItemType.nothing;
+        public delegate void Use(Player player, Item item);
+
+        public static void Nothing(Player player, Item item)
+        { }
+
+        public static void HealPlayer(Player player, Item item)
+        {
+            if (player.Health.Value < player.Health.MaxValue)
+            {
+                player.Health.Change(player.Health.MaxValue / 10);
+                if (item.NumberOfItems > 1)
+                {
+                    item.NumberOfItems--;
+                }
+                else
+                {
+                    item.Dead = true;
+                }
+            }
+        }
+
+        public bool PressedRight()
+        {
+            if (HoverOver() && Globals.MState.RightButton == ButtonState.Pressed && Globals.PrevMState.RightButton == ButtonState.Released)
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool HoverOver()
@@ -57,6 +94,11 @@ namespace Outer_Space
         {
             Position = position;
             Draw(spriteBatch);
+
+            if (NumberOfItems > 1)
+            {
+                spriteBatch.DrawString(TextureManager.SpriteFont15, NumberOfItems.ToString(), new Vector2(Position.X + 15, Position.Y + 8), Color.White);
+            }
 
             if (RecentlyAcquired)
             {

@@ -76,7 +76,7 @@ namespace Outer_Space
             {
                 for (int j = 0; j < 6; j++)
                 {
-                    Inventory[i, j] = (new Item());
+                    Inventory[i, j] = (new Item(Item.Nothing, ItemType.nothing, TextureManager.none, ""));
                 }
             }
 

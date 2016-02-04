@@ -26,7 +26,7 @@ namespace Outer_Space
 
         // Constructor(s)
         public Hull(Ship ship, int method)
-            : base()
+            : base(Item.Nothing, ItemType.hull, TextureManager.hulls[Globals.Randomizer.Next(0, TextureManager.hulls.Count)], "")
         {
             this.Type = ItemType.hull;
 
@@ -40,8 +40,6 @@ namespace Outer_Space
                     TileChance.Add((TileType)i);
                 }
             }
-
-            this.Texture = TextureManager.hulls[Globals.Randomizer.Next(0, TextureManager.hulls.Count)];
 
             this.Armor = Globals.Randomizer.Next(5, 10);
 
