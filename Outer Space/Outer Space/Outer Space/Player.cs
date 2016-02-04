@@ -47,7 +47,7 @@ namespace Outer_Space
             this.Texture = TextureManager.boss;
             this.Position = new Vector2(300, Globals.ScreenSize.Y - Texture.Height);
 
-            this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.OrangeRed);
+            this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.Orange);
 
             // Weapontargets
             foreach (Weapon w in Weapons)

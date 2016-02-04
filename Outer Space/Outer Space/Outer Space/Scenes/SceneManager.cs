@@ -19,12 +19,14 @@ namespace Outer_Space
         private static Scene changeTo;
 
         private static int changeSceneTimer;
+        public static bool started;
 
         public static MenuScene menuScene { get; set; }
         public static OptionsScene optionsScene { get; set; }
         public static ShipSelectScene shipSelectScene { get; set; }
         public static InventoryScene inventoryScene { get; set; }
         public static MapScene mapScene { get; set; }
+        public static ControlScene controlScene { get; set; }
 
         public static void Initialize()
         {
@@ -33,6 +35,7 @@ namespace Outer_Space
             shipSelectScene = new ShipSelectScene();
             inventoryScene = new InventoryScene();
             mapScene = new MapScene();
+            controlScene = new ControlScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

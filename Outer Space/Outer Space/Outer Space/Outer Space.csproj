@@ -116,6 +116,7 @@
     <Compile Include="Globals.cs" />
     <Compile Include="Hull.cs" />
     <Compile Include="Item.cs" />
+    <Compile Include="Scenes\ControlScene.cs" />
     <Compile Include="Scenes\InventoryScene.cs" />
     <Compile Include="Level.cs" />
     <Compile Include="MenuRock.cs" />

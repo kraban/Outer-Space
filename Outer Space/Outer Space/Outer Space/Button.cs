@@ -57,7 +57,7 @@ namespace Outer_Space
         {
             if (exploded <= 0)
             {
-                if (Globals.MRectangle.Intersects(Box))
+                if (Hover())
                 {
                     Offset = MathHelper.Lerp(Offset, 20, 0.1f);
                     size = MathHelper.Lerp(size, 1.5f, 0.1f);
@@ -97,6 +97,15 @@ namespace Outer_Space
                 characters.Last().Speed = MathHelper.Lerp(2, 4, (float)Globals.Randomizer.NextDouble());
                 characters.Last().MoveDirection = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
             }
+        }
+
+        public bool Hover()
+        {
+            if (Globals.MRectangle.Intersects(Box))
+            {
+                return true;
+            }
+            return false;
         }
 
         public bool Press()

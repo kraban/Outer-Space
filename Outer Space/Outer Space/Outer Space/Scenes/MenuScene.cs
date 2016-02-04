@@ -16,6 +16,7 @@ namespace Outer_Space
         public Button Start { get; set; }
         public Button Options { get; set; }
         public Button Quit { get; set; }
+        public Button Continue { get; set; }
 
         public float Score { get; set; }
         public float LerpScore { get; set; }
@@ -25,8 +26,9 @@ namespace Outer_Space
         public MenuScene()
         {
             this.Start = new Button(new Vector2(200, 200), "Start", TextureManager.SpriteFont20);
-            this.Options = new Button(new Vector2(200, 250), "Options", TextureManager.SpriteFont20);
-            this.Quit = new Button(new Vector2(200, 300), "Quit", TextureManager.SpriteFont20);
+            this.Continue = new Button(new Vector2(200, 250), "Continue", TextureManager.SpriteFont20);
+            this.Options = new Button(new Vector2(200, 300), "Options", TextureManager.SpriteFont20);
+            this.Quit = new Button(new Vector2(200, 350), "Quit", TextureManager.SpriteFont20);
 
             this.GameObjects = new List<GameObject>();
         }
@@ -34,19 +36,27 @@ namespace Outer_Space
         public override void Update()
         {
             Start.Update();
-            Options.Update();
-            Quit.Update();
-
             if (Start.Press())
             {
                 SceneManager.ChangeScene(SceneManager.shipSelectScene);
             }
 
+            if (SceneManager.started)
+            {
+                Continue.Update();
+                if (Continue.Press())
+                {
+                    SceneManager.ChangeScene(SceneManager.mapScene);
+                }
+            }
+
+            Options.Update();
             if (Options.Press())
             {
                 SceneManager.ChangeScene(SceneManager.optionsScene);
             }
 
+            Quit.Update();
             if (Quit.Press())
             {
                 Game1.Quit();
@@ -90,7 +100,14 @@ namespace Outer_Space
         {
             Start.Draw(spriteBatch);
             Options.Draw(spriteBatch);
+            Continue.Draw(spriteBatch);
             Quit.Draw(spriteBatch);
+
+            // Warning
+            if (Start.Hover() && SceneManager.started)
+            {
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Warning!\nIf you start a new game you will loose all previous progress!", new Vector2(355, 170), Color.Red);
+            }
 
             foreach (GameObject go in GameObjects)
             {

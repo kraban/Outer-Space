@@ -24,18 +24,25 @@ namespace Outer_Space
         private int levelToBeSelected;
 
         public Button Inventory { get; set; }
+        public Button Menu { get; set; }
 
         public MapScene()
             : base()
         {
             this.Inventory = new Button(new Vector2(200, 30), "Inventory", TextureManager.SpriteFont20);
-            this.SpaceObjects = new List<GameObject>();
-            this.Levels = new List<Level>();
-            this.ThePlayer = new Player();
+            this.Menu = new Button(new Vector2(0, Globals.ScreenSize.Y - 20), "Menu", TextureManager.SpriteFont20);
             this.SelectedLevel = -1;
             this.levelToBeSelected = -1;
             this.delay = -1;
             nearestLevels = new List<Level>();
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            this.SpaceObjects = new List<GameObject>();
+            this.Levels = new List<Level>();
+            this.ThePlayer = new Player();
             GenerateMap();
 
             // Add modifiers
@@ -55,7 +62,7 @@ namespace Outer_Space
                         for (int j = 0; j < Globals.Randomizer.Next(7, 15); j++)
                         {
                             SpaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(modifierPosition.X + Globals.Randomizer.Next(-100, 100), modifierPosition.Y + Globals.Randomizer.Next(-100, 100)), 0.3f));
-                        } 
+                        }
                     }
                 }
             }
@@ -152,6 +159,7 @@ namespace Outer_Space
                 }
 
                 Inventory.Draw(spriteBatch);
+                Menu.Draw(spriteBatch);
 
                 // Draw lines to close stars
                 foreach (Level level in nearestLevels)
@@ -199,6 +207,12 @@ namespace Outer_Space
                 if (Inventory.Press())
                 {
                     SceneManager.ChangeScene(SceneManager.inventoryScene);
+                }
+
+                Menu.Update();
+                if (Menu.Press())
+                {
+                    SceneManager.ChangeScene(SceneManager.menuScene);
                 }
 
                 for (int i = 0; i < Levels.Count; i++)

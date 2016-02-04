@@ -45,8 +45,10 @@ namespace Outer_Space
                 ShipButtons[i].Update();
                 if (ShipButtons[i].Pressed())
                 {
+                    SceneManager.mapScene.Initialize();
                     SceneManager.ChangeScene(SceneManager.mapScene);
                     SceneManager.mapScene.ThePlayer.Texture = ShipButtons[i].Texture;
+                    SceneManager.started = true;
                     if (i == 0)
                     {
                         SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship1EngineAnimation;

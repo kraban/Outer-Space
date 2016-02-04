@@ -14,12 +14,14 @@ namespace Outer_Space
     public class OptionsScene : Scene
     {
         public Button Back { get; set; }
+        public Button Controls { get; set; }
 
         public Slider StarChanceSlider { get; set; }
 
         public OptionsScene()
         {
             this.Back = new Button(new Vector2(200, 200), "Back", TextureManager.SpriteFont20);
+            this.Controls = new Button(new Vector2(200, 250), "Controls", TextureManager.SpriteFont20);
 
             this.StarChanceSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(300, 300), 100, 10, TextureManager.SpriteFont20, "Star Chance");
         }
@@ -34,6 +36,12 @@ namespace Outer_Space
                 SceneManager.ChangeScene(SceneManager.menuScene);
             }
 
+            Controls.Update();
+            if (Controls.Press())
+            {
+                SceneManager.ChangeScene(SceneManager.controlScene);
+            }
+
             StarChanceSlider.Update();
         }
 
@@ -42,6 +50,7 @@ namespace Outer_Space
             base.Draw(spriteBatch);
 
             Back.Draw(spriteBatch);
+            Controls.Draw(spriteBatch);
 
             StarChanceSlider.Draw(spriteBatch);
         }
