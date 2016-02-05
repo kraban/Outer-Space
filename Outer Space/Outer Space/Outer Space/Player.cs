@@ -19,8 +19,11 @@ namespace Outer_Space
         public float Speed { get; set; }
 
         public Bar Energy { get; set; }
+
+        // Rank
         public int Rank { get; set; }
         public Bar Experience { get; set; }
+        public List<string> RankPerks { get; set; }
 
         // Inventory
         private Item selectedItem;
@@ -35,8 +38,9 @@ namespace Outer_Space
 
             this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.Orange);
             this.Rank = 1;
-            this.Experience = new Bar(new Vector2(Globals.ScreenSize.X / 2 - 300, 50), 300, 25, 100, Color.Green);
+            this.Experience = new Bar(new Vector2(Globals.ScreenSize.X / 2 - 330, 50), 300, 25, 100, Color.Green);
             this.Experience.Change(-Experience.MaxValue + 10);
+            this.RankPerks = new List<string>();
 
             // Weapontargets
             foreach (Weapon w in Weapons)
@@ -128,23 +132,37 @@ namespace Outer_Space
 
         public void RankUp()
         {
-            int random = Globals.Randomizer.Next(0, 4);
+            int random = Globals.Randomizer.Next(0, 5);
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
                 AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count())));
+                RankPerks.Add("Shield Module");
             }
             else if (random == 1)
             {
                 AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count())));
+                RankPerks.Add("Hull Module");
             }
             else if (random == 2)
             {
                 AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+                RankPerks.Add("Weapon Module");
             }
             else if (random == 3)
             {
-
+                for (int i = 0; i < 3; i++)
+                {
+                    AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
+                    AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
+                }
+                RankPerks.Add("Misc items");
+            }
+            else if (random == 4)
+            {
+                Health.MaxValue += 10;
+                Health.Change(10);
+                RankPerks.Add("Increase health by 10");
             }
 
         }
@@ -164,8 +182,13 @@ namespace Outer_Space
 
         public void DrawRank(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Rank: " + Rank, new Vector2(Globals.ScreenSize.X / 2 - 15, 100), new Color(0, 255, 255));
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Rank: " + Rank, new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont20.MeasureString("Rank: " + Rank).X / 2, 100), new Color(0, 255, 255));
             Experience.Draw(spriteBatch);
+
+            for (int i = 0; i < RankPerks.Count(); i++)
+            {
+                spriteBatch.DrawString(TextureManager.SpriteFont15, RankPerks[i], new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont15.MeasureString(RankPerks[i]).X / 2, i * 25 + 150), Color.White);
+            }
         }
 
         public void EquipItem(Item item)

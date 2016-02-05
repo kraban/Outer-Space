@@ -115,7 +115,7 @@ namespace Outer_Space
 
             if (NumberOfItems > 1)
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, NumberOfItems.ToString(), new Vector2(Position.X + 15, Position.Y + 8), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, NumberOfItems.ToString(), new Vector2(Position.X - 32, Position.Y + 8), Color.White);
             }
 
             if (RecentlyAcquired)

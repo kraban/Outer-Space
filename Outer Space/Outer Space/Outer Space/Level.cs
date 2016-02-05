@@ -644,7 +644,7 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
-                        Player.GainExperience((int)EnemyDifficulty * 30 + 50);
+                        Player.GainExperience((int)EnemyDifficulty * 30 + 50 + 500);
                         if (Rewards.Count() > 0)
                         {
                             foreach (Item reward in Rewards)
