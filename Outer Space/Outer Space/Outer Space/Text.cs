@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace Outer_Space
 {
-    class Text : GameObject
+    public class Text : GameObject
     {
         // Public properties
         public string Write { get; set; }
@@ -24,10 +24,11 @@ namespace Outer_Space
         private int duration;
         private int maxDuration;
         private float maxSize;
-        private Color opacityColor;
+        private SpriteFont spriteFont;
+        private bool flash;
 
         // Constructor(s)
-        public Text(Vector2 position, string write, Color textColor, int duration, float size)
+        public Text(Vector2 position, string write, Color textColor, int duration, float size, bool flash, SpriteFont spriteFont)
             : base()
         {
             this.Position = position;
@@ -37,6 +38,12 @@ namespace Outer_Space
             this.maxDuration = duration;
             this.Size = size;
             this.maxSize = size;
+            this.spriteFont = spriteFont;
+            if (flash)
+            {
+                this.flash = flash;
+                this.Flash = duration;
+            }
         }
 
         // Method(s)
@@ -88,11 +95,11 @@ namespace Outer_Space
         {
             if (!Write.Contains("|"))
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont20, Write, Position, opacityColor, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth); 
+                spriteBatch.DrawString(spriteFont, Write, Position, TextColor * opacity, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth); 
             }
             else // different colors in same string
             {
-                TextDifferentColor(spriteBatch, Write, Position, Size, TextureManager.SpriteFont20, true);
+                TextDifferentColor(spriteBatch, Write, Position, Size, spriteFont, true);
             }
         }
 
@@ -110,8 +117,11 @@ namespace Outer_Space
             Position += new Vector2((float)Math.Cos(MoveDirection) * Speed, (float)Math.Sin(MoveDirection) * Speed);
 
             duration--;
-            Size -= maxSize / maxDuration;
-            opacityColor = TextColor * Size;
+            if (!flash)
+            {
+                Size -= maxSize / maxDuration;
+                opacity = Size;
+            }
             if (duration < 0)
             {
                 Dead = true;

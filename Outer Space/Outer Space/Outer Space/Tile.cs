@@ -63,7 +63,7 @@ namespace Outer_Space
             if (Position != new Vector2(TilePosition.X * 64 + (Globals.ScreenSize.X - 64 * 8), TilePosition.Y * 64 + 100))
             {
                 Vector2 move = new Vector2(TilePosition.X * 64 + (Globals.ScreenSize.X - 64 * 8), TilePosition.Y * 64 + 100) - Position;
-                Position += move * 0.06f;
+                Position += move * 0.1f;
 
                 // set move to stop matching when moving
                 if (move.Length() > 5)

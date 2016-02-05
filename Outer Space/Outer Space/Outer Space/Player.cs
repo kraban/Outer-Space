@@ -19,6 +19,8 @@ namespace Outer_Space
         public float Speed { get; set; }
 
         public Bar Energy { get; set; }
+        public int Rank { get; set; }
+        public Bar Experience { get; set; }
 
         // Inventory
         private Item selectedItem;
@@ -32,6 +34,9 @@ namespace Outer_Space
             this.Position = new Vector2(300, Globals.ScreenSize.Y - Texture.Height);
 
             this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.Orange);
+            this.Rank = 1;
+            this.Experience = new Bar(new Vector2(Globals.ScreenSize.X / 2 - 300, 50), 300, 25, 100, Color.Green);
+            this.Experience.Change(-Experience.MaxValue + 10);
 
             // Weapontargets
             foreach (Weapon w in Weapons)
@@ -48,10 +53,10 @@ namespace Outer_Space
                 AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
                 AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
             }
-            for (int i = 0; i < 20; i++)
-            {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
-            }
+            //for (int i = 0; i < 20; i++)
+            //{
+            //    AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+            //}
         }
 
         // Method(s)
@@ -119,6 +124,48 @@ namespace Outer_Space
                     break;
                 }
             }
+        }
+
+        public void RankUp()
+        {
+            int random = Globals.Randomizer.Next(0, 4);
+            SceneManager.mapScene.NewRank.Flash = 10;
+            if (random == 0)
+            {
+                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count())));
+            }
+            else if (random == 1)
+            {
+                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count())));
+            }
+            else if (random == 2)
+            {
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+            }
+            else if (random == 3)
+            {
+
+            }
+
+        }
+
+        public void GainExperience(float value)
+        {
+            float overflow = Experience.Change(value);
+            while (overflow > 0)
+            {
+                Rank++;
+                RankUp();
+                Experience.Change(-Experience.MaxValue);
+                Experience.MaxValue = Rank * 50 + 100;
+                overflow = Experience.Change(overflow);
+            }
+        }
+
+        public void DrawRank(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Rank: " + Rank, new Vector2(Globals.ScreenSize.X / 2 - 15, 100), new Color(0, 255, 255));
+            Experience.Draw(spriteBatch);
         }
 
         public void EquipItem(Item item)

@@ -27,6 +27,7 @@ namespace Outer_Space
         public static InventoryScene inventoryScene { get; set; }
         public static MapScene mapScene { get; set; }
         public static ControlScene controlScene { get; set; }
+        public static RankScene rankScene { get; set; }
 
         public static void Initialize()
         {
@@ -36,6 +37,7 @@ namespace Outer_Space
             inventoryScene = new InventoryScene();
             mapScene = new MapScene();
             controlScene = new ControlScene();
+            rankScene = new RankScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

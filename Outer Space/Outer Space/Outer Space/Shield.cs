@@ -146,6 +146,10 @@ namespace Outer_Space
                 ship.Size = 0;
                 ship.Position = new Vector2((int)ship.ShipLocation * 100 + 200, ship.Position.Y);
             }
+            else
+            {
+                ship.TakeDamage(damage, goThroughShield, damageType, true);
+            }
         }
     }
 }

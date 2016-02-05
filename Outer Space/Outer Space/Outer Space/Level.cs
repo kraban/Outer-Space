@@ -256,7 +256,7 @@ namespace Outer_Space
                                 // Create pieces and text
                                 if (k == 0)
                                 {
-                                    GameObjects.Add(new Text(new Vector2(Tiles[i][j].Position.X, Tiles[i][j].Position.Y + (number * 64) / 2 - 32), Tiles[i][j + k].Type.ToString(), Color.Red, 120, 2));
+                                    GameObjects.Add(new Text(new Vector2(Tiles[i][j].Position.X, Tiles[i][j].Position.Y + (number * 64) / 2 - 32), Tiles[i][j + k].Type.ToString(), Color.Red, 120, 2, false, TextureManager.SpriteFont20));
                                 }
                                 Explosion(i, j + k);
                             }
@@ -293,7 +293,7 @@ namespace Outer_Space
                                 // Create pieces and text
                                 if (k == 0)
                                 {
-                                    GameObjects.Add(new Text(new Vector2(Tiles[i][j].Position.X + (number * 64) / 2 - 32, Tiles[i][j].Position.Y), Tiles[i + k][j].Type.ToString(), Color.Red, 120, 2));
+                                    GameObjects.Add(new Text(new Vector2(Tiles[i][j].Position.X + (number * 64) / 2 - 32, Tiles[i][j].Position.Y), Tiles[i + k][j].Type.ToString(), Color.Red, 120, 2, false, TextureManager.SpriteFont20));
                                 }
                                 Explosion(i + k, j);
                             }
@@ -458,7 +458,7 @@ namespace Outer_Space
 
         public void CombatText(string text)
         {
-            ToAdd.Add(new Text(new Vector2(Globals.CombatScreenSize.X / 2, Globals.CombatScreenSize.Y / 2), text, Color.Red, 180, 1.5f));
+            ToAdd.Add(new Text(new Vector2(Globals.CombatScreenSize.X / 2, Globals.CombatScreenSize.Y / 2), text, Color.Red, 180, 1.5f, false, TextureManager.SpriteFont20));
         }
 
         public bool CheckAdjacent(int x, int y)
@@ -566,7 +566,7 @@ namespace Outer_Space
                                             Tiles[i][j].Moving = false;
                                             Tiles[Selected.TilePosition.X][Selected.TilePosition.Y] = Selected;
                                             Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Moving = false;
-                                            GameObjects.Add(new Text(Tiles[i][j].Position - (Tiles[i][j].Position - Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Position), "Invalid Swap!", Color.Red, 60, 2));
+                                            GameObjects.Add(new Text(Tiles[i][j].Position - (Tiles[i][j].Position - Tiles[Selected.TilePosition.X][Selected.TilePosition.Y].Position), "Invalid Swap!", Color.Red, 60, 2, false, TextureManager.SpriteFont20));
                                         }
                                         Selected = null;
                                     }
@@ -644,13 +644,14 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
+                        Player.GainExperience((int)EnemyDifficulty * 30 + 50);
                         if (Rewards.Count() > 0)
                         {
                             foreach (Item reward in Rewards)
                             {
                                 Player.AddItem(reward);
                             }
-                            SceneManager.mapScene.SpaceObjects.Add(new Text(new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2), "New items acquired! Go to inventory to check them out", Color.White, 180, 2f));
+                            SceneManager.mapScene.NewItems.Flash = 10;
                         }
                         Player.Move = true;
                     }

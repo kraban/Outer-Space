@@ -22,20 +22,27 @@ namespace Outer_Space
         public List<GameObject> SpaceObjects;
         private int delay;
         private int levelToBeSelected;
+        public Text NewRank { get; set; }
+        public Text NewItems { get; set; }
 
         public Button Inventory { get; set; }
         public Button Menu { get; set; }
+        public Button Rank { get; set; }
 
         public MapScene()
             : base()
         {
             this.Inventory = new Button(new Vector2(200, 30), "Inventory", TextureManager.SpriteFont20);
             this.Menu = new Button(new Vector2(0, Globals.ScreenSize.Y - 20), "Menu", TextureManager.SpriteFont20);
+            this.Rank = new Button(new Vector2(600, 30), "Rank", TextureManager.SpriteFont20);
             this.SelectedLevel = -1;
             this.levelToBeSelected = -1;
             this.delay = -1;
             nearestLevels = new List<Level>();
             Initialize();
+
+            this.NewRank = new Text(new Vector2(600, 70), "New Rank!", new Color(0, 255, 255), 0, 1f, true, TextureManager.SpriteFont15);
+            this.NewItems = new Text(new Vector2(300, 70), "New Items!", new Color(0, 255, 255), 0, 1f, true, TextureManager.SpriteFont15);
         }
 
         public void Initialize()
@@ -158,8 +165,22 @@ namespace Outer_Space
                     spaceObject.Draw(spriteBatch);
                 }
 
+                if (NewItems.Flash > 0)
+                {
+                    NewItems.Flash++;
+                    NewItems.Draw(spriteBatch);
+                }
+
+                if (NewRank.Flash > 0)
+                {
+                    NewRank.Flash++;
+                    NewRank.Draw(spriteBatch);
+                }
+
+
                 Inventory.Draw(spriteBatch);
                 Menu.Draw(spriteBatch);
+                Rank.Draw(spriteBatch);
 
                 // Draw lines to close stars
                 foreach (Level level in nearestLevels)
@@ -203,16 +224,35 @@ namespace Outer_Space
                     spaceObject.Update();
                 }
 
+                for (int i = SpaceObjects.Count() - 1; i >= 0; i--)
+                {
+                    if (SpaceObjects[i].Dead)
+                    {
+                        SpaceObjects.RemoveAt(i);
+                    }
+                }
+
+                NewItems.Update();
+                NewRank.Update();
+
                 Inventory.Update();
                 if (Inventory.Press())
                 {
                     SceneManager.ChangeScene(SceneManager.inventoryScene);
+                    NewItems.Flash = -1;
                 }
 
                 Menu.Update();
                 if (Menu.Press())
                 {
                     SceneManager.ChangeScene(SceneManager.menuScene);
+                }
+
+                Rank.Update();
+                if (Rank.Press())
+                {
+                    SceneManager.ChangeScene(SceneManager.rankScene);
+                    NewRank.Flash = -1;
                 }
 
                 for (int i = 0; i < Levels.Count; i++)

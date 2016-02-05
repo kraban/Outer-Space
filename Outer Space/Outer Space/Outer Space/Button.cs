@@ -93,7 +93,7 @@ namespace Outer_Space
             exploded = 60;
             for (int i = 0; i < Write.Length; i++)
             {
-                characters.Add(new Text(new Vector2(Position.X + Offset + (spriteFont.MeasureString(Write[i].ToString()).X * (i + 0.5f)), Position.Y + (spriteFont.MeasureString(Write).Y) / 2), Write[i].ToString(), HoverColor, exploded, 1.4f));
+                characters.Add(new Text(new Vector2(Position.X + Offset + (spriteFont.MeasureString(Write[i].ToString()).X * (i + 0.5f)), Position.Y + (spriteFont.MeasureString(Write).Y) / 2), Write[i].ToString(), HoverColor, exploded, 1.4f, false, TextureManager.SpriteFont20));
                 characters.Last().Speed = MathHelper.Lerp(2, 4, (float)Globals.Randomizer.NextDouble());
                 characters.Last().MoveDirection = MathHelper.Lerp(0, (float)Math.PI * 2, (float)Globals.Randomizer.NextDouble());
             }
