@@ -25,6 +25,7 @@ namespace Outer_Space
         public override void Update()
         {
             base.Update();
+            SceneManager.mapScene.KilledPlayer.UpdateGameOver();
 
             Quit.Update();
             if (Quit.Press())
@@ -44,7 +45,8 @@ namespace Outer_Space
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Game Over", new Vector2(400, 50), Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Game Over", new Vector2(400, 60), Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
+            SceneManager.mapScene.KilledPlayer.DrawGameOver(spriteBatch);
 
             Quit.Draw(spriteBatch);
             Menu.Draw(spriteBatch);

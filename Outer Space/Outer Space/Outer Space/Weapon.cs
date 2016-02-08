@@ -158,6 +158,7 @@ namespace Outer_Space
             if (drawDescription)
             {
                 Text.TextDifferentColor(spriteBatch, Description, new Vector2(Position.X + Texture.Width / 2 + 20, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
+                drawDescription = false;
             }
 
             // Disabled

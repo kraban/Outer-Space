@@ -155,6 +155,7 @@ namespace Outer_Space
             Player.MoveLeft = 0;
             Player.MoveRight = 0;
             player.ShipShield.Change(player.ShipShield.MaxValue);
+            SceneManager.mapScene.KilledPlayer = (Enemy)GameObjects.First(item => item is Enemy);
         }
 
         public void LeaveLevel(bool flee)

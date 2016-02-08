@@ -197,5 +197,27 @@ namespace Outer_Space
             ShipShield.Draw(spriteBatch);
             ShipHull.Draw(spriteBatch);
         }
+
+        public void DrawGameOver(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth - 0.1f);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Killer", new Vector2(500, 160), Color.White);
+            ShipShield.DrawInventory(spriteBatch, new Vector2(564, 300));
+            ShipHull.DrawInventory(spriteBatch, new Vector2(628, 300));
+            Health.Draw(spriteBatch);
+            for (int i = 0; i < Weapons.Count(); i++)
+            {
+                Weapons[i].DrawInventory(spriteBatch, new Vector2(692 + i * 64, 300));
+            }
+        }
+
+        public void UpdateGameOver()
+        {
+            Animation();
+            Size = 1.3f;
+            Position = new Vector2(440, 260);
+            Health.Position = new Vector2(500, 200);
+        }
     }
 }

@@ -25,6 +25,7 @@ namespace Outer_Space
         public Text NewRank { get; set; }
         public Text NewItems { get; set; }
         private int playerDeath;
+        public Enemy KilledPlayer { get; set; }
 
         public Button Inventory { get; set; }
         public Button Menu { get; set; }
@@ -53,6 +54,7 @@ namespace Outer_Space
             this.ThePlayer = new Player();
             GenerateMap();
             this.playerDeath = 100;
+            this.KilledPlayer = null;
 
             // Add modifiers
             for (int i = 0; i < Globals.Randomizer.Next(1, 4); i++)
