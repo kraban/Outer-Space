@@ -16,18 +16,27 @@ namespace Outer_Space
     {
         // Public properties
         public int ShootTimer { get; set; }
+        public Difficulty EnemyDifficulty { get; set; }
 
         // Constructor(s)
-        public Enemy()
+        public Enemy(Difficulty difficulty)
             : base((float)Math.PI * 0.5f)
         {
+            this.EnemyDifficulty = difficulty;
             this.Position = new Vector2((int)ShipLocation * 100 + 200, -100);
             this.Texture = TextureManager.enemyShip;
             this.engineAnimation = TextureManager.enemyShipEngineAnimation;
             this.maxFrame = 1;
 
-            this.Health = new Bar(new Vector2(70, 10), 100, 20, 10, Color.Red);
+            this.Health = new Bar(new Vector2(70, 10), 100, 20, 10 * (int)EnemyDifficulty + 10, Color.Red);
             this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 10, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
+            this.shieldRegeneration = 0.01f * (float)EnemyDifficulty;
+
+            // Difficulty
+            if (EnemyDifficulty == Difficulty.Easy)
+            {
+                Inventory[3, 5] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
+            }
 
             // Weapontargets
             foreach (Weapon w in Weapons)
@@ -78,6 +87,18 @@ namespace Outer_Space
                     ShootTimer = 180;
                     KnockBack = -3;
                     Weapons[SelectedWeapon].Method(this, Weapons[SelectedWeapon], 0, level, false);
+                }
+
+                // Change weapon if not easy difficulty
+                if (EnemyDifficulty != Difficulty.Easy && CurrentWeapon.Disabled > 0 && Globals.Randomizer.Next(0, 101) < 2)
+                {
+                    for (int i = 0; i < Weapons.Count(); i++)
+                    {
+                        if (Weapons[i].Disabled <= 0)
+                        {
+                            SelectedWeapon = i;
+                        }
+                    }
                 }
 
                 // Move

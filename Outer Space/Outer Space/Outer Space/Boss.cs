@@ -31,7 +31,7 @@ namespace Outer_Space
         private DodgeState dodge;
 
         public Boss()
-            : base()
+            : base(Difficulty.Hard)
         {
             this.TextureBackground = TextureManager.boss;
             this.Texture = TextureManager.bossForeground;

@@ -75,6 +75,8 @@ namespace Outer_Space
             methods.Add(FireBonusDamageLowerHealth);
             methods.Add(FireChanceToBreak);
             methods.Add(FireEveryOther);
+            methods.Add(FireScattered);
+            methods.Add(FireIncreasingChanceOfTwo);
             return methods;
 
         }
@@ -98,6 +100,8 @@ namespace Outer_Space
             Descriptions.Add("Fire a shot that deals 1% extra damage for each percent of missing health.");
             Descriptions.Add("Fire a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to break and damage yourself.");
             Descriptions.Add("Only fires every other tile match.");
+            Descriptions.Add("Fires 3 to 5 shots in scattered directions.");
+            Descriptions.Add("For every shot fired, increase the chance of shooting an extra shot by 15 %.\nWhen an extra shot is fired, the chance is reset back to 0.");
 
             Description = "255,255,255|Damage: |255,0,0|" + Damage + "|W|\nShield Piercing: |0,0,255|" + ShieldPiercing * 100 + "|W|%|W|\n" + Descriptions[method];
         }
@@ -221,7 +225,7 @@ namespace Outer_Space
                 float miss = 0;
                 if (Globals.Randomizer.Next(0, 101) > weapon.Chance)
                 {
-                    miss = MathHelper.Lerp(-0.5f, 0.5f, (float)Globals.Randomizer.NextDouble());
+                    miss = MathHelper.Lerp(-0.5f + shooter.ShipHull.WeaponAccuracy, 0.5f - shooter.ShipHull.WeaponAccuracy, (float)Globals.Randomizer.NextDouble());
                 }
                 level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + miss, weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
@@ -370,6 +374,35 @@ namespace Outer_Space
             {
                 weapon.Chance = 0;
                 weapon.Damage *= 3;
+            }
+        }
+
+        public static void FireScattered(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                for (int i = 0; i < Globals.Randomizer.Next(3, 6); i++)
+                {
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction + MathHelper.Lerp(-0.5f + shooter.ShipHull.WeaponAccuracy, 0.5f - shooter.ShipHull.WeaponAccuracy, (float)Globals.Randomizer.NextDouble()), weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                }
+            }
+            else
+            {
+                weapon.Damage /= 3;
+            }
+        }
+
+        public static void FireIncreasingChanceOfTwo(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
+        {
+            if (!initialize)
+            {
+                if (Globals.Randomizer.Next(0, 101) < weapon.Chance)
+                {
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    weapon.Chance = 0;
+                }
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                weapon.Chance += 15;
             }
         }
 

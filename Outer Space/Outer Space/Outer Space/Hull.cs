@@ -23,6 +23,7 @@ namespace Outer_Space
         public int WeaponChance { get; set; }
         public List<TileType> TileChance { get; set; }
         public bool FlashPossibleTiles { get; set; }
+        public float WeaponAccuracy { get; set; }
 
         // Constructor(s)
         public Hull(Ship ship, int method)
@@ -55,6 +56,7 @@ namespace Outer_Space
             Descriptions.Add("Increase the chance of shield tiles appearing by 100%");
             Descriptions.Add("Increase the chance of weapon tiles appearing by 100%");
             Descriptions.Add("Flash a random possible tilematch when there has been no match for a few seconds.");
+            Descriptions.Add("Increases the accuracy of some weapons.");
 
             this.Description = "|W|Armor: |255,255,0|" + Armor + "|W|\n" + Descriptions[method];
         }
@@ -70,6 +72,7 @@ namespace Outer_Space
             methods.Add(HullTileShieldChance);
             methods.Add(HullTileShootChance);
             methods.Add(HullFlashPossibleTiles);
+            methods.Add(HullIncreaseWeaponAccuracy);
             return methods;
         }
 
@@ -136,6 +139,11 @@ namespace Outer_Space
         public static void HullFlashPossibleTiles(Ship ship, Hull hull)
         {
             hull.FlashPossibleTiles = true;
+        }
+
+        public static void HullIncreaseWeaponAccuracy(Ship ship, Hull hull)
+        {
+            hull.WeaponAccuracy += 0.25f;
         }
     }
 }

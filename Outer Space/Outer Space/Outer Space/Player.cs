@@ -57,10 +57,10 @@ namespace Outer_Space
                 AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
                 AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
             }
-            //for (int i = 0; i < 20; i++)
-            //{
-            //    AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
-            //}
+            for (int i = 0; i < 20; i++)
+            {
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+            }
         }
 
         // Method(s)
@@ -132,7 +132,7 @@ namespace Outer_Space
 
         public void RankUp()
         {
-            int random = Globals.Randomizer.Next(0, 5);
+            int random = Globals.Randomizer.Next(0, 6);
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
@@ -163,6 +163,11 @@ namespace Outer_Space
                 Health.MaxValue += 10;
                 Health.Change(10);
                 RankPerks.Add("Increase health by 10");
+            }
+            else if (random == 5)
+            {
+                shieldRegeneration += 0.01f;
+                RankPerks.Add("Increase shield regeneration");
             }
 
         }

@@ -94,7 +94,7 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                GameObjects.Add(new Enemy());
+                GameObjects.Add(new Enemy(EnemyDifficulty));
                 // Reward for defeating enemy
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {
@@ -124,6 +124,7 @@ namespace Outer_Space
             Player.ShipLocation = Location.middle;
             Player.MoveLeft = 0;
             Player.MoveRight = 0;
+            player.ShipShield.Change(player.ShipShield.MaxValue);
         }
 
         public void LeaveLevel(bool flee)

@@ -41,6 +41,7 @@ namespace Outer_Space
         public int SelectedWeapon { get; set; }
         public Weapon CurrentWeapon { get { return Weapons[SelectedWeapon]; } set { Weapons[SelectedWeapon] = value; } }
         public float KnockBack { get; set; }
+        internal float shieldRegeneration;
 
         // Engine animation
         internal Texture2D engineAnimation;
@@ -114,6 +115,7 @@ namespace Outer_Space
             DamageOverTime();
             Animation();
             Size = MathHelper.Lerp(Size, 1, 0.05f);
+            ShipShield.Change(shieldRegeneration);
 
             // Weapons
             foreach (Weapon w in Weapons)
