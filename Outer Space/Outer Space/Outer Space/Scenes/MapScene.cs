@@ -24,6 +24,7 @@ namespace Outer_Space
         private int levelToBeSelected;
         public Text NewRank { get; set; }
         public Text NewItems { get; set; }
+        private int playerDeath;
 
         public Button Inventory { get; set; }
         public Button Menu { get; set; }
@@ -51,6 +52,7 @@ namespace Outer_Space
             this.Levels = new List<Level>();
             this.ThePlayer = new Player();
             GenerateMap();
+            this.playerDeath = 100;
 
             // Add modifiers
             for (int i = 0; i < Globals.Randomizer.Next(1, 4); i++)
@@ -232,41 +234,55 @@ namespace Outer_Space
                     }
                 }
 
-                NewItems.Update();
-                NewRank.Update();
-
-                Inventory.Update();
-                if (Inventory.Press())
+                if (!ThePlayer.Dead)
                 {
-                    SceneManager.ChangeScene(SceneManager.inventoryScene);
-                    NewItems.Flash = -1;
+                    NewItems.Update();
+                    NewRank.Update();
+
+                    Inventory.Update();
+                    if (Inventory.Press())
+                    {
+                        SceneManager.ChangeScene(SceneManager.inventoryScene);
+                        NewItems.Flash = -1;
+                    }
+
+                    Menu.Update();
+                    if (Menu.Press())
+                    {
+                        SceneManager.ChangeScene(SceneManager.menuScene);
+                    }
+
+                    Rank.Update();
+                    if (Rank.Press())
+                    {
+                        SceneManager.ChangeScene(SceneManager.rankScene);
+                        NewRank.Flash = -1;
+                    }
                 }
-
-                Menu.Update();
-                if (Menu.Press())
+                else
                 {
-                    SceneManager.ChangeScene(SceneManager.menuScene);
-                }
-
-                Rank.Update();
-                if (Rank.Press())
-                {
-                    SceneManager.ChangeScene(SceneManager.rankScene);
-                    NewRank.Flash = -1;
+                    playerDeath--;
+                    if (playerDeath == 0)
+                    {
+                        SceneManager.ChangeScene(SceneManager.gameOverScene);
+                    }
                 }
 
                 for (int i = 0; i < Levels.Count; i++)
-			    {
+                {
                     Levels[i].UpdateMap();
 
-                    if (nearestLevels.Any(item => item == Levels[i]) && Levels[i].EnterLevel.Pressed() && delay < 0)
+                    if (!ThePlayer.Dead)
                     {
-                        if (!Levels[i].Complete)
+                        if (nearestLevels.Any(item => item == Levels[i]) && Levels[i].EnterLevel.Pressed() && delay < 0)
                         {
-                            levelToBeSelected = i;
-                            delay = 65;
+                            if (!Levels[i].Complete)
+                            {
+                                levelToBeSelected = i;
+                                delay = 65;
+                            }
+                            PlayerMove(i);
                         }
-                        PlayerMove(i);
                     }
                 }
             }

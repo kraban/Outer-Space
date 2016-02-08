@@ -393,6 +393,13 @@ namespace Outer_Space
         {
             if (!Move)
             {
+                // Die
+                if (Health.Value <= 0)
+                {
+                    Move = true;
+                    Dead = true;
+                }
+
                 Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Globals.ScreenSize.Y - Texture.Height, 0.1f));
                 base.UpdateLevel(level);
                 // Select weapon
@@ -437,6 +444,16 @@ namespace Outer_Space
                 Direction = MathHelper.Lerp(Direction, (float)Math.PI, 0.03f);
                 Speed += 0.1f;
                 Position += new Vector2((float)Math.Cos(Direction) * Speed, (float)Math.Sin(Direction) * Speed);
+
+                if (Dead == true)
+                {
+                    Speed -= 0.06f;
+                    Direction += MathHelper.Lerp(-0.15f, 0.15f, (float)Globals.Randomizer.NextDouble());
+                    for (int i = 0; i < Globals.Randomizer.Next(1, 2); i++)
+                    {
+                        level.ToAdd.Add(new Piece(new Vector2(Position.X + Globals.Randomizer.Next(-20, 20), Position.Y + Globals.Randomizer.Next(-20, 20)), Texture, 60, 0.5f));
+                    }
+                }
             }
         }
 

@@ -32,6 +32,7 @@ namespace Outer_Space
         public List<Item> Rewards { get; set; }
         private int timeSinceLastMatch;
         public Difficulty EnemyDifficulty { get; set; }
+        private int playerDie;
 
         public TextureButton EnterLevel { get; set; }
 
@@ -45,6 +46,7 @@ namespace Outer_Space
             this.ToAdd = new List<GameObject>();
             this.Rewards = new List<Item>();
             this.EnemyDifficulty = difficulty;
+            this.playerDie = 60;
 
             this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
 
@@ -59,10 +61,35 @@ namespace Outer_Space
             EnterLevel.Update();
             if (PlayerOnStar)
             {
-                SceneManager.mapScene.ThePlayer.Animation();
-                PlayerDirection += 0.01f;
-                PlayerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(PlayerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(PlayerDirection) * 20);
-                PlayerSize = MathHelper.Lerp(PlayerSize, 0.5f, 0.05f);
+                if (SceneManager.mapScene.ThePlayer.Dead == true)
+                {
+                    if (playerDie >= 0)
+                    {
+                        playerDie--;
+                        PlayerPosition += new Vector2(2 * (float)Math.Cos(PlayerDirection + (float)Math.PI * 0.5f), 2 * (float)Math.Sin(PlayerDirection + (float)Math.PI * 0.5f));
+                        for (int i = 0; i < Globals.Randomizer.Next(1, 2); i++)
+                        {
+                            SceneManager.mapScene.SpaceObjects.Add(new Piece(PlayerPosition, SceneManager.mapScene.ThePlayer.Texture, 30, 0.2f));
+                            SceneManager.mapScene.SpaceObjects.Add(new Piece(PlayerPosition, TextureManager.explosion, 30, 1f));
+                        }
+
+                        if (playerDie == 0)
+                        {
+                            for (int i = 0; i < Globals.Randomizer.Next(25, 35); i++)
+                            {
+                                SceneManager.mapScene.SpaceObjects.Add(new Piece(PlayerPosition, SceneManager.mapScene.ThePlayer.Texture, 120, 0.5f));
+                                SceneManager.mapScene.SpaceObjects.Add(new Piece(PlayerPosition, TextureManager.explosion, 120, 1));
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    SceneManager.mapScene.ThePlayer.Animation();
+                    PlayerDirection += 0.01f;
+                    PlayerPosition = new Vector2(EnterLevel.Position.X + (float)Math.Cos(PlayerDirection) * 20, EnterLevel.Position.Y + (float)Math.Sin(PlayerDirection) * 20);
+                    PlayerSize = MathHelper.Lerp(PlayerSize, 0.5f, 0.05f);
+                }
             }
             else
             {
@@ -73,7 +100,10 @@ namespace Outer_Space
         public void DrawMap(SpriteBatch spriteBatch)
         {
             EnterLevel.Draw(spriteBatch);
-            SceneManager.mapScene.ThePlayer.DrawMap(spriteBatch, PlayerPosition, PlayerSize, PlayerDirection + (float)Math.PI * 0.5f);
+            if (playerDie > 0)
+            {
+                SceneManager.mapScene.ThePlayer.DrawMap(spriteBatch, PlayerPosition, PlayerSize, PlayerDirection + (float)Math.PI * 0.5f);
+            }
             if (EnterLevel.HoverOver())
             {
                 spriteBatch.DrawString(TextureManager.SpriteFont15, "Difficulty: " + EnemyDifficulty, new Vector2(0, 0), Color.White);
@@ -500,7 +530,7 @@ namespace Outer_Space
         public void Update()
         {
             // Update tiles
-            if (Started)
+            if (Started && !Player.Dead)
             {
                 // Hull flash possible match
                 timeSinceLastMatch++;
@@ -615,8 +645,11 @@ namespace Outer_Space
                     {
                         CombatText("The sun is heating up!");
                         Player.SetDamageOverTime(5, 5, 0);
-                        Enemy enemy = (Enemy)GameObjects.First(item => item is Enemy);
-                        enemy.SetDamageOverTime(5, 5, 0);
+                        if (GameObjects.Any(item => item is Enemy))
+                        {
+                            Enemy enemy = (Enemy)GameObjects.First(item => item is Enemy);
+                            enemy.SetDamageOverTime(5, 5, 0);
+                        }
                     }
                 }
             }
@@ -641,7 +674,7 @@ namespace Outer_Space
             // Remove
             for (int i = GameObjects.Count - 1; i >= 0; i--)
             {
-                if (GameObjects[i].Dead)
+                if (GameObjects[i].Dead && !(GameObjects[i] is Player))
                 {
                     if (GameObjects[i] is Enemy)
                     {

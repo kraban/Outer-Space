@@ -28,6 +28,7 @@ namespace Outer_Space
         public static MapScene mapScene { get; set; }
         public static ControlScene controlScene { get; set; }
         public static RankScene rankScene { get; set; }
+        public static GameOverScene gameOverScene { get; set; }
 
         public static void Initialize()
         {
@@ -38,6 +39,7 @@ namespace Outer_Space
             mapScene = new MapScene();
             controlScene = new ControlScene();
             rankScene = new RankScene();
+            gameOverScene = new GameOverScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

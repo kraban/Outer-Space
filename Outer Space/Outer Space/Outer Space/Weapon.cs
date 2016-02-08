@@ -36,6 +36,7 @@ namespace Outer_Space
             : base(Item.Nothing, ItemType.weapon, TextureManager.weapons[1], "", "Weapon")
         {
             this.Damage = Globals.Randomizer.Next(10, 20);
+            Damage += 100;
             this.ShieldPiercing = (float)Math.Round(Globals.Randomizer.NextDouble(), 2);
             this.Chance = Globals.Randomizer.Next(20, 30);
             this.Depth = 0.5f;
