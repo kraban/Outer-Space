@@ -99,6 +99,7 @@ namespace Outer_Space
                     {
                         if (Inventory[j, i].Type == ItemType.nothing)
                         {
+                            EquipItem(item);
                             Inventory[j, i] = item;
                             Inventory[j, i].RecentlyAcquired = true;
                             done = true;
@@ -107,7 +108,7 @@ namespace Outer_Space
                     }
                     else
                     {
-                        if (Inventory[j, i].Type == ItemType.nothing )
+                        if (Inventory[j, i].Type == ItemType.nothing)
                         {
                             Inventory[j, i] = item;
                             Inventory[j, i].RecentlyAcquired = true;
@@ -403,6 +404,13 @@ namespace Outer_Space
                 Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Globals.ScreenSize.Y - Texture.Height, 0.1f));
                 base.UpdateLevel(level);
                 // Select weapon
+                for (int i = 0; i < Weapons.Count(); i++)
+                {
+                    if (Weapons[i].Pressed())
+                    {
+                        SelectedWeapon = i;
+                    }
+                }
                 if (Globals.KState.IsKeyDown(Keys.D1))
                 {
                     SelectedWeapon = 0;

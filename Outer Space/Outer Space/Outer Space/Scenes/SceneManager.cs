@@ -64,7 +64,7 @@ namespace Outer_Space
             // Stars
             if (Globals.Randomizer.Next(0, 101) < Options.StarChance)
             {
-                Stars.Add(new Star(new Vector2(-5, Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2))));
+                Stars.Add(new Star(new Vector2(-5, Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2 + 50))));
             }
 
             foreach (Star s in Stars)

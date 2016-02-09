@@ -41,6 +41,7 @@ namespace Outer_Space
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Controls", new Vector2(Globals.ScreenSize.X / 2, 20), new Color(0, 255, 255), 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Move Left: A", new Vector2(Globals.ScreenSize.X / 2, 100), Color.White);
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Move Right: D", new Vector2(Globals.ScreenSize.X / 2, 150), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Select weapon: 1-3", new Vector2(Globals.ScreenSize.X / 2, 200), Color.White);
         }
     }
 }

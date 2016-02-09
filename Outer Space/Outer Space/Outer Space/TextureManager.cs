@@ -39,7 +39,9 @@ namespace Outer_Space
             bossEngineAnimation,
             wrench,
             flee,
-            explosion;
+            explosion,
+            blackHole,
+            satellite;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -78,6 +80,8 @@ namespace Outer_Space
             wrench = content.Load<Texture2D>("Wrench");
             flee = content.Load<Texture2D>("Flee");
             explosion = content.Load<Texture2D>("Explosion");
+            blackHole = content.Load<Texture2D>("BlackHole");
+            satellite = content.Load<Texture2D>("Satellite");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

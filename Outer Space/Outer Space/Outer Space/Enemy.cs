@@ -38,13 +38,13 @@ namespace Outer_Space
                 Inventory[3, 5] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
             }
 
-            // Weapontargets
+            // Weapon targets
             foreach (Weapon w in Weapons)
             {
                 w.Targets.Add("Player");
             }
 
-            // enemy hull
+            // Enemy hull
             ShipHull = new Hull(this, 0);
         }
 

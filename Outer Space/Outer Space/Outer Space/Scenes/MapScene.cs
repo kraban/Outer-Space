@@ -34,7 +34,7 @@ namespace Outer_Space
         public MapScene()
             : base()
         {
-            this.Inventory = new Button(new Vector2(200, 30), "Inventory", TextureManager.SpriteFont20);
+            this.Inventory = new Button(new Vector2(250, 30), "Inventory", TextureManager.SpriteFont20);
             this.Menu = new Button(new Vector2(0, Globals.ScreenSize.Y - 20), "Menu", TextureManager.SpriteFont20);
             this.Rank = new Button(new Vector2(600, 30), "Rank", TextureManager.SpriteFont20);
             this.SelectedLevel = -1;
@@ -57,24 +57,57 @@ namespace Outer_Space
             this.KilledPlayer = null;
 
             // Add modifiers
-            for (int i = 0; i < Globals.Randomizer.Next(1, 4); i++)
+            // Add modifier positions not to close to each other
+            List<Vector2> modifierPositions = new List<Vector2>();
+            modifierPositions.Add(new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100)));
+            for (int i = 1; i < Globals.Randomizer.Next(3, 5); i++)
             {
                 Vector2 modifierPosition = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
-                Modifier randomModifier = (Modifier)Enum.GetValues(typeof(Modifier)).GetValue(Globals.Randomizer.Next(1, Enum.GetValues(typeof(Modifier)).Length));
-                foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPosition) < 100))
+                while (modifierPositions.Any(item => Globals.Distance(item, modifierPosition) < 250) || Levels.Any(item => item.Distance(modifierPosition) < 50) || !Levels.Any(item => item.Distance(modifierPosition) < 100))
                 {
-                    level.LevelModifier = randomModifier;
-                    if (randomModifier == Modifier.Sun)
+                    modifierPosition = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
+                }
+                modifierPositions.Add(modifierPosition);
+            }
+
+            // Add the modifiers
+            for (int i = 0; i < modifierPositions.Count(); i++)
+            {
+                Modifier randomModifier = (Modifier)Enum.GetValues(typeof(Modifier)).GetValue(Globals.Randomizer.Next(1, Enum.GetValues(typeof(Modifier)).Length));
+                if (randomModifier == Modifier.Sun)
+                {
+                    SpaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPositions[i], 1, randomModifier));
+
+                    foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPositions[i]) < 100))
                     {
-                        SpaceObjects.Add(new SpaceObject(TextureManager.sun, modifierPosition, 1));
+                        level.LevelModifier = randomModifier;
                     }
-                    else if (randomModifier == Modifier.Asteriod)
+                }
+                else if (randomModifier == Modifier.Asteroid)
+                {
+                    Level level = ClosestLevels(modifierPositions[i])[0];
+                    for (int j = 0; j < 4; j++)
                     {
-                        for (int j = 0; j < Globals.Randomizer.Next(7, 15); j++)
+                        level.LevelModifier = Modifier.Asteroid;
+                        for (int k = 0; k < 3; k++)
                         {
-                            SpaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(modifierPosition.X + Globals.Randomizer.Next(-100, 100), modifierPosition.Y + Globals.Randomizer.Next(-100, 100)), 0.3f));
+                            SpaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(level.EnterLevel.Position.X + Globals.Randomizer.Next(-30, 30), level.EnterLevel.Position.Y + Globals.Randomizer.Next(-30, 30)), 0.3f, randomModifier));
                         }
+                        level = ClosestLevels(level.EnterLevel.Position).First(item => item.LevelModifier != Modifier.Asteroid);
                     }
+                }
+                else if (randomModifier == Modifier.BlackHole)
+                {
+                    SpaceObjects.Add(new SpaceObject(TextureManager.blackHole, modifierPositions[i], 1, randomModifier));
+
+                    foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPositions[i]) < 100))
+                    {
+                        level.LevelModifier = randomModifier;
+                    }
+                }
+                else if (randomModifier == Modifier.Satellite)
+                {
+                    SpaceObjects.Add(new SpaceObject(TextureManager.satellite, modifierPositions[i], 1, randomModifier));
                 }
             }
         }
@@ -142,7 +175,7 @@ namespace Outer_Space
             nearestLevels = FindNearestLevels(Levels[toLevel]);
             playerPosition = toLevel;
         }
-
+        
         // Find all levels within 150 pixels to a specific level
         public List<Level> FindNearestLevels(Level startingLevel)
         {
@@ -155,6 +188,17 @@ namespace Outer_Space
                 }
             }
             return nearestLevels;
+        }
+
+        public List<Level> ClosestLevels(Vector2 position)
+        {
+            List<Level> distances = new List<Level>();
+            foreach (Level level in Levels)
+            {
+                distances.Add(level);
+            }
+            distances = distances.OrderBy(item => item.Distance(position)).ToList();
+            return distances;
         }
 
         public override void Draw(SpriteBatch spriteBatch)

@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public enum Modifier { None, Sun, Asteriod }
+    public enum Modifier { None, Sun, Asteroid, BlackHole, Satellite }
     public class Level
     {
         // Public properties
@@ -630,7 +630,7 @@ namespace Outer_Space
 
                 // Modifiers
 
-                if (LevelModifier == Modifier.None)
+                if (LevelModifier == Modifier.Asteroid)
                 {
                     // spawn rock if possible to move
                     if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))
@@ -650,6 +650,22 @@ namespace Outer_Space
                         {
                             Enemy enemy = (Enemy)GameObjects.First(item => item is Enemy);
                             enemy.SetDamageOverTime(5, 5, 0);
+                        }
+                    }
+                }
+                else if (LevelModifier == Modifier.Satellite)
+                {
+                    Player.Energy.Change(0.05f);
+                }
+                else if (LevelModifier == Modifier.BlackHole)
+                {
+                    if (Globals.Randomizer.Next(0, 1001) < 2)
+                    {
+                        CombatText("The tiles are changing!");
+                        for (int i = 0; i < Globals.Randomizer.Next(2, 5); i++)
+                        {
+                            Point randomTile = new Point(Globals.Randomizer.Next(0, BoardSize.X), Globals.Randomizer.Next(0, BoardSize.Y));
+                            Tiles[randomTile.X][randomTile.Y] = new Tile(randomTile, (TileType)Enum.GetValues(typeof(TileType)).GetValue(Globals.Randomizer.Next(1, Enum.GetValues(typeof(TileType)).Length)));
                         }
                     }
                 }

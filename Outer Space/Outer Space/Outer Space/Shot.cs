@@ -69,6 +69,7 @@ namespace Outer_Space
             if (level.GameObjects.Any(item => item.GetType().Name == "Rock" && item.Box.Intersects(Box)))
             {
                 Rock rock = (Rock)level.GameObjects.First(item => item.GetType().Name == "Rock" && item.Box.Intersects(Box));
+                level.CreatePieces(rock.Position, rock.Texture);
                 rock.Dead = true;
                 Dead = true;
             }

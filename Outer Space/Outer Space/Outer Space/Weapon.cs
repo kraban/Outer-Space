@@ -191,7 +191,14 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, (float)(Math.Atan2((level.GameObjects.First(item => weapon.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).Y, (level.GameObjects.First(item => weapon.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).X)), weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                if (level.GameObjects.Any(item => weapon.Targets.Any(target => target == item.GetType().Name)))
+                {
+                    level.ToAdd.Add(new Shot(shooter.Position, (float)(Math.Atan2((level.GameObjects.First(item => weapon.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).Y, (level.GameObjects.First(item => weapon.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).X)), weapon.ShotDamage(tilesMatched), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                }
+                else
+                {
+                    FireStandard(shooter, weapon, tilesMatched, level, false);
+                }
             }
         }
 
