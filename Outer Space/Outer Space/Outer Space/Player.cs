@@ -452,6 +452,7 @@ namespace Outer_Space
                     for (int i = 0; i < Globals.Randomizer.Next(1, 2); i++)
                     {
                         level.ToAdd.Add(new Piece(new Vector2(Position.X + Globals.Randomizer.Next(-20, 20), Position.Y + Globals.Randomizer.Next(-20, 20)), Texture, 60, 0.5f));
+                        level.ToAdd.Add(new Piece(new Vector2(Position.X + Globals.Randomizer.Next(-20, 20), Position.Y + Globals.Randomizer.Next(-20, 20)), TextureManager.explosion, 60, 1.5f));
                     }
                 }
             }

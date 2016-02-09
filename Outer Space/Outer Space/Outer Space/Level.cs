@@ -163,7 +163,7 @@ namespace Outer_Space
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
             Complete = !flee;
-            if (flee)
+            if (flee && !Player.Dead)
             {
                 foreach (Enemy e in GameObjects.Where(item => item is Enemy))
                 {

@@ -55,9 +55,11 @@ namespace Outer_Space
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            // Text
             if (Globals.MRectangle.Intersects(new Rectangle((int)Position.X, (int)Position.Y, Width * 2, Height * 2)))
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, Value.ToString("0") + " /" + MaxValue.ToString("0"), new Vector2(Position.X + Width + 10 - TextureManager.SpriteFont15.MeasureString(Value.ToString("0") + " /" + MaxValue.ToString("0")).X / 2, Position.Y + Height / 2), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
+                float value = (float)Math.Round(Value + 0.5);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, value + " /" + MaxValue.ToString("0"), new Vector2(Position.X + Width + 10 - TextureManager.SpriteFont15.MeasureString(Value.ToString("0") + " /" + MaxValue.ToString("0")).X / 2, Position.Y + Height / 2), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.1f);
             }
 
             // Draw bar
