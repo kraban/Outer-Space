@@ -20,7 +20,7 @@ namespace Outer_Space
             this.Texture = TextureManager.rock;
             this.Position = new Vector2(Globals.Randomizer.Next(400, Globals.ScreenSize.X - 300), -100);
             this.Direction = (float)Math.Atan2((player.Position - Position).Y, (player.Position - Position).X);
-            level.CombatText("|0,0,0|Rock heading |0,0,255|towards you!|255,0,0| Move!");
+            level.CombatText("Rock heading towards you! Move!");
         }
 
         // Method(s)
@@ -29,7 +29,7 @@ namespace Outer_Space
             base.UpdateLevel(level);
 
             // Move
-            Position += new Vector2((float)Math.Cos(Direction) * 3, (float)Math.Sin(Direction) * 3);
+            Position += new Vector2((float)Math.Cos(Direction) * 2.5f, (float)Math.Sin(Direction) * 2.5f);
 
             // Hit Player
             if (Box.Intersects(level.Player.Box))

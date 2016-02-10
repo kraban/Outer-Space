@@ -25,8 +25,8 @@ namespace Outer_Space
             this.EnemyDifficulty = difficulty;
             this.Position = new Vector2((int)ShipLocation * 100 + 200, -100);
             this.Texture = TextureManager.enemyShip;
-            this.engineAnimation = TextureManager.enemyShipEngineAnimation;
-            this.maxFrame = 1;
+            this.EngineAnimation = TextureManager.enemyShipEngineAnimation;
+            this.MaxFrame = 1;
 
             this.Health = new Bar(new Vector2(70, 10), 100, 20, 10 * (int)EnemyDifficulty + 10, Color.Red);
             this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 10, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));

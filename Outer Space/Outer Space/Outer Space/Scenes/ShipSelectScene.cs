@@ -51,20 +51,20 @@ namespace Outer_Space
                     SceneManager.started = true;
                     if (i == 0)
                     {
-                        SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship1EngineAnimation;
-                        SceneManager.mapScene.ThePlayer.maxFrame = 3;
+                        SceneManager.mapScene.ThePlayer.EngineAnimation = TextureManager.ship1EngineAnimation;
+                        SceneManager.mapScene.ThePlayer.MaxFrame = 3;
                         break;
                     }
                     else if (i == 1)
                     {
-                        SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship2EngineAnimation;
-                        SceneManager.mapScene.ThePlayer.maxFrame = 3;
+                        SceneManager.mapScene.ThePlayer.EngineAnimation = TextureManager.ship2EngineAnimation;
+                        SceneManager.mapScene.ThePlayer.MaxFrame = 3;
                         break;
                     }
                     else if (i == 2)
                     {
-                        SceneManager.mapScene.ThePlayer.engineAnimation = TextureManager.ship3EngineAnimation;
-                        SceneManager.mapScene.ThePlayer.maxFrame = 1;
+                        SceneManager.mapScene.ThePlayer.EngineAnimation = TextureManager.ship3EngineAnimation;
+                        SceneManager.mapScene.ThePlayer.MaxFrame = 1;
                         break;
                     }
                 }

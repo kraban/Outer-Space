@@ -95,7 +95,7 @@ namespace Outer_Space
         {
             if (!Write.Contains("|"))
             {
-                spriteBatch.DrawString(spriteFont, Write, Position, TextColor * opacity, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth); 
+                spriteBatch.DrawString(spriteFont, Write, Position, TextColor * Opacity, Direction, new Vector2(TextureManager.SpriteFont20.MeasureString(Write).X / 2, TextureManager.SpriteFont20.MeasureString(Write).Y / 2), Size, SpriteEffects.None, Depth); 
             }
             else // different colors in same string
             {
@@ -120,7 +120,7 @@ namespace Outer_Space
             if (!flash)
             {
                 Size -= maxSize / maxDuration;
-                opacity = Size;
+                Opacity = Size;
             }
             if (duration < 0)
             {

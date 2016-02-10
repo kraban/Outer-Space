@@ -33,6 +33,7 @@ namespace Outer_Space
         private int timeSinceLastMatch;
         public Difficulty EnemyDifficulty { get; set; }
         private int playerDie;
+        private int modifierTimer;
 
         public TextureButton EnterLevel { get; set; }
 
@@ -163,6 +164,10 @@ namespace Outer_Space
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
             Complete = !flee;
+            if (Complete)
+            {
+                EnterLevel.Opacity = 0.5f;
+            }
             if (flee && !Player.Dead)
             {
                 foreach (Enemy e in GameObjects.Where(item => item is Enemy))
@@ -632,18 +637,22 @@ namespace Outer_Space
 
                 if (LevelModifier == Modifier.Asteroid)
                 {
+                    modifierTimer--;
                     // spawn rock if possible to move
-                    if (Globals.Randomizer.Next(0, 1001) < 4 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))
+                    if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3 && !(Player.ShipLocation == Location.left && !CheckPossibleMatches().Any(item => item.Type == TileType.right))
                          && !(Player.ShipLocation == Location.right && !CheckPossibleMatches().Any(item => item.Type == TileType.left))
                          && !(Player.ShipLocation == Location.middle && !CheckPossibleMatches().Any(item => item.Type == TileType.left) && !CheckPossibleMatches().Any(item => item.Type == TileType.right)))
                     {
+                        modifierTimer = 120;
                         ToAdd.Add(new Rock(Player, this));
                     }
                 }
                 else if (LevelModifier == Modifier.Sun)
                 {
-                    if (Globals.Randomizer.Next(0, 1001) < 4)
+                    modifierTimer--;
+                    if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)
                     {
+                        modifierTimer = 120;
                         CombatText("The sun is heating up!");
                         Player.SetDamageOverTime(5, 5, 0);
                         if (GameObjects.Any(item => item is Enemy))
@@ -655,17 +664,38 @@ namespace Outer_Space
                 }
                 else if (LevelModifier == Modifier.Satellite)
                 {
-                    Player.Energy.Change(0.05f);
+                    Player.Energy.Change(0.04f);
                 }
                 else if (LevelModifier == Modifier.BlackHole)
                 {
-                    if (Globals.Randomizer.Next(0, 1001) < 2)
+                    modifierTimer--;
+                    if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)
                     {
-                        CombatText("The tiles are changing!");
-                        for (int i = 0; i < Globals.Randomizer.Next(2, 5); i++)
+                        modifierTimer = 300;
+                        CombatText("The tiles are heating up!");
+                        for (int i = 0; i < Globals.Randomizer.Next(3, 7); i++)
                         {
-                            Point randomTile = new Point(Globals.Randomizer.Next(0, BoardSize.X), Globals.Randomizer.Next(0, BoardSize.Y));
-                            Tiles[randomTile.X][randomTile.Y] = new Tile(randomTile, (TileType)Enum.GetValues(typeof(TileType)).GetValue(Globals.Randomizer.Next(1, Enum.GetValues(typeof(TileType)).Length)));
+                            while (true)
+                            {
+                                Point randomTile = new Point(Globals.Randomizer.Next(0, BoardSize.X), Globals.Randomizer.Next(0, BoardSize.Y));
+                                Point randomTile2 = new Point(Globals.Randomizer.Next(0, BoardSize.X), Globals.Randomizer.Next(0, BoardSize.Y));
+                                while (randomTile.X == randomTile2.X && randomTile.Y == randomTile2.Y)
+                                {
+                                    randomTile2 = new Point(Globals.Randomizer.Next(0, BoardSize.X), Globals.Randomizer.Next(0, BoardSize.Y));
+                                }
+                                Tile temp = Tiles[randomTile.X][randomTile.Y];
+                                Tiles[randomTile.X][randomTile.Y] = Tiles[randomTile2.X][randomTile2.Y];
+                                Tiles[randomTile2.X][randomTile2.Y] = temp;
+                                if (!CheckSingleMatch(randomTile.X, randomTile.Y, Tiles) && !CheckSingleMatch(randomTile2.X, randomTile2.Y, Tiles))
+                                {
+                                    break;
+                                }
+                                else
+                                {
+                                    Tiles[randomTile2.X][randomTile2.Y] = Tiles[randomTile.X][randomTile.Y];
+                                    Tiles[randomTile.X][randomTile.Y] = temp;
+                                }
+                            }
                         }
                     }
                 }

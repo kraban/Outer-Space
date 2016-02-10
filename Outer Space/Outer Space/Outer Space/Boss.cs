@@ -38,12 +38,12 @@ namespace Outer_Space
             this.charge = ChargeState.NotCharging;
             this.dodge = DodgeState.NotDodging;
             this.Depth = 0.5f;
-            this.opacity = 0f;
+            this.Opacity = 0f;
             this.possibleAttacks = new List<int>();
-            this.engineAnimation = TextureManager.bossEngineAnimation;
-            this.maxFrame = 3;
-            this.frameWidth = 163;
-            this.frameHeight = 139;
+            this.EngineAnimation = TextureManager.bossEngineAnimation;
+            this.MaxFrame = 3;
+            this.FrameWidth = 163;
+            this.FrameHeight = 139;
             this.Colour = Color.Red;
 
             // Modules
@@ -84,7 +84,7 @@ namespace Outer_Space
 
             if (dodge == DodgeState.Dodge)
             {
-                frameWidth = 0;
+                FrameWidth = 0;
                 for (int i = 0; i < 3; i++)
                 {
                     spriteBatch.Draw(TextureBackground, Position, null, Color.LightGray * (0.9f - ((float)i / 5f)), Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size + 0.2f * (float)i, SpriteEffects.None, ((float)i / 10f));
@@ -93,24 +93,24 @@ namespace Outer_Space
             }
             else
             {
-                frameWidth = 163;
+                FrameWidth = 163;
             }
         }
 
         public override void UpdateLevel(Level level)
         {
             // Animation
-            animationTimer++;
-            if (animationTimer > 7)
+            AnimationTimer++;
+            if (AnimationTimer > 7)
             {
-                animationTimer = 0;
-                if (frame < maxFrame)
+                AnimationTimer = 0;
+                if (Frame < MaxFrame)
                 {
-                    frame++;
+                    Frame++;
                 }
                 else
                 {
-                    frame = 0;
+                    Frame = 0;
                 }
             }
 
@@ -159,7 +159,7 @@ namespace Outer_Space
                     else if (attack == 1)
                     {
                         shootTimer = 200;
-                        opacity = 0;
+                        Opacity = 0;
                     }
                     else if (attack == 2)
                     {
@@ -175,11 +175,11 @@ namespace Outer_Space
                 {
                     if (shootTimer > 100)
                     {
-                        opacity += 0.015f;
+                        Opacity += 0.015f;
                     }
                     else if (shootTimer < 20)
                     {
-                        opacity -= 0.07f;
+                        Opacity -= 0.07f;
                     }
                     if (shootTimer == 100)
                     {

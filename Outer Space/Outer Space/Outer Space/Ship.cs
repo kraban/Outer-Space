@@ -41,15 +41,15 @@ namespace Outer_Space
         public int SelectedWeapon { get; set; }
         public Weapon CurrentWeapon { get { return Weapons[SelectedWeapon]; } set { Weapons[SelectedWeapon] = value; } }
         public float KnockBack { get; set; }
-        internal float shieldRegeneration;
+        protected float shieldRegeneration;
 
         // Engine animation
-        internal Texture2D engineAnimation;
-        internal int frame;
-        internal int animationTimer;
-        internal int maxFrame;
-        internal int frameWidth;
-        internal int frameHeight;
+        public Texture2D EngineAnimation { get; set; }
+        public int Frame { get; set; }
+        public int AnimationTimer { get; set; }
+        public int MaxFrame { get; set; }
+        public int FrameWidth { get; set; }
+        public int FrameHeight { get; set; }
 
         // Damage over time
         public int DamageOverTimeCount { get; private set; }
@@ -66,10 +66,10 @@ namespace Outer_Space
             this.ShipLocation = Location.middle;
             this.StandardDirection = standardDirection;
             this.Direction = StandardDirection;
-            this.engineAnimation = TextureManager.none;
+            this.EngineAnimation = TextureManager.none;
             this.Depth = 0.3f;
-            this.frameWidth = 64;
-            this.frameHeight = 64;
+            this.FrameWidth = 64;
+            this.FrameHeight = 64;
 
             this.Inventory = new Item[5, 6];
             // Fill inventory
@@ -93,17 +93,17 @@ namespace Outer_Space
         // Method(s)
         public void Animation()
         {
-            animationTimer++;
-            if (animationTimer > 5)
+            AnimationTimer++;
+            if (AnimationTimer > 5)
             {
-                animationTimer = 0;
-                if (frame < maxFrame)
+                AnimationTimer = 0;
+                if (Frame < MaxFrame)
                 {
-                    frame++;
+                    Frame++;
                 }
                 else
                 {
-                    frame = 0;
+                    Frame = 0;
                 }
             }
         }
@@ -191,7 +191,7 @@ namespace Outer_Space
         {
             base.Draw(spriteBatch);
 
-            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth - 0.1f);
+            spriteBatch.Draw(EngineAnimation, Position, new Rectangle(Frame * FrameWidth, 0, FrameWidth, FrameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth - 0.1f);
 
             Health.Draw(spriteBatch);
             ShipShield.Draw(spriteBatch);
@@ -201,7 +201,7 @@ namespace Outer_Space
         public void DrawGameOver(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            spriteBatch.Draw(engineAnimation, Position, new Rectangle(frame * frameWidth, 0, frameWidth, frameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth - 0.1f);
+            spriteBatch.Draw(EngineAnimation, Position, new Rectangle(Frame * FrameWidth, 0, FrameWidth, FrameHeight), Color.White, Direction, new Vector2(Texture.Width / 2, Texture.Height / 2), Size, SpriteEffects.None, Depth - 0.1f);
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Killer", new Vector2(500, 160), Color.White);
             ShipShield.DrawInventory(spriteBatch, new Vector2(564, 300));
             ShipHull.DrawInventory(spriteBatch, new Vector2(628, 300));

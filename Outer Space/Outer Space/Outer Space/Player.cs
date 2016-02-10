@@ -343,7 +343,7 @@ namespace Outer_Space
         public void DrawMap(SpriteBatch spriteBatch, Vector2 position, float size, float direction)
         {
             spriteBatch.Draw(Texture, position, null, Color.White, direction, new Vector2(Texture.Width / 2, Texture.Height / 2), size, SpriteEffects.None, Depth);
-            spriteBatch.Draw(engineAnimation, position, new Rectangle(frame * 64, 0, 64, 64), Color.White, direction, new Vector2(Texture.Width / 2, Texture.Height / 2), size, SpriteEffects.None, Depth - 0.1f);
+            spriteBatch.Draw(EngineAnimation, position, new Rectangle(Frame * 64, 0, 64, 64), Color.White, direction, new Vector2(Texture.Width / 2, Texture.Height / 2), size, SpriteEffects.None, Depth - 0.1f);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
