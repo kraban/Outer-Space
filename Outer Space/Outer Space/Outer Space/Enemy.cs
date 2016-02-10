@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Outer_Space
 {
-    public enum Difficulty { Easy, Medium, Hard }
+    public enum Difficulty { Easy, Medium, Hard, Boss }
     public class Enemy : Ship
     {
         // Public properties

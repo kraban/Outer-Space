@@ -27,6 +27,13 @@ namespace Outer_Space
         private int playerDeath;
         public Enemy KilledPlayer { get; set; }
 
+        // Boss
+        private int numberOfJumps;
+        private Vector2 bossPosition;
+        private Vector2 bossLerpPosition;
+        private int bossAnimationTimer;
+        private int bossAnimationFrame;
+
         public Button Inventory { get; set; }
         public Button Menu { get; set; }
         public Button Rank { get; set; }
@@ -55,6 +62,9 @@ namespace Outer_Space
             GenerateMap();
             this.playerDeath = 100;
             this.KilledPlayer = null;
+            this.numberOfJumps = 0;
+            bossPosition = new Vector2(-500, Globals.ScreenSize.Y / 2);
+            bossLerpPosition = bossPosition;
 
             // Add modifiers
             // Add modifier positions not to close to each other
@@ -156,6 +166,7 @@ namespace Outer_Space
                     Levels[0].PlayerPosition = new Vector2(Levels[0].EnterLevel.Position.X + (float)Math.Cos(Levels[0].PlayerDirection) * 20, Levels[0].EnterLevel.Position.Y + (float)Math.Sin(Levels[0].PlayerDirection) * 20);
                     playerPosition = 0;
                     nearestLevels = FindNearestLevels(Levels[playerPosition]);
+                    Levels.Add(new Level(Vector2.Zero, Difficulty.Boss));
                     break;
                 }
                 else
@@ -193,9 +204,9 @@ namespace Outer_Space
         public List<Level> ClosestLevels(Vector2 position)
         {
             List<Level> distances = new List<Level>();
-            foreach (Level level in Levels)
+            for (int i = 0; i < Levels.Count() - 1; i++)
             {
-                distances.Add(level);
+                distances.Add(Levels[i]);
             }
             distances = distances.OrderBy(item => item.Distance(position)).ToList();
             return distances;
@@ -230,6 +241,14 @@ namespace Outer_Space
                 Menu.Draw(spriteBatch);
                 Rank.Draw(spriteBatch);
 
+                // Boss
+                spriteBatch.Draw(TextureManager.boss, bossPosition, null, Color.White, 0f, new Vector2(TextureManager.boss.Width / 2, TextureManager.boss.Height / 2), 0.6f, SpriteEffects.None, 0.2f);
+                spriteBatch.Draw(TextureManager.bossEngineAnimation, bossPosition, new Rectangle(163 * bossAnimationFrame, 0, 163, 139), Color.White, 0f, new Vector2(TextureManager.boss.Width / 2, TextureManager.boss.Height / 2), 0.6f, SpriteEffects.None, 0.1f);
+                for (int i = 0; i < 1000; i++)
+                {
+                    spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(bossPosition.X + Math.Cos(((float)i / 1000f) * Math.PI * 2) * 300), (int)(bossPosition.Y + Math.Sin(((float)i / 1000f) * Math.PI * 2) * 300), 3, 3), Color.Red);
+                }
+
                 // Draw lines to close stars
                 foreach (Level level in nearestLevels)
                 {
@@ -241,9 +260,9 @@ namespace Outer_Space
                     }
                 }
 
-                foreach (Level l in Levels)
+                for (int i = 0; i < Levels.Count() - 1; i++)
                 {
-                    l.DrawMap(spriteBatch);
+                    Levels[i].DrawMap(spriteBatch);
                 }
             }
             else
@@ -265,7 +284,26 @@ namespace Outer_Space
                     SelectedLevel = levelToBeSelected;
                     levelToBeSelected = -1;
                     Levels[SelectedLevel].Initialize(ThePlayer);
+                    numberOfJumps++;
+                    bossLerpPosition += new Vector2(100, 0);
                 }
+
+                // Boss
+                bossPosition = new Vector2(MathHelper.Lerp(bossPosition.X, bossLerpPosition.X, 0.01f), bossPosition.Y);
+                bossAnimationTimer++;
+                if (bossAnimationTimer > 5)
+                {
+                    bossAnimationTimer = 0;
+                    if (bossAnimationFrame < 3)
+                    {
+                        bossAnimationFrame++;
+                    }
+                    else
+                    {
+                        bossAnimationFrame = 0;
+                    }
+                }
+
                 // SpaceObjects
                 foreach (GameObject spaceObject in SpaceObjects)
                 {
@@ -284,6 +322,13 @@ namespace Outer_Space
                 {
                     NewItems.Update();
                     NewRank.Update();
+
+                    // Boss
+                    if (Globals.Distance(bossPosition, Levels[playerPosition].EnterLevel.Position) < 300 && delay < 0)
+                    {
+                        levelToBeSelected = Levels.Count() - 1;
+                        delay = 65;
+                    }
 
                     Inventory.Update();
                     if (Inventory.Press())
@@ -314,7 +359,7 @@ namespace Outer_Space
                     }
                 }
 
-                for (int i = 0; i < Levels.Count; i++)
+                for (int i = 0; i < Levels.Count() - 1; i++)
                 {
                     Levels[i].UpdateMap();
 

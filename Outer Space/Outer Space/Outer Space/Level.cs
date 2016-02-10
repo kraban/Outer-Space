@@ -125,7 +125,14 @@ namespace Outer_Space
             {
                 GameObjects.Clear();
                 GameObjects.Add(player);
-                GameObjects.Add(new Enemy(EnemyDifficulty));
+                if (EnemyDifficulty != Difficulty.Boss)
+                {
+                    GameObjects.Add(new Enemy(EnemyDifficulty));
+                }
+                else
+                {
+                    GameObjects.Add(new Boss());
+                }
                 // Reward for defeating enemy
                 for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
 			    {
@@ -742,7 +749,7 @@ namespace Outer_Space
 
             // Flee
             Flee.Update();
-            if (Flee.Press())
+            if (Flee.Press() && EnemyDifficulty != Difficulty.Boss)
             {
                 if (Player.ItemInInventory("Flee"))
                 {
