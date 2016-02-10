@@ -763,6 +763,7 @@ namespace Outer_Space
                 Player.Position = new Vector2(300, Globals.ScreenSize.Y - Player.Texture.Height);
                 Player.Direction = Player.StandardDirection;
                 LeaveLevel(GameObjects.Any(item => item is Enemy));
+                Player.BonusDamageOneFight = 0;
             }
         }
     }

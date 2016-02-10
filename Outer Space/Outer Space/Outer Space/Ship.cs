@@ -41,6 +41,7 @@ namespace Outer_Space
         public int SelectedWeapon { get; set; }
         public Weapon CurrentWeapon { get { return Weapons[SelectedWeapon]; } set { Weapons[SelectedWeapon] = value; } }
         public float KnockBack { get; set; }
+        public int BonusDamageOneFight { get; set; }
         protected float shieldRegeneration;
 
         // Engine animation

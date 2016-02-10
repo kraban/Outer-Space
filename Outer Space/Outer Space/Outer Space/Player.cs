@@ -49,7 +49,8 @@ namespace Outer_Space
                 w.Targets.Add("Boss");
             }
 
-            Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
+            //Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
+            Inventory[0, 0] = new Weapon(this, Weapon.ListOfMethods().Count() - 1);
             Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
             Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
             for (int i = 0; i < 5; i++)

@@ -179,5 +179,11 @@ namespace Outer_Space
             }
             HitBasic(level, shot);
         }
+
+        public static void UpdateRandom(Level level, Shot shot)
+        {
+            shot.Position += new Vector2(Globals.Randomizer.Next(-20, 21), 0);
+            HitBasic(level, shot);
+        }
     }
 }

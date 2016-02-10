@@ -44,6 +44,7 @@ namespace Outer_Space
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to loose energy instead of Shield/HP when you are hit.");
             Descriptions.Add("When you are hit, the damage is split up in five and taken over time.");
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to teleport to another location just before being hit.");
+            Descriptions.Add("Increase damage by 3 for the remainder of the fight.");
 
             this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + "Shield heal on Match: |0,150,255|" + ShieldHeal + "|W|\n" + Descriptions[method];
         }
@@ -58,6 +59,7 @@ namespace Outer_Space
             methods.Add(ShieldDamageEnergy);
             methods.Add(ShieldDamageOverTime);
             methods.Add(ShieldChanceToTeleport);
+            methods.Add(ShieldBonusDamage);
             return methods;
         }
 
@@ -150,6 +152,12 @@ namespace Outer_Space
             {
                 ship.TakeDamage(damage, goThroughShield, damageType, true);
             }
+        }
+
+        public static void ShieldBonusDamage(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
+        {
+            ship.TakeDamage(damage, goThroughShield, damageType, true);
+            ship.BonusDamageOneFight += 3;
         }
     }
 }
