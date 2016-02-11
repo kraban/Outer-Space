@@ -128,6 +128,7 @@ namespace Outer_Space
                 Levels.Clear();
                 // Generate levels
                 Levels.Add(new Level(new Vector2(50, Globals.ScreenSize.Y / 2), Difficulty.Easy));
+                Levels[0].EnterLevel.Opacity = 0.5f;
                 for (int i = 0; i < 30; i++)
                 {
                     Vector2 position = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));

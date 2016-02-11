@@ -49,18 +49,17 @@ namespace Outer_Space
                 w.Targets.Add("Boss");
             }
 
-            //Inventory[0, 0] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()));
-            Inventory[0, 0] = new Weapon(this, Weapon.ListOfMethods().Count() - 1);
-            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
-            Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()));
+            Inventory[0, 0] = new Weapon(this, Weapon.ListOfMethods().Count() - 1, Difficulty.Easy);
+            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Difficulty.Easy);
+            Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Difficulty.Easy);
             for (int i = 0; i < 5; i++)
             {
-                AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
-                AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
+                AddItem(new Item(Globals.Flee));
+                AddItem(new Item(Globals.Heal));
             }
             for (int i = 0; i < 20; i++)
             {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Difficulty.Easy));
             }
         }
 
@@ -138,25 +137,25 @@ namespace Outer_Space
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
-                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count())));
+                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 140 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Difficulty.Hard));
                 RankPerks.Add("Shield Module");
             }
             else if (random == 1)
             {
-                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count())));
+                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Difficulty.Hard));
                 RankPerks.Add("Hull Module");
             }
             else if (random == 2)
             {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Difficulty.Hard));
                 RankPerks.Add("Weapon Module");
             }
             else if (random == 3)
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    AddItem(new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench"));
-                    AddItem(new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee"));
+                    AddItem(new Item(Globals.Heal));
+                    AddItem(new Item(Globals.Flee));
                 }
                 RankPerks.Add("Misc items");
             }

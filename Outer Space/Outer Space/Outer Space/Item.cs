@@ -38,6 +38,23 @@ namespace Outer_Space
             this.Name = name;
         }
 
+        // Item template
+        public Item(Item itemTemplate)
+            : base()
+        {
+            if (itemTemplate.Type != ItemType.misc)
+            {
+                this.Colour = new Color(Globals.Randomizer.Next(50, 255), Globals.Randomizer.Next(50, 255), Globals.Randomizer.Next(50, 255));
+            }
+            this.Depth = 0.1f;
+            this.UseItem = itemTemplate.UseItem;
+            this.Type = itemTemplate.Type;
+            this.Texture = itemTemplate.Texture;
+            Description = itemTemplate.Description;
+            this.NumberOfItems = 1;
+            this.Name = itemTemplate.Name;
+        }
+
         public delegate void Use(Player player, Item item);
 
         public static void Nothing(Player player, Item item)

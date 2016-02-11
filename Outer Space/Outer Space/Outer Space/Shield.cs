@@ -26,12 +26,12 @@ namespace Outer_Space
         public float Width { get { return ShieldBar.Width; } }
 
         // Constructor(s)
-        public Shield(Vector2 position, int width, int height, float shieldValue, int method)
+        public Shield(Vector2 position, int width, int height, float shieldValue, int method, Difficulty difficulty)
             : base(Item.Nothing, ItemType.shield, TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)], "", "Shield")
         {
             this.Type = ItemType.shield;
-            this.ShieldHeal = Globals.Randomizer.Next(6, 14);
-            this.Chance = Globals.Randomizer.Next(10, 21);
+            this.ShieldHeal = Globals.Randomizer.Next(6 + (int)difficulty * 2, 14 + (int)difficulty * 2);
+            this.Chance = Globals.Randomizer.Next(10 + (int)difficulty * 3, 21 + (int)difficulty * 4);
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);
 
@@ -44,7 +44,8 @@ namespace Outer_Space
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to loose energy instead of Shield/HP when you are hit.");
             Descriptions.Add("When you are hit, the damage is split up in five and taken over time.");
             Descriptions.Add("Has a |255,0,255|" + Chance + "|W|% chance to teleport to another location just before being hit.");
-            Descriptions.Add("Increase damage by 3 for the remainder of the fight.");
+            Descriptions.Add("Increase damage by 1-3 every time you get hit for the remainder of the fight.");
+            Descriptions.Add("50 % chance to reduce damage by 50 %.");
 
             this.Description = "|W|Shield: |0,0,255|" + MaxValue + "|W|\n" + "Shield heal on Match: |0,150,255|" + ShieldHeal + "|W|\n" + Descriptions[method];
         }
@@ -60,6 +61,7 @@ namespace Outer_Space
             methods.Add(ShieldDamageOverTime);
             methods.Add(ShieldChanceToTeleport);
             methods.Add(ShieldBonusDamage);
+            methods.Add(ShieldChanceReduceDamage);
             return methods;
         }
 
@@ -157,7 +159,19 @@ namespace Outer_Space
         public static void ShieldBonusDamage(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
         {
             ship.TakeDamage(damage, goThroughShield, damageType, true);
-            ship.BonusDamageOneFight += 3;
+            ship.BonusDamageOneFight += Globals.Randomizer.Next(1, 4);
+        }
+
+        public static void ShieldChanceReduceDamage(float damage, float goThroughShield, DamageType damageType, Ship ship, Shield shield)
+        {
+            if (Globals.Randomizer.Next(0, 101) < 50)
+            {
+                ship.TakeDamage(damage / 2, goThroughShield, damageType, true);
+            }
+            else
+            {
+                ship.TakeDamage(damage, goThroughShield, damageType, true);
+            }
         }
     }
 }

@@ -152,15 +152,29 @@ namespace Outer_Space
                     int random = Globals.Randomizer.Next(0, 3);
                     if (random == 0)
                     {
-                        Rewards.Add(new Weapon(Player, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count())));
+                        Rewards.Add(new Weapon(Player, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), EnemyDifficulty));
                     }
                     else if (random == 1)
                     {
-                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count())));
+                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100 + (int)EnemyDifficulty * 20 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), EnemyDifficulty));
                     }
                     if (random == 2)
                     {
-                        Rewards.Add(new Hull(Player, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count())));
+                        Rewards.Add(new Hull(Player, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), EnemyDifficulty));
+                    }
+
+                    // Consumable
+                    if (Globals.Randomizer.Next(0, 101) < 50)
+                    {
+                        random = Globals.Randomizer.Next(0, 2);
+                        if (random == 0)
+                        {
+                            Rewards.Add(new Item(Globals.Flee));
+                        }
+                        else if (random == 1)
+                        {
+                            Rewards.Add(new Item(Globals.Heal));
+                        }
                     }
                 }
                 InitializeTiles();

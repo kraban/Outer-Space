@@ -32,12 +32,12 @@ namespace Outer_Space
         private int method;
 
         // Constructor(s)
-        public Weapon(Ship ship, int method)
+        public Weapon(Ship ship, int method, Difficulty difficulty)
             : base(Item.Nothing, ItemType.weapon, TextureManager.weapons[1], "", "Weapon")
         {
-            this.Damage = Globals.Randomizer.Next(10, 20);
+            this.Damage = Globals.Randomizer.Next(10 + (int)difficulty * 5, 20 + (int)difficulty * 5);
             this.ShieldPiercing = (float)Math.Round(MathHelper.Lerp(0, 0.2f, (float)Globals.Randomizer.NextDouble()), 2);
-            this.Chance = Globals.Randomizer.Next(20, 30);
+            this.Chance = Globals.Randomizer.Next(20 + (int)difficulty * 2, 30 + (int)difficulty * 2);
             this.Depth = 0.5f;
             this.ShotsToShoot = new List<Shot>();
             this.method = method;

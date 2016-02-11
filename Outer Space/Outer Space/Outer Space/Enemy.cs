@@ -29,13 +29,18 @@ namespace Outer_Space
             this.MaxFrame = 1;
 
             this.Health = new Bar(new Vector2(70, 10), 100, 20, 10 * (int)EnemyDifficulty + 10, Color.Red);
-            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 10, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()));
-            this.shieldRegeneration = 0.01f * (float)EnemyDifficulty;
+            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), difficulty);
+            this.shieldRegeneration = 0.007f * (float)EnemyDifficulty;
 
             // Difficulty
+            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), difficulty);
             if (EnemyDifficulty == Difficulty.Easy)
             {
                 Inventory[3, 5] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
+            }
+            else
+            {
+                Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), difficulty);
             }
 
             // Weapon targets
@@ -45,7 +50,7 @@ namespace Outer_Space
             }
 
             // Enemy hull
-            ShipHull = new Hull(this, 0);
+            ShipHull = new Hull(this, 0, difficulty);
         }
 
         // Method(s)

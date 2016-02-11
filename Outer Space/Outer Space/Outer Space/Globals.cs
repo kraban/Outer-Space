@@ -29,10 +29,17 @@ namespace Outer_Space
         public static KeyboardState KState { get; set; }
         public static KeyboardState PrevKState { get; set; }
 
+        // ItemTemplates
+        public static Item Heal { get; set; }
+        public static Item Flee { get; set; }
+
         // Initialize
         public static void Initialize()
         {
             Randomizer = new Random();
+
+            Heal = new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench");
+            Flee = new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee");
         }
 
         public static float Distance(Vector2 v1, Vector2 v2)
