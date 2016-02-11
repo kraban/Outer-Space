@@ -37,13 +37,13 @@ namespace Outer_Space
 
                 foreach (Level level in SceneManager.mapScene.Levels)
                 {
-                    if (level.Distance(Position) < 100)
+                    if (level.Distance(Position) < 100 && !level.HasModifier(Modifier.Satellite))
                     {
-                        level.LevelModifier = Modifier.Satellite;
+                        level.LevelModifiers.Add(Modifier.Satellite);
                     }
-                    else if (level.LevelModifier == Modifier.Satellite && level.Distance(Position) < 105)
+                    else if (level.HasModifier(Modifier.Satellite) && level.Distance(Position) < 105 && level.Distance(Position) > 100)
                     {
-                        level.LevelModifier = Modifier.None;
+                        level.LevelModifiers.Remove(Modifier.Satellite);
                     }
                 }
             }

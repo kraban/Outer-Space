@@ -28,7 +28,7 @@ namespace Outer_Space
         public float PlayerDirection { get; set; }
         public Vector2 PlayerPosition { get; set; }
         public float PlayerSize { get; set; }
-        public Modifier LevelModifier { get; set; }
+        public List<Modifier> LevelModifiers { get; set; }
         public List<Item> Rewards { get; set; }
         private int timeSinceLastMatch;
         public Difficulty EnemyDifficulty { get; set; }
@@ -53,7 +53,7 @@ namespace Outer_Space
 
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
             this.PlayerSize = 0.5f;
-            this.LevelModifier = Modifier.None;
+            this.LevelModifiers = new List<Modifier>();
         }
 
         // Method(s)
@@ -108,7 +108,20 @@ namespace Outer_Space
             if (EnterLevel.HoverOver())
             {
                 spriteBatch.DrawString(TextureManager.SpriteFont15, "Difficulty: " + EnemyDifficulty, new Vector2(0, 0), Color.White);
-                spriteBatch.DrawString(TextureManager.SpriteFont15, "Modifier: " + LevelModifier.ToString(), new Vector2(0, 30), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "Modifiers: ", new Vector2(0, 30), Color.White);
+                if (LevelModifiers.Count() > 0)
+                {
+                    float offset = 0;
+                    for (int i = 0; i < LevelModifiers.Count(); i++)
+                    {
+                        spriteBatch.DrawString(TextureManager.SpriteFont15, (i % 2 == 1 ? ", " : "" ) + LevelModifiers[i].ToString(), new Vector2(120 + offset, 30), Color.White);
+                        offset += TextureManager.SpriteFont15.MeasureString((i % 2 == 1 ? ", " : "") + LevelModifiers[i].ToString()).X;
+                    }
+                }
+                else
+                {
+                    spriteBatch.DrawString(TextureManager.SpriteFont15, "None", new Vector2(120, 30), Color.White);
+                }
                 spriteBatch.DrawString(TextureManager.SpriteFont15, "Completed: " + Complete, new Vector2(0, 60), Color.White);
             }
         }
@@ -259,9 +272,16 @@ namespace Outer_Space
             if (!Started)
             {
                 Text.TextDifferentColor(spriteBatch, "|W|Press enter to start", new Vector2(Globals.ScreenSize.X / 2, 10), 1.3f, TextureManager.SpriteFont20, true);
+                if (EnemyDifficulty == Difficulty.Boss)
+                {
+                    spriteBatch.DrawString(TextureManager.SpriteFont20, "Warning! The boss has special modules,\nHover over them to read.\nAnd remember,\nyou can not flee from the boss.", new Vector2(10, Globals.CombatScreenSize.Y / 2 - 10), Color.White);
+                }
             }
 
-            Flee.Draw(spriteBatch);
+            if (EnemyDifficulty != Difficulty.Boss)
+            {
+                Flee.Draw(spriteBatch);
+            }
         }
 
         public void CheckMatch()
@@ -540,6 +560,15 @@ namespace Outer_Space
             return false;
         }
 
+        public bool HasModifier(Modifier modifier)
+        {
+            if (LevelModifiers.Any(item => item == modifier))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void Update()
         {
             // Update tiles
@@ -642,7 +671,7 @@ namespace Outer_Space
 
                 // Modifiers
 
-                if (LevelModifier == Modifier.Asteroid)
+                if (HasModifier(Modifier.Asteroid))
                 {
                     modifierTimer--;
                     // spawn rock if possible to move
@@ -654,7 +683,7 @@ namespace Outer_Space
                         ToAdd.Add(new Rock(Player, this));
                     }
                 }
-                else if (LevelModifier == Modifier.Sun)
+                else if (HasModifier(Modifier.Sun))
                 {
                     modifierTimer--;
                     if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)
@@ -669,11 +698,11 @@ namespace Outer_Space
                         }
                     }
                 }
-                else if (LevelModifier == Modifier.Satellite)
+                else if (HasModifier(Modifier.Satellite))
                 {
                     Player.Energy.Change(0.04f);
                 }
-                else if (LevelModifier == Modifier.BlackHole)
+                else if (HasModifier(Modifier.BlackHole))
                 {
                     modifierTimer--;
                     if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)

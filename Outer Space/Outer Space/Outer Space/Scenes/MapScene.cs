@@ -69,8 +69,7 @@ namespace Outer_Space
             // Add modifiers
             // Add modifier positions not to close to each other
             List<Vector2> modifierPositions = new List<Vector2>();
-            modifierPositions.Add(new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100)));
-            for (int i = 1; i < Globals.Randomizer.Next(3, 5); i++)
+            for (int i = 0; i < Globals.Randomizer.Next(3, 5); i++)
             {
                 Vector2 modifierPosition = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
                 while (modifierPositions.Any(item => Globals.Distance(item, modifierPosition) < 250) || Levels.Any(item => item.Distance(modifierPosition) < 50) || !Levels.Any(item => item.Distance(modifierPosition) < 100))
@@ -90,7 +89,7 @@ namespace Outer_Space
 
                     foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPositions[i]) < 100))
                     {
-                        level.LevelModifier = randomModifier;
+                        level.LevelModifiers.Add(Modifier.Sun);
                     }
                 }
                 else if (randomModifier == Modifier.Asteroid)
@@ -98,12 +97,12 @@ namespace Outer_Space
                     Level level = ClosestLevels(modifierPositions[i])[0];
                     for (int j = 0; j < 4; j++)
                     {
-                        level.LevelModifier = Modifier.Asteroid;
+                        level.LevelModifiers.Add(Modifier.Asteroid);
                         for (int k = 0; k < 3; k++)
                         {
                             SpaceObjects.Add(new SpaceObject(TextureManager.rock, new Vector2(level.EnterLevel.Position.X + Globals.Randomizer.Next(-30, 30), level.EnterLevel.Position.Y + Globals.Randomizer.Next(-30, 30)), 0.3f, randomModifier));
                         }
-                        level = ClosestLevels(level.EnterLevel.Position).First(item => item.LevelModifier != Modifier.Asteroid);
+                        level = ClosestLevels(level.EnterLevel.Position).First(item => !item.HasModifier(Modifier.Asteroid));
                     }
                 }
                 else if (randomModifier == Modifier.BlackHole)
@@ -112,7 +111,7 @@ namespace Outer_Space
 
                     foreach (Level level in Levels.Where(item => Globals.Distance(item.EnterLevel.Position, modifierPositions[i]) < 100))
                     {
-                        level.LevelModifier = randomModifier;
+                        level.LevelModifiers.Add(Modifier.BlackHole);
                     }
                 }
                 else if (randomModifier == Modifier.Satellite)
