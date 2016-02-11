@@ -39,6 +39,8 @@ namespace Outer_Space
             if (Start.Press())
             {
                 SceneManager.ChangeScene(SceneManager.shipSelectScene);
+                SceneManager.mapScene.NewItems.Flash = -1;
+                SceneManager.mapScene.NewRank.Flash = -1;
             }
 
             if (SceneManager.started)

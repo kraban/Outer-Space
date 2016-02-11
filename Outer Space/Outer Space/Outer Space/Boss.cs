@@ -16,6 +16,7 @@ namespace Outer_Space
     class Boss : Enemy
     {
         private List<int> possibleAttacks;
+        private int attackCooldown;
 
         // Shoot
         public Vector2 LeftShootPosition { get { return new Vector2(Position.X - 50, Position.Y + 50); } }
@@ -138,9 +139,11 @@ namespace Outer_Space
             }
             if (level.Started)
             {
+                attackCooldown--;
                 // Choose attack
-                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 1001) < 8)
+                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 101) < 3 && attackCooldown < 0)
                 {
+                    attackCooldown = 60;
                     int attack = possibleAttacks[Globals.Randomizer.Next(0, possibleAttacks.Count())];
                     possibleAttacks.Remove(attack);
                     if (attack == 0)
@@ -251,7 +254,7 @@ namespace Outer_Space
                 {
                     charge = ChargeState.Finished;
                     level.Player.KnockBack = 10;
-                    level.Player.TakeDamage(50, 0, DamageType.rock, false);
+                    level.Player.TakeDamage(50, 0.5f, DamageType.rock, false);
                     Camera.ScreenShakeTimer = 30;
                 }
 

@@ -89,7 +89,7 @@ namespace Outer_Space
         public void AddItem(Item item)
         {
             bool done = false;
-            for (int i = 0; i < Inventory.GetLength(1) - 1; i++)
+            for (int i = 0; i < Inventory.GetLength(1) - 2; i++)
             {
                 for (int j = 0; j < Inventory.GetLength(0); j++)
                 {
@@ -170,7 +170,7 @@ namespace Outer_Space
             else if (random == 6)
             {
                 BonusDamage += 2;
-                RankPerks.Add("Increase damage.");
+                RankPerks.Add("Increase damage");
             }
 
         }
@@ -223,6 +223,14 @@ namespace Outer_Space
         public void UpdateInventory()
         {
             // Crafting
+            if (currentlyCrafting > 0)
+            {
+                for (int i = 0; i < Globals.Randomizer.Next(5, 10); i++)
+                {
+                    SceneManager.GameObjects.Add(new Piece(new Vector2(864, 350), TextureManager.explosion, 90, 1.5f));
+                }
+            }
+
             craft.Update();
             currentlyCrafting--;
             if (CanCraft() && currentlyCrafting < 0)
@@ -253,7 +261,7 @@ namespace Outer_Space
                 }
                 else if (random == 2)
                 {
-                    Inventory[3, 6] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), itemLevel);
+                    Inventory[3, 6] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 100 + itemLevel * 20 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), itemLevel);
                 }
             }
 
@@ -559,7 +567,7 @@ namespace Outer_Space
 
                 if (tileType == TileType.shield && ShipShield.Value != ShipShield.Width)
                 {
-                    ShipShield.Change(ShipShield.ShieldHeal * tilesMatched);
+                    ShipShield.Change((ShipShield.ShieldHeal / 3) * tilesMatched);
                 } 
             }
             else

@@ -31,7 +31,7 @@ namespace Outer_Space
         {
             this.Type = ItemType.shield;
             this.ShieldHeal = Globals.Randomizer.Next(6 + itemLevel * 2, 14 + itemLevel * 2);
-            this.Chance = Globals.Randomizer.Next(10 + itemLevel * 3, 21 + itemLevel * 4);
+            this.Chance = Globals.Randomizer.Next(13 + itemLevel * 5, 24 + itemLevel * 6);
             this.ItemLevel = itemLevel;
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);

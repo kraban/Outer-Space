@@ -38,8 +38,6 @@ namespace Outer_Space
             {
                 SceneManager.ChangeScene(SceneManager.menuScene);
                 SceneManager.started = false;
-                SceneManager.mapScene.NewItems.Flash = -1;
-                SceneManager.mapScene.NewRank.Flash = -1;
             }
         }
 

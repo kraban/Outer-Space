@@ -697,7 +697,7 @@ namespace Outer_Space
                         ToAdd.Add(new Rock(Player, this));
                     }
                 }
-                else if (HasModifier(Modifier.Sun))
+                if (HasModifier(Modifier.Sun))
                 {
                     modifierTimer--;
                     if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)
@@ -712,11 +712,11 @@ namespace Outer_Space
                         }
                     }
                 }
-                else if (HasModifier(Modifier.Satellite))
+                if (HasModifier(Modifier.Satellite))
                 {
                     Player.Energy.Change(0.04f);
                 }
-                else if (HasModifier(Modifier.BlackHole))
+                if (HasModifier(Modifier.BlackHole))
                 {
                     modifierTimer--;
                     if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)
@@ -775,7 +775,7 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
-                        Player.GainExperience((int)EnemyDifficulty * 30 + 50 + 500);
+                        Player.GainExperience((int)EnemyDifficulty * 30 + 50);
                         if (Rewards.Count() > 0)
                         {
                             foreach (Item reward in Rewards)
