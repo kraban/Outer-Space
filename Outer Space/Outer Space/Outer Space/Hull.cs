@@ -26,10 +26,11 @@ namespace Outer_Space
         public float WeaponAccuracy { get; set; }
 
         // Constructor(s)
-        public Hull(Ship ship, int method, Difficulty difficulty)
+        public Hull(Ship ship, int method, int itemLevel)
             : base(Item.Nothing, ItemType.hull, TextureManager.hulls[Globals.Randomizer.Next(0, TextureManager.hulls.Count)], "", "Hull")
         {
             this.Type = ItemType.hull;
+            this.ItemLevel = itemLevel;
 
             // Method variables
             RockResistance = 1;
@@ -42,7 +43,7 @@ namespace Outer_Space
                 }
             }
 
-            this.Armor = Globals.Randomizer.Next(5 + (int)difficulty * 3, 10 + (int)difficulty * 4);
+            this.Armor = Globals.Randomizer.Next(5 + itemLevel * 3, 10 + itemLevel * 4);
 
             this.Method = ListOfHullMethods()[method];
             Method(ship, this);

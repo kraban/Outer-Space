@@ -18,7 +18,6 @@ namespace Outer_Space
         public float ShieldPiercing { get; set; }
         public int Chance { get; set; }
         public List<string> Descriptions { get; set; }
-        public List<string> Targets { get; set; }
         public int Disabled { get; set; }
         public Shoot Method { get; set; }
 
@@ -32,15 +31,16 @@ namespace Outer_Space
         private int method;
 
         // Constructor(s)
-        public Weapon(Ship ship, int method, Difficulty difficulty)
+        public Weapon(Ship ship, int method, int itemLevel)
             : base(Item.Nothing, ItemType.weapon, TextureManager.weapons[1], "", "Weapon")
         {
-            this.Damage = Globals.Randomizer.Next(10 + (int)difficulty * 5, 20 + (int)difficulty * 5);
+            this.Damage = Globals.Randomizer.Next(10 + itemLevel * 5, 20 + itemLevel * 5);
             this.ShieldPiercing = (float)Math.Round(MathHelper.Lerp(0, 0.2f, (float)Globals.Randomizer.NextDouble()), 2);
-            this.Chance = Globals.Randomizer.Next(20 + (int)difficulty * 2, 30 + (int)difficulty * 2);
+            this.Chance = Globals.Randomizer.Next(20 + itemLevel * 2, 30 + itemLevel * 2);
             this.Depth = 0.5f;
             this.ShotsToShoot = new List<Shot>();
             this.method = method;
+            this.ItemLevel = itemLevel;
 
             this.TextureBackground = TextureManager.weapons[0];
 
@@ -48,8 +48,6 @@ namespace Outer_Space
 
             // Initialize weapon
             Method(ship, this, 0, null, true);
-
-            Targets = new List<string>();
 
             // Description
             LoadDescriptions();
@@ -175,7 +173,7 @@ namespace Outer_Space
             {
                 tilesMatched = 3;
             }
-            return Damage + (tilesMatched - 3) * (Damage / 3) + shooter.BonusDamageOneFight;
+            return Damage + (tilesMatched - 3) * (Damage / 3) + shooter.BonusDamageOneFight + shooter.BonusDamage;
         }
 
         public delegate void Shoot(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize);
@@ -185,7 +183,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance)); 
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance)); 
             }
         }
 
@@ -193,9 +191,9 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                if (level.GameObjects.Any(item => weapon.Targets.Any(target => target == item.GetType().Name)))
+                if (level.GameObjects.Any(item => shooter.Targets.Any(target => target == item.GetType().Name)))
                 {
-                    level.ToAdd.Add(new Shot(shooter.Position, (float)(Math.Atan2((level.GameObjects.First(item => weapon.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).Y, (level.GameObjects.First(item => weapon.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).X)), weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    level.ToAdd.Add(new Shot(shooter.Position, (float)(Math.Atan2((level.GameObjects.First(item => shooter.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).Y, (level.GameObjects.First(item => shooter.Targets.Any(target => target == item.GetType().Name)).Position - shooter.Position).X)), weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 }
                 else
                 {
@@ -208,7 +206,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitCrit, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitCrit, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -216,7 +214,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitEnemyShotDelay, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitEnemyShotDelay, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -224,7 +222,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitDamageOverTime, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitDamageOverTime, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -237,7 +235,7 @@ namespace Outer_Space
                 {
                     miss = MathHelper.Lerp(-0.5f + shooter.ShipHull.WeaponAccuracy, 0.5f - shooter.ShipHull.WeaponAccuracy, (float)Globals.Randomizer.NextDouble());
                 }
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + miss, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + miss, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
             else
             {
@@ -250,10 +248,10 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 for (int i = 0; i < 2; i++)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 }
             }
             else
@@ -266,10 +264,10 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 if (tilesMatched > 3)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 }
             }
         }
@@ -278,8 +276,8 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + 0.2f, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction - 0.2f, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction + 0.2f, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction - 0.2f, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -287,7 +285,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateChanceToExplode, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateChanceToExplode, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -295,7 +293,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 int random = Globals.Randomizer.Next(0, 101);
                 if (random < weapon.Chance / 2)
                 {
@@ -318,12 +316,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                List<string> targets = new List<string>();
-                for (int i = 0; i < weapon.Targets.Count; i++)
-                {
-                    targets.Add(weapon.Targets[i]);
-                }
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateBoomerang, targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateBoomerang, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
             else
             {
@@ -335,7 +328,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateExtraDamageCollideShot, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateExtraDamageCollideShot, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -343,7 +336,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
         }
 
@@ -356,7 +349,7 @@ namespace Outer_Space
                     weapon.Disabled = 180;
                     shooter.TakeDamage(weapon.Damage, weapon.ShieldPiercing, DamageType.laser, false);
                 }
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
             else
             {
@@ -372,7 +365,7 @@ namespace Outer_Space
                 if (weapon.Chance == 100)
                 {
                     weapon.Chance = 0;
-                    level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 }
                 else
                 {
@@ -393,7 +386,7 @@ namespace Outer_Space
             {
                 for (int i = 0; i < Globals.Randomizer.Next(3, 6); i++)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction + MathHelper.Lerp(-0.5f + shooter.ShipHull.WeaponAccuracy, 0.5f - shooter.ShipHull.WeaponAccuracy, (float)Globals.Randomizer.NextDouble()), weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction + MathHelper.Lerp(-0.5f + shooter.ShipHull.WeaponAccuracy, 0.5f - shooter.ShipHull.WeaponAccuracy, (float)Globals.Randomizer.NextDouble()), weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 }
             }
             else
@@ -408,10 +401,10 @@ namespace Outer_Space
             {
                 if (Globals.Randomizer.Next(0, 101) < weapon.Chance)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                     weapon.Chance = 0;
                 }
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 weapon.Chance += 15;
             }
         }
@@ -420,7 +413,7 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateRandom, weapon.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.UpdateRandom, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
             else
             {
@@ -437,8 +430,8 @@ namespace Outer_Space
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(boss.RightShootPosition, directionRight, 5, Shot.HitBasic, weapon.Targets, 0, 0));
-                    weapon.ShotsToShoot.Add(new Shot(boss.LeftShootPosition, directionLeft, 5, Shot.HitBasic, weapon.Targets, 0, 0));
+                    weapon.ShotsToShoot.Add(new Shot(boss.RightShootPosition, directionRight, 5, Shot.HitBasic, shooter.Targets, 0, 0));
+                    weapon.ShotsToShoot.Add(new Shot(boss.LeftShootPosition, directionLeft, 5, Shot.HitBasic, shooter.Targets, 0, 0));
                 }
             }
         }
@@ -452,8 +445,8 @@ namespace Outer_Space
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(boss.RightShootPosition, directionRight, 5, Shot.HitBasic, weapon.Targets, 0, 0));
-                    weapon.ShotsToShoot.Add(new Shot(boss.LeftShootPosition, directionLeft, 5, Shot.HitBasic, weapon.Targets, 0, 0));
+                    weapon.ShotsToShoot.Add(new Shot(boss.RightShootPosition, directionRight, 5, Shot.HitBasic, shooter.Targets, 0, 0));
+                    weapon.ShotsToShoot.Add(new Shot(boss.LeftShootPosition, directionLeft, 5, Shot.HitBasic, shooter.Targets, 0, 0));
                 }
             }
         }

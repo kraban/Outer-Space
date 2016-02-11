@@ -43,6 +43,8 @@ namespace Outer_Space
         public float KnockBack { get; set; }
         public int BonusDamageOneFight { get; set; }
         protected float shieldRegeneration;
+        public int BonusDamage { get; set; }
+        public List<string> Targets { get; set; }
 
         // Engine animation
         public Texture2D EngineAnimation { get; set; }
@@ -71,24 +73,25 @@ namespace Outer_Space
             this.Depth = 0.3f;
             this.FrameWidth = 64;
             this.FrameHeight = 64;
+            this.Targets = new List<string>();
 
-            this.Inventory = new Item[5, 6];
+            this.Inventory = new Item[5, 7];
             // Fill inventory
             for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < 6; j++)
+                for (int j = 0; j < 7; j++)
                 {
                     Inventory[i, j] = (new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", ""));
                 }
             }
 
-            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Difficulty.Easy);
-            Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Difficulty.Easy);
+            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), 0);
+            Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), 0);
 
-            this.ShipHull = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Difficulty.Easy);
+            this.ShipHull = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), 0);
 
             this.Health = new Bar(new Vector2(0, Globals.ScreenSize.Y - 35), 100, 20, 140, Color.Red);
-            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 100, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Difficulty.Easy);
+            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 100, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 0);
         }
 
         // Method(s)

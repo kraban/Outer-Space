@@ -41,7 +41,8 @@ namespace Outer_Space
             flee,
             explosion,
             blackHole,
-            satellite;
+            satellite,
+            craftingArrow;
 
         public static List<Texture2D> tiles;
         public static List<Texture2D> hulls;
@@ -82,6 +83,7 @@ namespace Outer_Space
             explosion = content.Load<Texture2D>("Explosion");
             blackHole = content.Load<Texture2D>("BlackHole");
             satellite = content.Load<Texture2D>("Satellite");
+            craftingArrow = content.Load<Texture2D>("CraftingArrow");
 
             pixel = new Texture2D(graphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[] { Color.White });

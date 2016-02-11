@@ -21,6 +21,7 @@ namespace Outer_Space
         public Use UseItem { get; set; }
         public int NumberOfItems { get; set; }
         public string Name { get; set; }
+        public int ItemLevel { get; set; }
 
         public Item(Use useItem, ItemType type, Texture2D texture, string description, string name)
             : base()
@@ -36,6 +37,7 @@ namespace Outer_Space
             Description = description;
             this.NumberOfItems = 1;
             this.Name = name;
+            this.ItemLevel = 0;
         }
 
         // Item template

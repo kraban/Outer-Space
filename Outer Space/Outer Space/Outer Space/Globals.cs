@@ -32,6 +32,7 @@ namespace Outer_Space
         // ItemTemplates
         public static Item Heal { get; set; }
         public static Item Flee { get; set; }
+        public static Item Nothing { get; set; }
 
         // Initialize
         public static void Initialize()
@@ -40,6 +41,7 @@ namespace Outer_Space
 
             Heal = new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench");
             Flee = new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee");
+            Nothing = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
         }
 
         public static float Distance(Vector2 v1, Vector2 v2)

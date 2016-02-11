@@ -13,7 +13,7 @@ namespace Outer_Space
 {
     public static class SceneManager
     {
-        public static List<Star> Stars { get; set; }
+        public static List<GameObject> GameObjects { get; set; }
 
         public static Scene CurrentScene { get; private set; }
         private static Scene changeTo;
@@ -46,10 +46,10 @@ namespace Outer_Space
 
             changeSceneTimer = 40;
 
-            Stars = new List<Star>();
+            GameObjects = new List<GameObject>();
             for (int i = 0; i < Globals.Randomizer.Next(40, 50); i++)
             {
-                Stars.Add(new Star(new Vector2(Globals.Randomizer.Next(5, Globals.ScreenSize.X - 5), Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2))));
+                GameObjects.Add(new Star(new Vector2(Globals.Randomizer.Next(5, Globals.ScreenSize.X - 5), Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2))));
             }
         }
 
@@ -64,28 +64,28 @@ namespace Outer_Space
             // Stars
             if (Globals.Randomizer.Next(0, 101) < Options.StarChance)
             {
-                Stars.Add(new Star(new Vector2(-5, Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2 + 50))));
+                GameObjects.Add(new Star(new Vector2(-5, Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2 + 50))));
             }
 
-            foreach (Star s in Stars)
+            foreach (GameObject gameObject in GameObjects)
             {
-                s.Update();
+                gameObject.Update();
             }
 
-            for (int i = Stars.Count - 1; i >= 0; i--)
+            for (int i = GameObjects.Count - 1; i >= 0; i--)
             {
-                if (Stars[i].Dead)
+                if (GameObjects[i].Dead)
                 {
-                    Stars.RemoveAt(i);
+                    GameObjects.RemoveAt(i);
                 }
             }
         }
 
         public static void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Star s in Stars)
+            foreach (GameObject gameObject in GameObjects)
             {
-                s.Draw(spriteBatch);
+                gameObject.Draw(spriteBatch);
             }
         }
 

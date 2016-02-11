@@ -28,6 +28,8 @@ namespace Outer_Space
         // Inventory
         private Item selectedItem;
         private Point selectedItemArrayPosition;
+        private Button craft;
+        private int currentlyCrafting;
 
         // Constructor(s)
         public Player()
@@ -41,17 +43,13 @@ namespace Outer_Space
             this.Experience = new Bar(new Vector2(Globals.ScreenSize.X / 2 - 330, 50), 300, 25, 100, Color.Green);
             this.Experience.Change(-Experience.MaxValue + 10);
             this.RankPerks = new List<string>();
+            Targets.Add("Enemy");
+            Targets.Add("Boss");
 
-            // Weapontargets
-            foreach (Weapon w in Weapons)
-            {
-                w.Targets.Add("Enemy");
-                w.Targets.Add("Boss");
-            }
-
-            Inventory[0, 0] = new Weapon(this, Weapon.ListOfMethods().Count() - 1, Difficulty.Easy);
-            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Difficulty.Easy);
-            Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Difficulty.Easy);
+            this.craft = new Button(new Vector2(700, 400), "Craft", TextureManager.SpriteFont20);
+            Inventory[0, 0] = new Weapon(this, Weapon.ListOfMethods().Count() - 1, 0);
+            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 0);
+            Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), 0);
             for (int i = 0; i < 5; i++)
             {
                 AddItem(new Item(Globals.Flee));
@@ -59,7 +57,7 @@ namespace Outer_Space
             }
             for (int i = 0; i < 20; i++)
             {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Difficulty.Easy));
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), 0));
             }
         }
 
@@ -99,7 +97,6 @@ namespace Outer_Space
                     {
                         if (Inventory[j, i].Type == ItemType.nothing)
                         {
-                            EquipItem(item);
                             Inventory[j, i] = item;
                             Inventory[j, i].RecentlyAcquired = true;
                             done = true;
@@ -133,21 +130,21 @@ namespace Outer_Space
 
         public void RankUp()
         {
-            int random = Globals.Randomizer.Next(0, 6);
+            int random = Globals.Randomizer.Next(0, 7);
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
-                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 140 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Difficulty.Hard));
+                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 140 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 2));
                 RankPerks.Add("Shield Module");
             }
             else if (random == 1)
             {
-                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Difficulty.Hard));
+                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), 2));
                 RankPerks.Add("Hull Module");
             }
             else if (random == 2)
             {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Difficulty.Hard));
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), 2));
                 RankPerks.Add("Weapon Module");
             }
             else if (random == 3)
@@ -169,6 +166,11 @@ namespace Outer_Space
             {
                 shieldRegeneration += 0.01f;
                 RankPerks.Add("Increase shield regeneration");
+            }
+            else if (random == 6)
+            {
+                BonusDamage += 2;
+                RankPerks.Add("Increase damage.");
             }
 
         }
@@ -197,15 +199,6 @@ namespace Outer_Space
             }
         }
 
-        public void EquipItem(Item item)
-        {
-            if (item.Type == ItemType.weapon)
-            {
-                Weapon weapon = (Weapon)item;
-                weapon.Targets.Add("Enemy");
-            }
-        }
-
         public void SwapItem(Point swapWith)
         {
             Item temp = Inventory[swapWith.X, swapWith.Y];
@@ -214,8 +207,56 @@ namespace Outer_Space
 
         }
 
+        public bool CanCraft()
+        {
+            List<ItemType> craftableTypes = new List<ItemType>();
+            craftableTypes.Add(ItemType.hull);
+            craftableTypes.Add(ItemType.shield);
+            craftableTypes.Add(ItemType.weapon);
+            if (craftableTypes.Any(item => item == Inventory[0, 6].Type) && craftableTypes.Any(item => item == Inventory[1, 6].Type) && craftableTypes.Any(item => item == Inventory[2, 6].Type))
+            {
+                return true;
+            }
+            return false;
+        }
+
         public void UpdateInventory()
         {
+            // Crafting
+            craft.Update();
+            currentlyCrafting--;
+            if (CanCraft() && currentlyCrafting < 0)
+            {
+                if (craft.Press())
+                {
+                    currentlyCrafting = 60;
+                }
+            }
+            if (currentlyCrafting == 0)
+            {
+                int itemLevel = (int)((Inventory[0, 6].ItemLevel + Inventory[1, 6].ItemLevel + Inventory[2, 6].ItemLevel) / 3 + MathHelper.Lerp(-0.2f, 0.2f, (float)Globals.Randomizer.NextDouble()));
+                Inventory[0, 6] = new Item(Globals.Nothing);
+                Inventory[1, 6] = new Item(Globals.Nothing);
+                Inventory[2, 6] = new Item(Globals.Nothing);
+                if (Inventory[3, 6].Type != ItemType.nothing)
+                {
+                    AddItem(Inventory[3, 6]);
+                }
+                int random = Globals.Randomizer.Next(0, 3);
+                if (random == 0)
+                {
+                    Inventory[3, 6] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), itemLevel);
+                }
+                else if (random == 1)
+                {
+                    Inventory[3, 6] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), itemLevel);
+                }
+                else if (random == 2)
+                {
+                    Inventory[3, 6] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), itemLevel);
+                }
+            }
+
             for (int i = 0; i < Inventory.GetLength(0); i++)
 			{
                 for (int j = 0; j < Inventory.GetLength(1); j++)
@@ -266,11 +307,10 @@ namespace Outer_Space
                                     if (((selectedItem.Type == ItemType.weapon || Inventory[i, j].Type == ItemType.weapon) && (Weapons.Count > 1 || !Weapons.Any(item => item == selectedItem)) || (selectedItem.Type == ItemType.weapon && Inventory[i, j].Type == ItemType.weapon)))
                                     {
                                         SwapItem(new Point(i, j));
-                                        EquipItem(selectedItem);
                                         break;
                                     }
                                 }
-                                else // inventory
+                                else if (!(i > 2 && j == 6)) // inventory
                                 {
                                     SwapItem(new Point(i, j));
                                     break; 
@@ -333,11 +373,31 @@ namespace Outer_Space
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(360, 100), Color.White);
             for (int i = 0; i < Inventory.GetLength(0); i++)
             {
-                for (int j = 0; j < Inventory.GetLength(1) - 1; j++)
+                for (int j = 0; j < Inventory.GetLength(1) - 2; j++)
 			    {
 			        Inventory[i, j].DrawInventory(spriteBatch, new Vector2(i * 64 + 300, j * 64 + 200));
 			    }
             }
+
+            // Crafting
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Crafting", new Vector2(805, 100), Color.White);
+            craft.Draw(spriteBatch);
+            for (int i = 0; i < 3; i++)
+            {
+                if (currentlyCrafting > 0)
+                {
+                    Vector2 target = new Vector2(864, 350);
+                    Inventory[i, 6].DrawInventory(spriteBatch, new Vector2(MathHelper.Lerp(i * 64 + 800, target.X, (float)(60 - currentlyCrafting) / 60), MathHelper.Lerp(200, target.Y, (float)(60 - currentlyCrafting) / 60)));
+                }
+                else
+                {
+                    Inventory[i, 6].DrawInventory(spriteBatch, new Vector2(i * 64 + 800, 200));
+                }
+                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 + 800 - 32, 200 - 32), Color.White);
+            }
+            spriteBatch.Draw(TextureManager.craftingArrow, new Vector2(832, 350 - 32 - 80), CanCraft() ? new Color(0, 255, 255) : Color.Gray); 
+            Inventory[3, 6].DrawInventory(spriteBatch, new Vector2(864, 350));
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(864 - 32, 350 - 32), Color.White);
         }
 
         public void DrawMap(SpriteBatch spriteBatch, Vector2 position, float size, float direction)

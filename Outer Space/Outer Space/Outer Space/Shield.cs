@@ -26,12 +26,13 @@ namespace Outer_Space
         public float Width { get { return ShieldBar.Width; } }
 
         // Constructor(s)
-        public Shield(Vector2 position, int width, int height, float shieldValue, int method, Difficulty difficulty)
+        public Shield(Vector2 position, int width, int height, float shieldValue, int method, int itemLevel)
             : base(Item.Nothing, ItemType.shield, TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)], "", "Shield")
         {
             this.Type = ItemType.shield;
-            this.ShieldHeal = Globals.Randomizer.Next(6 + (int)difficulty * 2, 14 + (int)difficulty * 2);
-            this.Chance = Globals.Randomizer.Next(10 + (int)difficulty * 3, 21 + (int)difficulty * 4);
+            this.ShieldHeal = Globals.Randomizer.Next(6 + itemLevel * 2, 14 + itemLevel * 2);
+            this.Chance = Globals.Randomizer.Next(10 + itemLevel * 3, 21 + itemLevel * 4);
+            this.ItemLevel = itemLevel;
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);
 

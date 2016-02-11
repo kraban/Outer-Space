@@ -27,30 +27,25 @@ namespace Outer_Space
             this.Texture = TextureManager.enemyShip;
             this.EngineAnimation = TextureManager.enemyShipEngineAnimation;
             this.MaxFrame = 1;
+            this.Targets.Add("Player");
 
             this.Health = new Bar(new Vector2(70, 10), 100, 20, 10 * (int)EnemyDifficulty + 10, Color.Red);
-            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), difficulty);
+            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)difficulty);
             this.shieldRegeneration = 0.007f * (float)EnemyDifficulty;
 
             // Difficulty
-            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), difficulty);
+            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), (int)difficulty);
             if (EnemyDifficulty == Difficulty.Easy)
             {
                 Inventory[3, 5] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
             }
             else
             {
-                Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), difficulty);
-            }
-
-            // Weapon targets
-            foreach (Weapon w in Weapons)
-            {
-                w.Targets.Add("Player");
+                Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), (int)difficulty);
             }
 
             // Enemy hull
-            ShipHull = new Hull(this, 0, difficulty);
+            ShipHull = new Hull(this, 0, (int)difficulty);
         }
 
         // Method(s)
