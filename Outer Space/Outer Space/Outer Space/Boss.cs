@@ -17,6 +17,7 @@ namespace Outer_Space
     {
         private List<int> possibleAttacks;
         private int attackCooldown;
+        private int deathTimer;
 
         // Shoot
         public Vector2 LeftShootPosition { get { return new Vector2(Position.X - 50, Position.Y + 50); } }
@@ -48,7 +49,7 @@ namespace Outer_Space
             this.Colour = Color.Red;
 
             // Modules
-            ShipShield = new Shield(new Vector2(270, 10), (int)ShipShield.Width, 20, 200, 0, 3);
+            ShipShield = new Shield(new Vector2(270, 10), (int)ShipShield.Width, 20, 200 - 200, 0, 3);
             ShipShield.Description = "|W|Shield: |0,0,255|" + ShipShield.MaxValue + "|W|\nWill teleport to another location just before being hit.";
             ShipHull = new Hull(this, 0, 3);
             ShipHull.Description = "|W|Armor: |255,255,0|" + ShipHull.Armor + "|255,255,100|\nPlaces mines on tiles in the tileboard.\nThe Player will take 20 damage when matching tiles with mines.\nMines will be disarmed when matched or then falling.";
@@ -139,9 +140,42 @@ namespace Outer_Space
             }
             if (level.Started)
             {
+                Health.Change(-0.2f);
+                // Die
+                if (Health.Value <= 0 && deathTimer == 0 && dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging)
+                {
+                    deathTimer = 180;
+                }
+                if (deathTimer > 0)
+                {
+                    deathTimer--;
+                    if (deathTimer % 5 == 0)
+                    {
+                        dodge = DodgeState.Dodge;
+                        List<int> possibleLocations = new List<int>();
+                        for (int i = 0; i < 3; i++)
+                        {
+                            if (i != (int)ShipLocation)
+                            {
+                                possibleLocations.Add(i);
+                            }
+                        }
+                        ShipLocation = (Location)possibleLocations[Globals.Randomizer.Next(0, possibleLocations.Count())];
+                    }
+                }
+                if (deathTimer == 1)
+                {
+                    Dead = true;
+                    for (int i = 0; i < 100; i++)
+                    {
+                        level.ToAdd.Add(new Piece(Position, Texture, 60, 3f));
+                    }
+                    SceneManager.ChangeScene(SceneManager.winScene);
+                }
+
                 attackCooldown--;
                 // Choose attack
-                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 101) < 3 && attackCooldown < 0)
+                if (dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging && shootTimer < -20 && Globals.Randomizer.Next(0, 101) < 3 && attackCooldown < 0 && deathTimer == 0)
                 {
                     attackCooldown = 60;
                     int attack = possibleAttacks[Globals.Randomizer.Next(0, possibleAttacks.Count())];

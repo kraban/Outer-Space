@@ -44,9 +44,6 @@ namespace Outer_Space
             this.Inventory = new Button(new Vector2(250, 30), "Inventory", TextureManager.SpriteFont20);
             this.Menu = new Button(new Vector2(0, Globals.ScreenSize.Y - 20), "Menu", TextureManager.SpriteFont20);
             this.Rank = new Button(new Vector2(600, 30), "Rank", TextureManager.SpriteFont20);
-            this.SelectedLevel = -1;
-            this.levelToBeSelected = -1;
-            this.delay = -1;
             nearestLevels = new List<Level>();
             Initialize();
 
@@ -56,6 +53,9 @@ namespace Outer_Space
 
         public void Initialize()
         {
+            this.SelectedLevel = -1;
+            this.levelToBeSelected = -1;
+            this.delay = -1;
             this.SpaceObjects = new List<GameObject>();
             this.Levels = new List<Level>();
             this.ThePlayer = new Player();
@@ -193,7 +193,7 @@ namespace Outer_Space
             List<Level> nearestLevels = new List<Level>();
             if (Levels.Any(item => item != startingLevel && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
             {
-                foreach (Level nextTo in Levels.Where(item => item != startingLevel && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
+                foreach (Level nextTo in Levels.Where(item => item != startingLevel && item != Levels[Levels.Count() - 1] && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
                 {
                     nearestLevels.Add(nextTo);
                 }
@@ -242,11 +242,14 @@ namespace Outer_Space
                 Rank.Draw(spriteBatch);
 
                 // Boss
-                spriteBatch.Draw(TextureManager.boss, bossPosition, null, Color.White, 0f, new Vector2(TextureManager.boss.Width / 2, TextureManager.boss.Height / 2), 0.6f, SpriteEffects.None, 0.2f);
-                spriteBatch.Draw(TextureManager.bossEngineAnimation, bossPosition, new Rectangle(163 * bossAnimationFrame, 0, 163, 139), Color.White, 0f, new Vector2(TextureManager.boss.Width / 2, TextureManager.boss.Height / 2), 0.6f, SpriteEffects.None, 0.1f);
-                for (int i = 0; i < 1000; i++)
+                if (!Levels[Levels.Count() - 1].Complete)
                 {
-                    spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(bossPosition.X + Math.Cos(((float)i / 1000f) * Math.PI * 2) * 300), (int)(bossPosition.Y + Math.Sin(((float)i / 1000f) * Math.PI * 2) * 300), 3, 3), Color.Red);
+                    spriteBatch.Draw(TextureManager.boss, bossPosition, null, Color.White, 0f, new Vector2(TextureManager.boss.Width / 2, TextureManager.boss.Height / 2), 0.6f, SpriteEffects.None, 0.2f);
+                    spriteBatch.Draw(TextureManager.bossEngineAnimation, bossPosition, new Rectangle(163 * bossAnimationFrame, 0, 163, 139), Color.White, 0f, new Vector2(TextureManager.boss.Width / 2, TextureManager.boss.Height / 2), 0.6f, SpriteEffects.None, 0.1f);
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)(bossPosition.X + Math.Cos(((float)i / 1000f) * Math.PI * 2) * 300), (int)(bossPosition.Y + Math.Sin(((float)i / 1000f) * Math.PI * 2) * 300), 3, 3), Color.Red);
+                    }
                 }
 
                 // Draw lines to close stars
@@ -324,7 +327,7 @@ namespace Outer_Space
                     NewRank.Update();
 
                     // Boss
-                    if (Globals.Distance(bossPosition, Levels[playerPosition].EnterLevel.Position) < 300 && delay < 0)
+                    if (Globals.Distance(bossPosition, Levels[playerPosition].EnterLevel.Position) < 300 && delay < 0 && !Levels[Levels.Count() - 1].Complete)
                     {
                         levelToBeSelected = Levels.Count() - 1;
                         delay = 65;

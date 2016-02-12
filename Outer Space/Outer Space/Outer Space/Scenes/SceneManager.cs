@@ -29,6 +29,7 @@ namespace Outer_Space
         public static ControlScene controlScene { get; set; }
         public static RankScene rankScene { get; set; }
         public static GameOverScene gameOverScene { get; set; }
+        public static WinScene winScene { get; set; }
 
         public static void Initialize()
         {
@@ -40,6 +41,7 @@ namespace Outer_Space
             controlScene = new ControlScene();
             rankScene = new RankScene();
             gameOverScene = new GameOverScene();
+            winScene = new WinScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

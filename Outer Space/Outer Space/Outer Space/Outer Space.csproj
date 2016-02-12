@@ -112,6 +112,7 @@
     <Compile Include="Button.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Enemy.cs" />
+    <Compile Include="Firework.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Globals.cs" />
@@ -146,6 +147,7 @@
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Weapon.cs" />
+    <Compile Include="WinScene.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
