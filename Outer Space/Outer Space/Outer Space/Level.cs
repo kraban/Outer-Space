@@ -719,7 +719,7 @@ namespace Outer_Space
                 if (HasModifier(Modifier.BlackHole))
                 {
                     modifierTimer--;
-                    if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 3)
+                    if (modifierTimer < 0 && Globals.Randomizer.Next(0, 1001) < 4)
                     {
                         modifierTimer = 300;
                         CombatText("The tiles are heating up!");

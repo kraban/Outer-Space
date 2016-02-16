@@ -159,9 +159,16 @@ namespace Outer_Space
             {
                 shot.changeSpeed = -shot.changeSpeed;
                 shot.HitTarget = Shot.HitBasic;
-                for (int i = 0; i < shot.Targets.Count; i++)
+                if (shot.Targets.Any(item => item == "Player"))
                 {
-                    shot.Targets[i] = shot.Targets[i] == "Enemy" ? "Player" : "Enemy";
+                    shot.Targets.Clear();
+                    shot.Targets.Add("Enemy");
+                    shot.Targets.Add("Boss");
+                }
+                else
+                {
+                    shot.Targets.Clear();
+                    shot.Targets.Add("Player");
                 }
             }
             HitBasic(level, shot);

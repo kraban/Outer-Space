@@ -30,6 +30,7 @@ namespace Outer_Space
         public static RankScene rankScene { get; set; }
         public static GameOverScene gameOverScene { get; set; }
         public static WinScene winScene { get; set; }
+        public static TutorialScene tutorialScene { get; set; }
 
         public static void Initialize()
         {
@@ -42,6 +43,7 @@ namespace Outer_Space
             rankScene = new RankScene();
             gameOverScene = new GameOverScene();
             winScene = new WinScene();
+            tutorialScene = new TutorialScene();
 
             CurrentScene = menuScene;
             changeTo = menuScene;

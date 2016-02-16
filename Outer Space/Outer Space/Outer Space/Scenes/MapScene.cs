@@ -191,7 +191,7 @@ namespace Outer_Space
         public List<Level> FindNearestLevels(Level startingLevel)
         {
             List<Level> nearestLevels = new List<Level>();
-            if (Levels.Any(item => item != startingLevel && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
+            if (Levels.Any(item => item != startingLevel && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 155))
             {
                 foreach (Level nextTo in Levels.Where(item => item != startingLevel && item != Levels[Levels.Count() - 1] && Globals.Distance(startingLevel.EnterLevel.Position, item.EnterLevel.Position) < 150))
                 {

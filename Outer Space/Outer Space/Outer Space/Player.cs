@@ -41,7 +41,7 @@ namespace Outer_Space
             this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.Orange);
             this.Rank = 1;
             this.Experience = new Bar(new Vector2(Globals.ScreenSize.X / 2 - 330, 50), 300, 25, 100, Color.Green);
-            this.Experience.Change(-Experience.MaxValue + 10);
+            this.Experience.Change(-Experience.MaxValue);
             this.RankPerks = new List<string>();
             Targets.Add("Enemy");
             Targets.Add("Boss");

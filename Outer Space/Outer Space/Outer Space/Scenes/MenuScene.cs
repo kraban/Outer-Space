@@ -15,6 +15,7 @@ namespace Outer_Space
     {
         public Button Start { get; set; }
         public Button Options { get; set; }
+        public Button Tutorial { get; set; }
         public Button Quit { get; set; }
         public Button Continue { get; set; }
 
@@ -28,7 +29,8 @@ namespace Outer_Space
             this.Start = new Button(new Vector2(200, 200), "New Game", TextureManager.SpriteFont20);
             this.Continue = new Button(new Vector2(200, 250), "Continue", TextureManager.SpriteFont20);
             this.Options = new Button(new Vector2(200, 300), "Options", TextureManager.SpriteFont20);
-            this.Quit = new Button(new Vector2(200, 350), "Quit", TextureManager.SpriteFont20);
+            this.Tutorial = new Button(new Vector2(200, 350), "Tutorial", TextureManager.SpriteFont20);
+            this.Quit = new Button(new Vector2(200, 400), "Quit", TextureManager.SpriteFont20);
 
             this.GameObjects = new List<GameObject>();
         }
@@ -56,6 +58,12 @@ namespace Outer_Space
             if (Options.Press())
             {
                 SceneManager.ChangeScene(SceneManager.optionsScene);
+            }
+
+            Tutorial.Update();
+            if (Tutorial.Press())
+            {
+                SceneManager.ChangeScene(SceneManager.tutorialScene);
             }
 
             Quit.Update();
@@ -103,6 +111,7 @@ namespace Outer_Space
             Start.Draw(spriteBatch);
             Options.Draw(spriteBatch);
             Continue.Draw(spriteBatch);
+            Tutorial.Draw(spriteBatch);
             Quit.Draw(spriteBatch);
 
             // Warning
