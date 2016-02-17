@@ -49,7 +49,7 @@ namespace Outer_Space
         public static List<Texture2D> shields;
         public static List<Texture2D> weapons;
 
-
+        public static SpriteFont SpriteFont50 { get; set; }
         public static SpriteFont SpriteFont20 { get; set; }
         public static SpriteFont SpriteFont15 { get; set; }
 
@@ -89,6 +89,7 @@ namespace Outer_Space
             pixel.SetData<Color>(new Color[] { Color.White });
 
             // SpriteFonts
+            SpriteFont50 = content.Load<SpriteFont>("SpriteFont50");
             SpriteFont20 = content.Load<SpriteFont>("SpriteFont20");
             SpriteFont15 = content.Load<SpriteFont>("SpriteFont15");
 

@@ -21,6 +21,8 @@ namespace Outer_Space
 
         public float Score { get; set; }
         public float LerpScore { get; set; }
+        private float titleSize;
+        private bool titleSizeFlip;
 
         public List<GameObject> GameObjects { get; set; }
 
@@ -33,10 +35,44 @@ namespace Outer_Space
             this.Quit = new Button(new Vector2(200, 400), "Quit", TextureManager.SpriteFont20);
 
             this.GameObjects = new List<GameObject>();
+
+            this.titleSize = 1;
         }
 
         public override void Update()
         {
+            // Title
+            if (titleSizeFlip)
+            {
+                if (titleSize > 1f)
+                {
+                    titleSize -= 0.001f;
+                }
+                else
+                {
+                    titleSize = MathHelper.Lerp(titleSize, 0.9f, 0.015f);
+                }
+                if (titleSize < 0.91f)
+                {
+                    titleSizeFlip = !titleSizeFlip;
+                }
+            }
+            else
+            {
+                if (titleSize < 1f)
+                {
+                    titleSize += 0.001f;
+                }
+                else
+                {
+                    titleSize = MathHelper.Lerp(titleSize, 1.1f, 0.015f);
+                }
+                if (titleSize > 1.09f)
+                {
+                    titleSizeFlip = !titleSizeFlip;
+                }
+            }
+
             Start.Update();
             if (Start.Press())
             {
@@ -126,6 +162,7 @@ namespace Outer_Space
             }
 
             spriteBatch.DrawString(TextureManager.SpriteFont15, "Score: " + Score.ToString("0"), new Vector2(Globals.ScreenSize.X - 150, 0), Color.Yellow);
+            spriteBatch.DrawString(TextureManager.SpriteFont50, "Outer Space", new Vector2(Globals.ScreenSize.X / 2, 10), new Color(0, 255, 255), 0f, new Vector2(TextureManager.SpriteFont50.MeasureString("Outer Space").X / 2, 0), titleSize, SpriteEffects.None, 0f);
         }
     }
 }

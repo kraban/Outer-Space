@@ -53,7 +53,7 @@ namespace Outer_Space
             // Scene
             SceneManager.Initialize();
 
-            Camera.Position = new Vector3(-Globals.ScreenSize.X, 0, 0);
+            Camera.Position = new Vector3(-Globals.ScreenSize.X * 3, 0, 0);
 
             base.Initialize();
         }
