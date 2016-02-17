@@ -110,7 +110,7 @@ namespace Outer_Space
 
         public bool Press()
         {
-            if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0)
+            if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0 && Camera.ChangeSceneDelay < -10)
             {
                 SoundManager.fire.Play();
                 Explode();

@@ -49,7 +49,7 @@ namespace Outer_Space
         {
             Value = (SlidePosition.X + Texture.Width / 2 - Position.X) / MaxValue * Texture.Width;
 
-            if (Globals.MRectangle.Intersects(SlideBox))
+            if (Globals.MRectangle.Intersects(SlideBox) && Globals.PrevMState.LeftButton == ButtonState.Released && Camera.ChangeSceneDelay < -10)
             {
                 active = true;
             }

@@ -49,7 +49,7 @@ namespace Outer_Space
 
         public bool Pressed()
         {
-            if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0)
+            if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0 && Camera.ChangeSceneDelay < -10)
             {
                 Explode();
                 return true;

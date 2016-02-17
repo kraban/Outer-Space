@@ -51,7 +51,7 @@ namespace Outer_Space
             changeSceneTimer = 40;
 
             GameObjects = new List<GameObject>();
-            for (int i = 0; i < Globals.Randomizer.Next(40, 50); i++)
+            for (int i = 0; i < Options.StarChance * 10; i++)
             {
                 GameObjects.Add(new Star(new Vector2(Globals.Randomizer.Next(5, Globals.ScreenSize.X - 5), Globals.Randomizer.Next(5, Globals.ScreenSize.Y * 2))));
             }
