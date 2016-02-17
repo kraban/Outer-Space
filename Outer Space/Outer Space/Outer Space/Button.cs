@@ -112,6 +112,7 @@ namespace Outer_Space
         {
             if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0)
             {
+                SoundManager.fire.Play();
                 Explode();
                 return true;
             }

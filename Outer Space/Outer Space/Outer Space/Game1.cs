@@ -44,6 +44,9 @@ namespace Outer_Space
             // TextureManager
             TextureManager.Initialize(Content, GraphicsDevice);
 
+            // SoundEffects
+            SoundManager.Initialize(Content);
+
             // Globals
             Globals.Initialize();
 
@@ -91,6 +94,8 @@ namespace Outer_Space
 
             // Globals
             Globals.Update();
+
+            SoundManager.Update();
 
             Camera.Update();
 

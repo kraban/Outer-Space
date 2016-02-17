@@ -39,7 +39,7 @@ namespace Outer_Space
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), 1f, SpriteEffects.None, 0.1f);
             spriteBatch.Draw(SlideTexture, SlidePosition, null, Color.White, 0f, new Vector2(SlideTexture.Width / 2, SlideTexture.Height / 2), 1f, SpriteEffects.None, 0f);
 
             spriteBatch.DrawString(spriteFont, Name + ": " + Value.ToString(), new Vector2(Position.X - Texture.Width / 2 - spriteFont.MeasureString(Name + ": ").X - 50, Position.Y), Color.White, 0f, new Vector2(0, spriteFont.MeasureString(Name + ": " + Value.ToString()).Y / 2), 1f, SpriteEffects.None, 0f);

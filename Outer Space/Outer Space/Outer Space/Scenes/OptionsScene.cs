@@ -17,13 +17,19 @@ namespace Outer_Space
         public Button Controls { get; set; }
 
         public Slider StarChanceSlider { get; set; }
+        
+        // Sound
+        public Slider SoundVolumeSlider { get; set; }
+        public Slider MusicVolumeSlider { get; set; }
 
         public OptionsScene()
         {
             this.Back = new Button(new Vector2(200, 200), "Back", TextureManager.SpriteFont20);
             this.Controls = new Button(new Vector2(200, 250), "Controls", TextureManager.SpriteFont20);
 
-            this.StarChanceSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(300, 300), 100, 10, TextureManager.SpriteFont20, "Star Chance");
+            this.StarChanceSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(350, 300), 100, Options.GetOptions()[0], TextureManager.SpriteFont20, "Star Chance");
+            this.SoundVolumeSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(350, 400), 100, Options.GetOptions()[1], TextureManager.SpriteFont20, "Sound Volume");
+            this.MusicVolumeSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(350, 500), 100, Options.GetOptions()[2], TextureManager.SpriteFont20, "Music Volume");
         }
 
         public override void Update()
@@ -33,6 +39,7 @@ namespace Outer_Space
             Back.Update();
             if (Back.Press())
             {
+                Options.SaveOptions();
                 SceneManager.ChangeScene(SceneManager.menuScene);
             }
 
@@ -43,6 +50,8 @@ namespace Outer_Space
             }
 
             StarChanceSlider.Update();
+            SoundVolumeSlider.Update();
+            MusicVolumeSlider.Update();
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -53,6 +62,8 @@ namespace Outer_Space
             Controls.Draw(spriteBatch);
 
             StarChanceSlider.Draw(spriteBatch);
+            SoundVolumeSlider.Draw(spriteBatch);
+            MusicVolumeSlider.Draw(spriteBatch);
         }
     }
 }
