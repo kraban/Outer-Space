@@ -75,7 +75,7 @@ namespace Outer_Space
             methods.Add(FireEveryOther);
             methods.Add(FireScattered);
             methods.Add(FireIncreasingChanceOfTwo);
-            methods.Add(FireRandom);
+            methods.Add(FireRandom);    
             return methods;
 
         }

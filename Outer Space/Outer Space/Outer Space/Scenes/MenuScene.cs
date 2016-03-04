@@ -46,11 +46,11 @@ namespace Outer_Space
             {
                 if (titleSize > 1f)
                 {
-                    titleSize -= 0.001f;
+                    titleSize -= 0.0007f;
                 }
                 else
                 {
-                    titleSize = MathHelper.Lerp(titleSize, 0.9f, 0.015f);
+                    titleSize = MathHelper.Lerp(titleSize, 0.9f, 0.009f);
                 }
                 if (titleSize < 0.91f)
                 {
@@ -61,11 +61,11 @@ namespace Outer_Space
             {
                 if (titleSize < 1f)
                 {
-                    titleSize += 0.001f;
+                    titleSize += 0.0007f;
                 }
                 else
                 {
-                    titleSize = MathHelper.Lerp(titleSize, 1.1f, 0.015f);
+                    titleSize = MathHelper.Lerp(titleSize, 1.1f, 0.009f);
                 }
                 if (titleSize > 1.09f)
                 {

@@ -140,7 +140,6 @@ namespace Outer_Space
             }
             if (level.Started)
             {
-                Health.Change(-0.2f);
                 // Die
                 if (Health.Value <= 0 && deathTimer == 0 && dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging)
                 {
