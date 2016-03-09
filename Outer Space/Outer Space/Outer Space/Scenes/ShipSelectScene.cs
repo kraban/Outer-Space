@@ -15,12 +15,18 @@ namespace Outer_Space
     {
         public Button Back { get; set; }
 
+        public InfoButton Info { get; set; }
+
         public List<TextureButton> ShipButtons { get; set; }
 
         public ShipSelectScene()
             : base()
         {
             Back = new Button(new Vector2(200, 200), "Back", TextureManager.SpriteFont20);
+            string[] info = new string[2];
+            info[0] = "Select the ship you want to use.";
+            info[1] = "All ships have equal stats, the only difference is appearance.";
+            Info = new InfoButton(new Vector2(20, 20), info);
 
             // Ship buttons
             ShipButtons = new List<TextureButton>();
@@ -39,6 +45,8 @@ namespace Outer_Space
             }
 
             Back.Update();
+
+            Info.Update();
 
             for (int i = 0; i < ShipButtons.Count(); i++)
 			{
@@ -77,7 +85,9 @@ namespace Outer_Space
 
             Back.Draw(spriteBatch);
 
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Choose a ship", new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont20.MeasureString("Choose a ship").X * (1.5f / 2f), 200), new Color(0, 255, 255), 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0f);
+            Info.Draw(spriteBatch);
+
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Choose a ship", new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont20.MeasureString("Choose a ship").X * (1.5f / 2f), 200), new Color(0, 255, 255), 0f, Vector2.Zero, 1.5f, SpriteEffects.None, 0.1f);
 
             foreach (TextureButton shipButton in ShipButtons)
             {

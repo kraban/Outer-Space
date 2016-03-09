@@ -17,6 +17,7 @@ namespace Outer_Space
         public static float StarChance { get { return SceneManager.optionsScene.StarChanceSlider.Value; } }
         public static float SoundVolume { get { return SceneManager.optionsScene.SoundVolumeSlider.Value; } }
         public static float MusicVolume { get { return SceneManager.optionsScene.MusicVolumeSlider.Value; } }
+        public static float TutorialTips { get { if (SceneManager.optionsScene.TipsEnable) { return 1; } else return 0; } }
 
         public static void SaveOptions()
         {
@@ -32,6 +33,7 @@ namespace Outer_Space
                 sw.WriteLine(StarChance);
                 sw.WriteLine(SoundVolume);
                 sw.WriteLine(MusicVolume);
+                sw.WriteLine(TutorialTips);
             }
         }
 
@@ -45,17 +47,26 @@ namespace Outer_Space
                 // Read file
                 using (StreamReader sr = new StreamReader("Options.txt"))
                 {
-                    for (int i = 0; i < 3; i++)
+                    for (int i = 0; i < 4; i++)
                     {
-                        options.Add(int.Parse(sr.ReadLine()));
+                        string readLine = sr.ReadLine();
+                        int number = 0;
+                        if (int.TryParse(readLine, out number))
+                        {
+                            options.Add(int.Parse(readLine)); 
+                        }
+                        else
+                        {
+                            options.Add(0);
+                        }
                     }
                 }
             }
             else // add default values if file does not exist
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 4; i++)
                 {
-                    options.Add(10);
+                    options.Add(0);
                 }
             }
             return options;

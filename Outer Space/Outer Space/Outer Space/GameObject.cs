@@ -38,6 +38,7 @@ namespace Outer_Space
             this.Size = 1;
             this.Colour = Color.White;
             this.Opacity = 1;
+            this.Depth += 0.1f;
         }
 
         // Method(s)

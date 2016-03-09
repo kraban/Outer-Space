@@ -21,11 +21,11 @@ namespace Outer_Space
         public Color NormalColor { get; set; }
         public Color HoverColor { get; set; }
         public Color TextColor { get; set; }
+        public float Size;
 
         // Explode
         private List<Text> characters;
         private int exploded;
-        private float size;
 
         public Button(Vector2 position, string text, SpriteFont spriteFont)
         {
@@ -35,15 +35,15 @@ namespace Outer_Space
             this.NormalColor = new Color(255, 255, 255);
             this.TextColor = NormalColor;
             this.HoverColor = new Color(0, 255, 255);
-            this.size = 1f;
+            this.Size = 1f;
             this.characters = new List<Text>();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             if (exploded <= 0)
             {
-                spriteBatch.DrawString(spriteFont, Write, new Vector2(Position.X + Offset, Position.Y), TextColor, 0f, new Vector2(0, spriteFont.MeasureString(Write).Y / 2), size, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(spriteFont, Write, new Vector2(Position.X + Offset, Position.Y), TextColor, 0f, new Vector2(0, spriteFont.MeasureString(Write).Y / 2), Size, SpriteEffects.None, 0.1f);
             }
 
             // Explode
@@ -53,20 +53,20 @@ namespace Outer_Space
             }
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (exploded <= 0)
             {
                 if (Hover())
                 {
                     Offset = MathHelper.Lerp(Offset, 20, 0.1f);
-                    size = MathHelper.Lerp(size, 1.5f, 0.1f);
+                    Size = MathHelper.Lerp(Size, 1.5f, 0.1f);
                     TextColor = new Color((int)MathHelper.Lerp(TextColor.R, HoverColor.R, 0.1f), (int)MathHelper.Lerp(TextColor.G, HoverColor.G, 0.1f), (int)MathHelper.Lerp(TextColor.B, HoverColor.B, 0.1f));
                 }
                 else
                 {
                     Offset = MathHelper.Lerp(0, Offset, 0.9f);
-                    size = MathHelper.Lerp(1, size, 0.9f);
+                    Size = MathHelper.Lerp(1, Size, 0.9f);
                     TextColor = new Color((int)MathHelper.Lerp(TextColor.R, NormalColor.R, 0.1f), (int)MathHelper.Lerp(TextColor.G, NormalColor.G, 0.1f), (int)MathHelper.Lerp(TextColor.B, NormalColor.B, 0.1f));
                 } 
             }
@@ -99,7 +99,7 @@ namespace Outer_Space
             }
         }
 
-        public bool Hover()
+        public virtual bool Hover()
         {
             if (Globals.MRectangle.Intersects(Box))
             {
@@ -108,7 +108,7 @@ namespace Outer_Space
             return false;
         }
 
-        public bool Press()
+        public virtual bool Press()
         {
             if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0 && Camera.ChangeSceneDelay < -10)
             {

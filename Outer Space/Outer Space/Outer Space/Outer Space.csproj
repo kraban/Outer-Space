@@ -114,6 +114,7 @@
     <Compile Include="Enemy.cs" />
     <Compile Include="Firework.cs" />
     <Compile Include="GameObject.cs" />
+    <Compile Include="InfoButton.cs" />
     <Compile Include="Scenes\GameOverScene.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Hull.cs" />
@@ -147,7 +148,7 @@
     <Compile Include="TextureButton.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="TutorialScene.cs" />
+    <Compile Include="Scenes\TutorialScene.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="WinScene.cs" />
   </ItemGroup>
