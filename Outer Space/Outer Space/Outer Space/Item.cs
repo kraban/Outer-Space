@@ -134,7 +134,7 @@ namespace Outer_Space
 
             if (NumberOfItems > 1)
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, NumberOfItems.ToString(), new Vector2(Position.X - 32, Position.Y + 8), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, NumberOfItems.ToString(), new Vector2(Position.X - 32, Position.Y + 8), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             }
 
             if (RecentlyAcquired)
@@ -151,7 +151,7 @@ namespace Outer_Space
                 {
                     recentlyAcquiredOpacity = MathHelper.Lerp(recentlyAcquiredOpacity, 0, 0.05f);
                 }
-                spriteBatch.DrawString(TextureManager.SpriteFont15, "NEW", new Vector2(Position.X - Texture.Width / 2, Position.Y - Texture.Height / 2), Color.White * recentlyAcquiredOpacity, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, "NEW", new Vector2(Position.X - Texture.Width / 2, Position.Y - Texture.Height / 2), Color.White * recentlyAcquiredOpacity, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
 
             }
 

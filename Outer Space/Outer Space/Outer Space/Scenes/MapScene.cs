@@ -37,6 +37,7 @@ namespace Outer_Space
         public Button Inventory { get; set; }
         public Button Menu { get; set; }
         public Button Rank { get; set; }
+        public InfoButton MapInfo { get; set; }
 
         public MapScene()
             : base()
@@ -46,6 +47,12 @@ namespace Outer_Space
             this.Rank = new Button(new Vector2(600, 30), "Rank", TextureManager.SpriteFont20);
             nearestLevels = new List<Level>();
             Initialize();
+
+            string[] info = new string[3];
+            info[0] = "You begin at the leftmost star.";
+            info[1] = "Hover over stars to see info about them.";
+            info[2] = "Click on nearby stars to travel to them.";
+            MapInfo = new InfoButton(new Vector2(20, 20), info);
 
             this.NewRank = new Text(new Vector2(600, 70), "New Rank!", new Color(0, 255, 255), 0, 1f, true, TextureManager.SpriteFont15);
             this.NewItems = new Text(new Vector2(300, 70), "New Items!", new Color(0, 255, 255), 0, 1f, true, TextureManager.SpriteFont15);
@@ -241,6 +248,8 @@ namespace Outer_Space
                 Menu.Draw(spriteBatch);
                 Rank.Draw(spriteBatch);
 
+                MapInfo.Draw(spriteBatch);
+
                 // Boss
                 if (!Levels[Levels.Count() - 1].Complete)
                 {
@@ -352,6 +361,8 @@ namespace Outer_Space
                         SceneManager.ChangeScene(SceneManager.rankScene);
                         NewRank.Flash = -1;
                     }
+
+                    MapInfo.Update();
                 }
                 else
                 {

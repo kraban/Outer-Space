@@ -195,7 +195,7 @@ namespace Outer_Space
 
             for (int i = 0; i < RankPerks.Count(); i++)
             {
-                spriteBatch.DrawString(TextureManager.SpriteFont15, RankPerks[i], new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont15.MeasureString(RankPerks[i]).X / 2, i * 25 + 150), Color.White);
+                spriteBatch.DrawString(TextureManager.SpriteFont15, RankPerks[i], new Vector2(Globals.ScreenSize.X / 2 - TextureManager.SpriteFont15.MeasureString(RankPerks[i]).X / 2, i * 25 + 150), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             }
         }
 
@@ -349,7 +349,7 @@ namespace Outer_Space
         {
             // Health
             Health.Draw(spriteBatch);
-            spriteBatch.DrawString(TextureManager.SpriteFont15, "Current Health:", new Vector2(Health.Position.X + 15, Health.Position.Y - 30), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont15, "Current Health:", new Vector2(Health.Position.X + 15, Health.Position.Y - 30), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
 
             if (selectedItem != null)
             {
@@ -358,27 +358,27 @@ namespace Outer_Space
             }
 
             // Weapons
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Weapons", new Vector2(40, 130), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Weapons", new Vector2(40, 130), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             for (int i = 0; i < 3; i++)
             {
                 Inventory[2 + i, 5].DrawInventory(spriteBatch, new Vector2(i * 64 + 32, 200));
-                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 - 32 + 32, 200 - 32), Color.White);
+                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 - 32 + 32, 200 - 32), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             }
 
             // Shield
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield", new Vector2(60, 258), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Shield", new Vector2(60, 258), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             ShipShield.DrawInventory(spriteBatch, new Vector2(100, 328));
-            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 328 - 32), Color.White);
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 328 - 32), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
 
             // Hull
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Hull", new Vector2(70, 386), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Hull", new Vector2(70, 386), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             ShipHull.DrawInventory(spriteBatch, new Vector2(100, 456));
-            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 456 - 32), Color.White);
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(100 - 32, 456 - 32), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
 
             // Inventory
-            spriteBatch.Draw(TextureManager.inventory, new Vector2(300 - 32, 200 - 32), Color.White);
+            spriteBatch.Draw(TextureManager.inventory, new Vector2(300 - 32, 200 - 32), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
 
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(360, 100), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Inventory", new Vector2(360, 100), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             for (int i = 0; i < Inventory.GetLength(0); i++)
             {
                 for (int j = 0; j < Inventory.GetLength(1) - 2; j++)
@@ -388,7 +388,7 @@ namespace Outer_Space
             }
 
             // Crafting
-            spriteBatch.DrawString(TextureManager.SpriteFont20, "Crafting", new Vector2(805, 100), Color.White);
+            spriteBatch.DrawString(TextureManager.SpriteFont20, "Crafting", new Vector2(805, 100), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             craft.Draw(spriteBatch);
             for (int i = 0; i < 3; i++)
             {
@@ -401,11 +401,11 @@ namespace Outer_Space
                 {
                     Inventory[i, 6].DrawInventory(spriteBatch, new Vector2(i * 64 + 800, 200));
                 }
-                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 + 800 - 32, 200 - 32), Color.White);
+                spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(i * 64 + 800 - 32, 200 - 32), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
             }
-            spriteBatch.Draw(TextureManager.craftingArrow, new Vector2(832, 350 - 32 - 80), CanCraft() ? new Color(0, 255, 255) : Color.Gray); 
+            spriteBatch.Draw(TextureManager.craftingArrow, new Vector2(832, 350 - 32 - 80), null, CanCraft() ? new Color(0, 255, 255) : Color.Gray, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f); 
             Inventory[3, 6].DrawInventory(spriteBatch, new Vector2(864, 350));
-            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(864 - 32, 350 - 32), Color.White);
+            spriteBatch.Draw(TextureManager.inventorySlot, new Vector2(864 - 32, 350 - 32), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.01f);
         }
 
         public void DrawMap(SpriteBatch spriteBatch, Vector2 position, float size, float direction)

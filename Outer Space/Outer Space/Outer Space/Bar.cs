@@ -74,13 +74,13 @@ namespace Outer_Space
             // Border
             for (int i = 0; i < bar.GetLength(0); i++)
             {
-                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + 2, (int)Position.Y + 2, 2, 2), Color.DarkGray);
-                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + bar.GetLength(1) * 2 - 2, (int)Position.Y + (bar.GetLength(1) - 1) * 2, 2, 2), Color.DarkGray);
+                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + 2, (int)Position.Y + 2, 2, 2), null, Color.DarkGray, 0f, Vector2.Zero, SpriteEffects.None, 0.01f);
+                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + bar.GetLength(1) * 2 - 2, (int)Position.Y + (bar.GetLength(1) - 1) * 2, 2, 2), null, Color.DarkGray, 0f, Vector2.Zero, SpriteEffects.None, 0.01f);
             }
             for (int i = 0; i < bar.GetLength(1) - 1; i++)
             {
-                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + 2, (int)Position.Y + i * 2 + 2, 2, 2), Color.DarkGray);
-                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + 2 + bar.GetLength(0) * 2, (int)Position.Y + i * 2 + 2, 2, 2), Color.DarkGray);
+                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + 2, (int)Position.Y + i * 2 + 2, 2, 2), null, Color.DarkGray, 0f, Vector2.Zero, SpriteEffects.None, 0.01f);
+                spriteBatch.Draw(TextureManager.pixel, new Rectangle((int)Position.X + i * 2 + 2 + bar.GetLength(0) * 2, (int)Position.Y + i * 2 + 2, 2, 2), null, Color.DarkGray, 0f, Vector2.Zero, SpriteEffects.None, 0.01f);
             }
         }
     }

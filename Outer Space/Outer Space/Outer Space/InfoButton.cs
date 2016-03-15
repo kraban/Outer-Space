@@ -60,10 +60,10 @@ namespace Outer_Space
 
                 if (Hover())
                 {
-                    spriteBatch.Draw(TextureManager.fade, new Vector2(0, 0), null, Color.White * 0.75f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.001f);
+                    spriteBatch.Draw(TextureManager.fade, new Vector2(0, 0), null, Color.White * 0.60f, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.001f);
                     for (int i = 0; i < Info.Length; i++)
                     {
-                        spriteBatch.DrawString(TextureManager.SpriteFont15, Info[i], new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2 - Info.Length * 20 + i * 20), Color.White, 0f, new Vector2(TextureManager.SpriteFont15.MeasureString(Info[i]).X / 2, 0), 1f, SpriteEffects.None, 0f);
+                        spriteBatch.DrawString(TextureManager.SpriteFont15, Info[i], new Vector2(Globals.ScreenSize.X / 2, Globals.ScreenSize.Y / 2 - Info.Length * 23 + i * 23), Color.White, 0f, new Vector2(TextureManager.SpriteFont15.MeasureString(Info[i]).X / 2, 0), 1f, SpriteEffects.None, 0f);
                     }
                 }
             }
