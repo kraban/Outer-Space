@@ -36,6 +36,9 @@ namespace Outer_Space
         private int modifierTimer;
 
         public TextureButton EnterLevel { get; set; }
+        public InfoButton ModuleInfo { get; set; }
+        public InfoButton TileboardInfo { get; set; }
+        public InfoButton EnergyInfo { get; set; }
 
         public bool Started { get; set; }
 
@@ -50,6 +53,30 @@ namespace Outer_Space
             this.playerDie = 60;
 
             this.Flee = new Button(new Vector2(0, Globals.ScreenSize.Y - 50), "Flee", TextureManager.SpriteFont20);
+
+            string[] info = new string[3];
+            info[0] = "The modules at the bottom are yours.";
+            info[1] = "The modules at the top are your enemy's.";
+            info[2] = "Hover over modules to see their stats and effects";
+            ModuleInfo = new InfoButton(new Vector2(20, 350), info);
+
+            info = new string[9];
+            info[0] = "This is your tile board.";
+            info[1] = "Select tiles with your mouse";
+            info[2] = "and switch it with adjacent tiles to get three in a row.";
+            info[3] = "";
+            info[4] = "Different tiles:";
+            info[5] = "Cog: Regain energy.";
+            info[6] = "Weapon: Fire current weapon.";
+            info[7] = "Shield: Regain shield.";
+            info[8] = "Arrow: Move in arrow direction.";
+            TileboardInfo = new InfoButton(new Vector2(850, 50), info);
+
+            info = new string[3];
+            info[0] = "This is your energy.";
+            info[1] = "Energy is required to perform an action.";
+            info[2] = "Regain energy by match three cog tiles.";
+            EnergyInfo = new InfoButton(new Vector2(500, 550), info);
 
             EnterLevel = new TextureButton(positionOnMap, TextureManager.level);
             this.PlayerSize = 0.5f;
@@ -282,6 +309,11 @@ namespace Outer_Space
             {
                 go.Draw(spriteBatch);
             }
+
+            // Infobuttons
+            ModuleInfo.Draw(spriteBatch);
+            TileboardInfo.Draw(spriteBatch);
+            EnergyInfo.Draw(spriteBatch);
 
             if (!Started)
             {
@@ -789,6 +821,11 @@ namespace Outer_Space
                     GameObjects.RemoveAt(i);
                 }
             }
+
+            // Infobuttons
+            ModuleInfo.Update();
+            TileboardInfo.Update();
+            EnergyInfo.Update();
 
             // Flee
             Flee.Update();

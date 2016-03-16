@@ -48,10 +48,16 @@ namespace Outer_Space
             nearestLevels = new List<Level>();
             Initialize();
 
-            string[] info = new string[3];
+            string[] info = new string[9];
             info[0] = "You begin at the leftmost star.";
             info[1] = "Hover over stars to see info about them.";
             info[2] = "Click on nearby stars to travel to them.";
+            info[3] = "";
+            info[4] = "Modifiers affect different aspects of nearby stars:";
+            info[5] = "Sun: Chance to take damage over time.";
+            info[6] = "Black hole: The tiles switch around.";
+            info[7] = "Asteroid: Asteroids crashes into you.";
+            info[8] = "Satellite: You regain energy over time.";
             MapInfo = new InfoButton(new Vector2(20, 20), info);
 
             this.NewRank = new Text(new Vector2(600, 70), "New Rank!", new Color(0, 255, 255), 0, 1f, true, TextureManager.SpriteFont15);
@@ -172,8 +178,8 @@ namespace Outer_Space
                     Levels[0].Complete = true;
                     Levels[0].PlayerPosition = new Vector2(Levels[0].EnterLevel.Position.X + (float)Math.Cos(Levels[0].PlayerDirection) * 20, Levels[0].EnterLevel.Position.Y + (float)Math.Sin(Levels[0].PlayerDirection) * 20);
                     playerPosition = 0;
-                    nearestLevels = FindNearestLevels(Levels[playerPosition]);
                     Levels.Add(new Level(Vector2.Zero, Difficulty.Boss));
+                    nearestLevels = FindNearestLevels(Levels[playerPosition]);
                     break;
                 }
                 else
