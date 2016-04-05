@@ -161,13 +161,13 @@ namespace Outer_Space
                 shot.HitTarget = Shot.HitBasic;
                 if (shot.Targets.Any(item => item == "Player"))
                 {
-                    shot.Targets.Clear();
+                    shot.Targets = new List<string>();
                     shot.Targets.Add("Enemy");
                     shot.Targets.Add("Boss");
                 }
                 else
                 {
-                    shot.Targets.Clear();
+                    shot.Targets = new List<string>();
                     shot.Targets.Add("Player");
                 }
             }

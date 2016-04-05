@@ -91,7 +91,7 @@ namespace Outer_Space
             this.ShipHull = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), 0);
 
             this.Health = new Bar(new Vector2(0, Globals.ScreenSize.Y - 35), 100, 20, 140, Color.Red);
-            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 100, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 0);
+            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 120, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 0);
         }
 
         // Method(s)

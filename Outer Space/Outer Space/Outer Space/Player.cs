@@ -47,17 +47,10 @@ namespace Outer_Space
             Targets.Add("Boss");
 
             this.craft = new Button(new Vector2(700, 400), "Craft", TextureManager.SpriteFont20);
-            Inventory[0, 0] = new Weapon(this, Weapon.ListOfMethods().Count() - 1, 0);
-            Inventory[1, 0] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 20, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 0);
-            Inventory[2, 0] = new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), 0);
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
             {
                 AddItem(new Item(Globals.Flee));
-                AddItem(new Item(Globals.Heal));
-            }
-            for (int i = 0; i < 20; i++)
-            {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), 0));
+                AddItem(new Weapon(this, 11, 0));
             }
         }
 
@@ -500,6 +493,11 @@ namespace Outer_Space
                     {
                         ShipLocation++;
                         MoveRight = 0;
+                        if (level.GameObjects.Any(item => item is Enemy))
+                        {
+                            Enemy enemy = (Enemy)level.GameObjects.First(item => item is Enemy);
+                            enemy.ShootTimer = 90;
+                        }
                     }
                 }
 
@@ -511,6 +509,11 @@ namespace Outer_Space
                     {
                         ShipLocation--;
                         MoveLeft = 0;
+                        if (level.GameObjects.Any(item => item is Enemy))
+                        {
+                            Enemy enemy = (Enemy)level.GameObjects.First(item => item is Enemy);
+                            enemy.ShootTimer = 90;
+                        }
                     }
                 }
             }

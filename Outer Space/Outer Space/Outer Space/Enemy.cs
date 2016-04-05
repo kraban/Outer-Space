@@ -18,6 +18,8 @@ namespace Outer_Space
         public int ShootTimer { get; set; }
         public Difficulty EnemyDifficulty { get; set; }
 
+        private int dodgeCooldown;
+
         // Constructor(s)
         public Enemy(Difficulty difficulty)
             : base((float)Math.PI * 0.5f)
@@ -28,8 +30,9 @@ namespace Outer_Space
             this.EngineAnimation = TextureManager.enemyShipEngineAnimation;
             this.MaxFrame = 1;
             this.Targets.Add("Player");
+            this.ShootTimer = 60;
 
-            this.Health = new Bar(new Vector2(70, 10), 100, 20, 10 * (int)EnemyDifficulty + 10 + Globals.Randomizer.Next(5, 10), Color.Red);
+            this.Health = new Bar(new Vector2(70, 10), 100, 20, 15 * (int)EnemyDifficulty + 50 + Globals.Randomizer.Next(5, 10), Color.Red);
             this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)difficulty);
             this.shieldRegeneration = 0.007f * (float)EnemyDifficulty;
 
@@ -102,18 +105,52 @@ namespace Outer_Space
                     }
                 }
 
+                // Dodge if hard difficulty
+                dodgeCooldown--;
+                if (EnemyDifficulty == Difficulty.Hard && dodgeCooldown < 0 && (Health.Value / Health.MaxValue) < 0.7)
+                {
+                    foreach (Shot shot in level.GameObjects.Where(item => item is Shot))
+                    {
+                        if (shot.Direction > Math.PI)
+                        {
+                            shot.Direction -= (float)Math.PI * 2f;
+                        }
+                        if (Globals.Distance(Position, shot.Position) < 100 && Math.Abs(Math.Atan2(Position.Y - shot.Position.Y, Position.X - shot.Position.X) - shot.Direction) < 0.3f)
+                        {
+                            dodgeCooldown = 180;
+                            if (Globals.Randomizer.Next(0, 101) < 30)
+                            {
+                                if (ShipLocation == Location.left)
+                                {
+                                    ShipLocation = Location.middle;
+                                }
+                                else if (ShipLocation == Location.middle)
+                                {
+                                    ShipLocation = Location.left;
+                                }
+                                else
+                                {
+                                    ShipLocation = Location.middle;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // Move
-                if (Globals.Randomizer.Next(0, 1001) < 2)
+                if (Globals.Randomizer.Next(0, 1001) < 1 + (Health.Value / Health.MaxValue) * 8)
                 {
                     if (ShipLocation < level.Player.ShipLocation)
                     {
                         ShipLocation++;
                         DirectionSpeed = -0.0005f;
+                        ShootTimer = 60;
                     }
                     else if (ShipLocation > level.Player.ShipLocation)
                     {
                         ShipLocation--;
                         DirectionSpeed = 0.0005f;
+                        ShootTimer = 60;
                     }
                 }
 

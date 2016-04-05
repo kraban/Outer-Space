@@ -174,7 +174,7 @@ namespace Outer_Space
                     GameObjects.Add(new Boss());
                 }
                 // Reward for defeating enemy
-                for (int i = 0; i < Globals.Randomizer.Next(0, 3); i++)
+                for (int i = 0; i < Globals.Randomizer.Next(1, 3); i++)
 			    {
                     int random = Globals.Randomizer.Next(0, 3);
                     if (random == 0)
@@ -217,6 +217,7 @@ namespace Outer_Space
             Player.MoveLeft = 0;
             Player.MoveRight = 0;
             player.ShipShield.Change(player.ShipShield.MaxValue);
+            player.Energy.Change(1000);
             SceneManager.mapScene.KilledPlayer = (Enemy)GameObjects.First(item => item is Enemy);
         }
 
@@ -807,7 +808,7 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
-                        Player.GainExperience((int)EnemyDifficulty * 30 + 50);
+                        Player.GainExperience((int)EnemyDifficulty * 30 + 50 + Globals.Randomizer.Next(5, 10));
                         if (Rewards.Count() > 0)
                         {
                             foreach (Item reward in Rewards)
@@ -817,6 +818,7 @@ namespace Outer_Space
                             SceneManager.mapScene.NewItems.Flash = 10;
                         }
                         Player.Move = true;
+                        Player.Health.Change(1);
                     }
                     GameObjects.RemoveAt(i);
                 }
