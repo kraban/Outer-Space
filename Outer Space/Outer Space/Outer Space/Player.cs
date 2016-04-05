@@ -50,8 +50,13 @@ namespace Outer_Space
             for (int i = 0; i < 2; i++)
             {
                 AddItem(new Item(Globals.Flee));
-                AddItem(new Weapon(this, 11, 0));
             }
+
+            // Startmodules
+            Inventory[2, 5] = new Weapon(this, 2, 0);
+            Inventory[3, 5] = new Weapon(this, 3, 0);
+            this.ShipHull = new Hull(this, 6, 0);
+            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 120, 0, 0);
         }
 
         // Method(s)

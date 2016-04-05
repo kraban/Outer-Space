@@ -47,6 +47,7 @@ namespace Outer_Space
 
             spriteBatch.DrawString(TextureManager.SpriteFont20, "Game Over", new Vector2(400, 60), Color.Red, 0f, Vector2.Zero, 2f, SpriteEffects.None, 0f);
             SceneManager.mapScene.KilledPlayer.DrawGameOver(spriteBatch);
+            SceneManager.mapScene.KilledPlayer.Direction = SceneManager.mapScene.KilledPlayer.StandardDirection;
 
             Quit.Draw(spriteBatch);
             Menu.Draw(spriteBatch);

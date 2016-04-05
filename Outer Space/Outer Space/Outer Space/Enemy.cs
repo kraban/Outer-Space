@@ -32,23 +32,26 @@ namespace Outer_Space
             this.Targets.Add("Player");
             this.ShootTimer = 60;
 
+            // Possible modules
+            List<int> possibleWeapons = new List<int>();
+
             this.Health = new Bar(new Vector2(70, 10), 100, 20, 15 * (int)EnemyDifficulty + 50 + Globals.Randomizer.Next(5, 10), Color.Red);
-            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)difficulty);
+            this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.EnemyShields[Globals.Randomizer.Next(0, Globals.EnemyShields.Count())], (int)difficulty);
             this.shieldRegeneration = 0.007f * (float)EnemyDifficulty;
 
             // Difficulty
-            Inventory[2, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), (int)difficulty);
+            Inventory[2, 5] = new Weapon(this, Globals.EnemyWeapons[Globals.Randomizer.Next(0, Globals.EnemyWeapons.Count())], (int)difficulty);
             if (EnemyDifficulty == Difficulty.Easy)
             {
                 Inventory[3, 5] = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
             }
             else
             {
-                Inventory[3, 5] = new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), (int)difficulty);
+                Inventory[3, 5] = new Weapon(this, Globals.EnemyWeapons[Globals.Randomizer.Next(0, Globals.EnemyWeapons.Count())], (int)difficulty);
             }
 
             // Enemy hull
-            ShipHull = new Hull(this, 0, (int)difficulty);
+            ShipHull = new Hull(this, Globals.EnemyHulls[Globals.Randomizer.Next(0, Globals.EnemyHulls.Count())], (int)difficulty);
         }
 
         // Method(s)

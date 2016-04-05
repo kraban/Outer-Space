@@ -83,11 +83,11 @@ namespace Outer_Space
         public void LoadDescriptions()
         {
             Descriptions = new List<string>();
-            Descriptions.Add("Shoot a standard shot");
-            Descriptions.Add("Shoot a shot that aims at a random target");
-            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal double damage");
-            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds");
-            Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds");
+            Descriptions.Add("Shoot a standard shot.");
+            Descriptions.Add("Shoot a shot that aims at a random target.");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal 50% extra damage.");
+            Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds.");
+            Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds.");
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
             Descriptions.Add("Shoot a burst with three shots.");
             Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
@@ -186,6 +186,10 @@ namespace Outer_Space
             {
                 level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance)); 
             }
+            else
+            {
+                weapon.Damage += 4;
+            }
         }
 
         public static void FireAiming(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
@@ -200,6 +204,10 @@ namespace Outer_Space
                 {
                     FireStandard(shooter, weapon, tilesMatched, level, false);
                 }
+            }
+            else
+            {
+                weapon.Damage -= 6;
             }
         }
 
@@ -241,7 +249,7 @@ namespace Outer_Space
             else
             {
                 weapon.Damage += 15;
-                weapon.Chance = 40;
+                weapon.Chance = 60;
             }
         }
 

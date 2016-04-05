@@ -34,6 +34,11 @@ namespace Outer_Space
         public static Item Flee { get; set; }
         public static Item Nothing { get; set; }
 
+        // Possible enemymodules
+        public static List<int> EnemyWeapons { get; set; }
+        public static List<int> EnemyHulls { get; set; }
+        public static List<int> EnemyShields { get; set; }
+
         // Initialize
         public static void Initialize()
         {
@@ -42,6 +47,30 @@ namespace Outer_Space
             Heal = new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench");
             Flee = new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee");
             Nothing = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
+
+            // Possible enemymodules
+            EnemyWeapons = new List<int>();
+            for (int i = 0; i < Weapon.ListOfMethods().Count(); i++)
+            {
+                EnemyWeapons.Add(i);
+            }
+            EnemyWeapons.Remove(1);
+            EnemyWeapons.Remove(8);
+            EnemyWeapons.Remove(15);
+            EnemyWeapons.Remove(18);
+
+            EnemyHulls = new List<int>();
+            EnemyHulls.Add(0);
+            EnemyHulls.Add(2);
+            EnemyHulls.Add(7);
+
+            EnemyShields = new List<int>();
+            EnemyShields.Add(0);
+            EnemyShields.Add(1);
+            EnemyShields.Add(2);
+            EnemyShields.Add(4);
+            EnemyShields.Add(5);
+            EnemyShields.Add(7);
         }
 
         public static float Distance(Vector2 v1, Vector2 v2)

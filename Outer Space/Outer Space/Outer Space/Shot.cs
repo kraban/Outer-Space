@@ -103,7 +103,7 @@ namespace Outer_Space
                 Ship ship = CollisionTarget(level, shot);
                 if (Globals.Randomizer.Next(0, 101) < shot.Chance)
                 {
-                    ship.TakeDamage(shot.Damage * 2, shot.ShieldPiercing, DamageType.laser, false);
+                    ship.TakeDamage(shot.Damage * 1.5f, shot.ShieldPiercing, DamageType.laser, false);
                     level.CombatText("CRIT!");
                 }
                 else
