@@ -44,7 +44,7 @@ namespace Outer_Space
         {
             Randomizer = new Random();
 
-            Heal = new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 10 % health.", "Wrench");
+            Heal = new Item(Item.HealPlayer, ItemType.misc, TextureManager.wrench, "|W|Right click to regain 15 % health.", "Wrench");
             Flee = new Item(Item.Flee, ItemType.misc, TextureManager.flee, "|W|Used to flee from combat.", "Flee");
             Nothing = new Item(Item.Nothing, ItemType.nothing, TextureManager.none, "", "");
 
@@ -55,6 +55,7 @@ namespace Outer_Space
                 EnemyWeapons.Add(i);
             }
             EnemyWeapons.Remove(1);
+            EnemyWeapons.Remove(7);
             EnemyWeapons.Remove(8);
             EnemyWeapons.Remove(15);
             EnemyWeapons.Remove(18);

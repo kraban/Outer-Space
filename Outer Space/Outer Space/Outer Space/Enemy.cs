@@ -141,7 +141,7 @@ namespace Outer_Space
                 }
 
                 // Move
-                if (Globals.Randomizer.Next(0, 1001) < 1 + (Health.Value / Health.MaxValue) * 8)
+                if (Globals.Randomizer.Next(0, 1001) < 3 + (Health.Value / Health.MaxValue) * 5)
                 {
                     if (ShipLocation < level.Player.ShipLocation)
                     {

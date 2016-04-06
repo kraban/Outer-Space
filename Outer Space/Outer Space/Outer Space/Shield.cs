@@ -30,8 +30,16 @@ namespace Outer_Space
             : base(Item.Nothing, ItemType.shield, TextureManager.shields[Globals.Randomizer.Next(0, TextureManager.shields.Count)], "", "Shield")
         {
             this.Type = ItemType.shield;
-            this.ShieldHeal = Globals.Randomizer.Next(14 + itemLevel * 3, 19 + itemLevel * 3);
-            this.Chance = Globals.Randomizer.Next(13 + itemLevel * 5, 24 + itemLevel * 6);
+            if (itemLevel != -1)
+            {
+                this.ShieldHeal = Globals.Randomizer.Next(10 + itemLevel * 3, 15 + itemLevel * 3);
+                this.Chance = Globals.Randomizer.Next(13 + itemLevel * 5, 24 + itemLevel * 6);
+            }
+            else
+            {
+                this.ShieldHeal = 13;
+                this.Chance = 15;
+            }
             this.ItemLevel = itemLevel;
 
             this.ShieldBar = new Bar(position, width, height, shieldValue, Color.LightBlue);

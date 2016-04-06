@@ -43,7 +43,14 @@ namespace Outer_Space
                 }
             }
 
-            this.Armor = Globals.Randomizer.Next(5 + itemLevel * 3, 10 + itemLevel * 4);
+            if (itemLevel != -1)
+            {
+                this.Armor = Globals.Randomizer.Next(5 + itemLevel * 3, 10 + itemLevel * 4);
+            }
+            else
+            {
+                this.Armor = 7;
+            }
 
             this.Method = ListOfHullMethods()[method];
             Method(ship, this);

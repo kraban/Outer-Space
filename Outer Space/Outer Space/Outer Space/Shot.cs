@@ -135,7 +135,7 @@ namespace Outer_Space
             {
                 Ship ship = CollisionTarget(level, shot);
                 ship.TakeDamage(shot.Damage, shot.ShieldPiercing, DamageType.laser, false);
-                ship.SetDamageOverTime(shot.Damage / 6, 6, shot.ShieldPiercing);
+                ship.SetDamageOverTime(shot.Damage / 12, 6, shot.ShieldPiercing);
                 shot.Dead = true;
             }
         }

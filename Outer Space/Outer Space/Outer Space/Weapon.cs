@@ -34,9 +34,18 @@ namespace Outer_Space
         public Weapon(Ship ship, int method, int itemLevel)
             : base(Item.Nothing, ItemType.weapon, TextureManager.weapons[1], "", "Weapon")
         {
-            this.Damage = Globals.Randomizer.Next(10 + itemLevel * 5, 20 + itemLevel * 5);
-            this.ShieldPiercing = (float)Math.Round(MathHelper.Lerp(0, 0.2f, (float)Globals.Randomizer.NextDouble()), 2);
-            this.Chance = Globals.Randomizer.Next(20 + itemLevel * 2, 30 + itemLevel * 2);
+            if (itemLevel != -1)
+            {
+                this.Damage = Globals.Randomizer.Next(10 + itemLevel * 5, 20 + itemLevel * 5);
+                this.ShieldPiercing = (float)Math.Round(MathHelper.Lerp(0, 0.2f, (float)Globals.Randomizer.NextDouble()), 2);
+                this.Chance = Globals.Randomizer.Next(20 + itemLevel * 2, 30 + itemLevel * 2);
+            }
+            else
+            {
+                this.Damage = 14;
+                this.ShieldPiercing = 0.1f;
+                this.Chance = 23;
+            }
             this.Depth = 0.5f;
             this.ShotsToShoot = new List<Shot>();
             this.method = method;
@@ -87,9 +96,9 @@ namespace Outer_Space
             Descriptions.Add("Shoot a shot that aims at a random target.");
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to deal 50% extra damage.");
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + Chance + "|W|% chance to disable|W|\na random target weapon for a few seconds.");
-            Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage + "|W| damage over a few seconds.");
+            Descriptions.Add("Shoot a shot that deals |255,0,0|" + Damage / 2 + "|W| damage over a few seconds.");
             Descriptions.Add("Shoot a shot that has a |255,70,0|" + (100 - Chance) + "|W|% chance to shoot in a random direction.");
-            Descriptions.Add("Shoot a burst with three shots.");
+            Descriptions.Add("Shoot a burst with three shots that each deals 33% weapon damage.");
             Descriptions.Add("Shoot a extra shot when four or more weapon tiles is matched.");
             Descriptions.Add("Shoot two shots in a V pattern.");
             Descriptions.Add("Fire a shot that has a small chance to explode when in air.");
@@ -233,6 +242,10 @@ namespace Outer_Space
             {
                 level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitDamageOverTime, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
+            else
+            {
+                weapon.Damage -= 2;
+            }
         }
 
         public static void FireChanceToMiss(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)
@@ -257,16 +270,12 @@ namespace Outer_Space
         {
             if (!initialize)
             {
-                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
+                level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter) / 3, Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 for (int i = 0; i < 2; i++)
                 {
-                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
+                    weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter) / 3, Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
                 }
                 SoundManager.fire.Play();
-            }
-            else
-            {
-                weapon.Damage -= 6;
             }
         }
 
@@ -357,14 +366,14 @@ namespace Outer_Space
                 if (Globals.Randomizer.Next(0, 101) < 100 - weapon.Chance)
                 {
                     weapon.Disabled = 180;
-                    shooter.TakeDamage(weapon.Damage, weapon.ShieldPiercing, DamageType.laser, false);
+                    shooter.TakeDamage(weapon.Damage / 2, weapon.ShieldPiercing, DamageType.laser, false);
                 }
                 level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.Chance));
             }
             else
             {
                 weapon.Chance += Globals.Randomizer.Next(30, 50);
-                weapon.Damage += Globals.Randomizer.Next(5, 10);
+                weapon.Damage += Globals.Randomizer.Next(5, 7);
             }
         }
 

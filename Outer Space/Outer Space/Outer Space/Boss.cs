@@ -49,7 +49,8 @@ namespace Outer_Space
             this.Colour = Color.Red;
 
             // Modules
-            ShipShield = new Shield(new Vector2(270, 10), (int)ShipShield.Width, 20, 200 - 200, 0, 3);
+            this.Health = new Bar(new Vector2(70, 10), 200, 25, 150, Color.Red);
+            ShipShield = new Shield(new Vector2(270, 10), (int)ShipShield.Width, 20, 0, 0, 3);
             ShipShield.Description = "|W|Shield: |0,0,255|" + ShipShield.MaxValue + "|W|\nWill teleport to another location just before being hit.";
             ShipHull = new Hull(this, 0, 3);
             ShipHull.Description = "|W|Armor: |255,255,0|" + ShipHull.Armor + "|255,255,100|\nPlaces mines on tiles in the tileboard.\nThe Player will take 20 damage when matching tiles with mines.\nMines will be disarmed when matched or then falling.";

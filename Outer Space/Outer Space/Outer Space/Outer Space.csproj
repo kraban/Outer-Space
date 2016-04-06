@@ -148,7 +148,6 @@
     <Compile Include="TextureButton.cs" />
     <Compile Include="TextureManager.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="Scenes\TutorialScene.cs" />
     <Compile Include="Weapon.cs" />
     <Compile Include="WinScene.cs" />
   </ItemGroup>

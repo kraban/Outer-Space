@@ -66,7 +66,7 @@ namespace Outer_Space
         {
             if (player.Health.Value < player.Health.MaxValue)
             {
-                player.Health.Change(player.Health.MaxValue / 10);
+                player.Health.Change(player.Health.MaxValue * 0.15f);
                 if (item.NumberOfItems > 1)
                 {
                     item.NumberOfItems--;

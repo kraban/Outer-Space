@@ -53,10 +53,10 @@ namespace Outer_Space
             }
 
             // Startmodules
-            Inventory[2, 5] = new Weapon(this, 2, 0);
-            Inventory[3, 5] = new Weapon(this, 3, 0);
-            this.ShipHull = new Hull(this, 6, 0);
-            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 120, 0, 0);
+            Inventory[2, 5] = new Weapon(this, 2, -1);
+            Inventory[3, 5] = new Weapon(this, 3, -1);
+            this.ShipHull = new Hull(this, 6, -1);
+            this.ShipShield = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60, 0, -1);
         }
 
         // Method(s)
@@ -132,7 +132,7 @@ namespace Outer_Space
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
-                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 140 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 2));
+                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + Globals.Randomizer.Next(-10, 20), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 2));
                 RankPerks.Add("Shield Module");
             }
             else if (random == 1)
@@ -259,7 +259,7 @@ namespace Outer_Space
                 }
                 else if (random == 2)
                 {
-                    Inventory[3, 6] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 100 + itemLevel * 20 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), itemLevel);
+                    Inventory[3, 6] = new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + itemLevel * 20 + Globals.Randomizer.Next(-5, 15), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), itemLevel);
                 }
             }
 

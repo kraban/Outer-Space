@@ -183,7 +183,7 @@ namespace Outer_Space
                     }
                     else if (random == 1)
                     {
-                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 100 + (int)EnemyDifficulty * 20 + Globals.Randomizer.Next(0, 30), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)EnemyDifficulty));
+                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 60 + (int)EnemyDifficulty * 20 + Globals.Randomizer.Next(-5, 15), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)EnemyDifficulty));
                     }
                     if (random == 2)
                     {
@@ -191,14 +191,14 @@ namespace Outer_Space
                     }
 
                     // Consumable
-                    if (Globals.Randomizer.Next(0, 101) < 50)
+                    if (Globals.Randomizer.Next(0, 101) < 55)
                     {
-                        random = Globals.Randomizer.Next(0, 2);
-                        if (random == 0)
+                        random = Globals.Randomizer.Next(0, 101);
+                        if (random < 35)
                         {
                             Rewards.Add(new Item(Globals.Flee));
                         }
-                        else if (random == 1)
+                        else
                         {
                             Rewards.Add(new Item(Globals.Heal));
                         }
@@ -808,7 +808,7 @@ namespace Outer_Space
                 {
                     if (GameObjects[i] is Enemy)
                     {
-                        Player.GainExperience((int)EnemyDifficulty * 30 + 50 + Globals.Randomizer.Next(5, 10));
+                        Player.GainExperience((int)EnemyDifficulty * 45 + 50 + Globals.Randomizer.Next(5, 10));
                         if (Rewards.Count() > 0)
                         {
                             foreach (Item reward in Rewards)
