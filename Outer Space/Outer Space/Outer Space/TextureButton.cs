@@ -52,6 +52,7 @@ namespace Outer_Space
             if (Globals.MRectangle.Intersects(Box) && Globals.MState.LeftButton == ButtonState.Pressed && Globals.PrevMState.LeftButton == ButtonState.Released && exploded <= 0 && Camera.ChangeSceneDelay < -10)
             {
                 Explode();
+                SoundManager.click.Play();
                 return true;
             }
             return false;

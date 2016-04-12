@@ -14,12 +14,35 @@ namespace Outer_Space
     class SoundManager
     {
         public static SoundEffect
-            fire;
+            click,
+            explosion,
+            shoot,
+            match,
+            die,
+            notEnoughEnergy,
+            craft,
+            swapItem,
+            victory,
+            bossChargeShot,
+            bossMine,
+            bossChargeAttack,
+            bossTeleport;
 
         public static void Initialize(ContentManager content)
         {
-            fire = content.Load<SoundEffect>("SoundEffects/SoundDing");
-
+            click = content.Load<SoundEffect>("SoundEffects/Blip");
+            explosion = content.Load<SoundEffect>("SoundEffects/Explosion");
+            shoot = content.Load<SoundEffect>("SoundEffects/Shoot");
+            match = content.Load<SoundEffect>("SoundEffects/Match");
+            die = content.Load<SoundEffect>("SoundEffects/Die");
+            notEnoughEnergy = content.Load<SoundEffect>("SoundEffects/NotEnoughEnergy");
+            craft = content.Load<SoundEffect>("SoundEffects/Craft");
+            swapItem = content.Load<SoundEffect>("SoundEffects/SwapItem");
+            victory = content.Load<SoundEffect>("SoundEffects/Victory");
+            bossChargeShot = content.Load<SoundEffect>("SoundEffects/BossChargeShot");
+            bossMine = content.Load<SoundEffect>("SoundEffects/BossMine");
+            bossChargeAttack = content.Load<SoundEffect>("SoundEffects/BossChargeAttack");
+            bossTeleport = content.Load<SoundEffect>("SoundEffects/BossTeleport");
         }
 
         public static void Update()

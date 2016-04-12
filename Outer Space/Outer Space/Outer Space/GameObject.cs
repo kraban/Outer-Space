@@ -28,6 +28,7 @@ namespace Outer_Space
         // Flash
         public int Flash { get; set; }
         private bool flip;
+        public bool LargeFlash { get; set; }
 
         // Constructor(s)
         public GameObject()
@@ -56,18 +57,33 @@ namespace Outer_Space
                 if (Flash == 0)
                 {
                     Opacity = 1;
+                    Size = 1;
                 }
-                if (Opacity < 0.05f || Opacity > 0.95f)
+                if ((!LargeFlash && (Opacity < 0.05f || Opacity > 0.95f)) || (LargeFlash && (Size < 1.05f || Size > 1.95f)))
                 {
                     flip = !flip;
                 }
                 if (flip)
                 {
-                    Opacity = MathHelper.Lerp(Opacity, 0, 0.05f);
+                    if (!LargeFlash)
+                    {
+                        Opacity = MathHelper.Lerp(Opacity, 0, 0.05f);
+                    }
+                    else
+                    {
+                        Size = MathHelper.Lerp(Size, 2.5f, 0.05f);
+                    }
                 }
                 else
                 {
-                    Opacity = MathHelper.Lerp(Opacity, 1, 0.05f);
+                    if (!LargeFlash)
+                    {
+                        Opacity = MathHelper.Lerp(Opacity, 1, 0.05f);
+                    }
+                    else
+                    {
+                        Size = MathHelper.Lerp(Size, 1, 0.05f);
+                    }
                 }
             }
         }

@@ -24,8 +24,9 @@ namespace Outer_Space
 
         private SpriteFont spriteFont;
         private bool active;
+        private bool playSound;
 
-        public Slider(Texture2D texture, Texture2D slideTexture, Vector2 position, float maxValue, float value, SpriteFont spriteFont, string name)
+        public Slider(Texture2D texture, Texture2D slideTexture, Vector2 position, float maxValue, float value, SpriteFont spriteFont, string name, bool playSound)
         {
             this.Texture = texture;
             this.SlideTexture = slideTexture;
@@ -34,6 +35,7 @@ namespace Outer_Space
             this.Value = value;
             this.spriteFont = spriteFont;
             this.Name = name;
+            this.playSound = playSound;
             this.SlidePosition = new Vector2((Position.X - Texture.Width / 2) + (int)((Value / MaxValue) * Texture.Width), Position.Y);
         }
 
@@ -52,6 +54,10 @@ namespace Outer_Space
             if (Globals.MRectangle.Intersects(SlideBox) && Globals.PrevMState.LeftButton == ButtonState.Released && Camera.ChangeSceneDelay < -10)
             {
                 active = true;
+                if (playSound && Globals.MState.LeftButton == ButtonState.Pressed)
+                {
+                    SoundManager.click.Play();
+                }
             }
 
             if (Globals.MState.LeftButton == ButtonState.Pressed && active)

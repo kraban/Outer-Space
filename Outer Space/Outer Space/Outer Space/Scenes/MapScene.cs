@@ -374,6 +374,10 @@ namespace Outer_Space
                 else
                 {
                     playerDeath--;
+                    if (playerDeath == 30)
+                    {
+                        SoundManager.explosion.Play();
+                    }
                     if (playerDeath == 0)
                     {
                         SceneManager.ChangeScene(SceneManager.gameOverScene);

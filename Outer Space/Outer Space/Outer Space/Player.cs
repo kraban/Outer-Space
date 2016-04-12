@@ -50,6 +50,7 @@ namespace Outer_Space
             for (int i = 0; i < 2; i++)
             {
                 AddItem(new Item(Globals.Flee));
+                AddItem(new Weapon(this, 5, -1));
             }
 
             // Startmodules
@@ -132,20 +133,20 @@ namespace Outer_Space
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
-                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + Globals.Randomizer.Next(-10, 20), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), 2));
+                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + Globals.Randomizer.Next(-10, 20), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Globals.Randomizer.Next(1, 3)));
                 RankPerks.Add("Shield Module");
             }
             else if (random == 1)
             {
-                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), 2));
+                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Globals.Randomizer.Next(1, 3)));
                 RankPerks.Add("Hull Module");
             }
             else if (random == 2)
             {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), 2));
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Globals.Randomizer.Next(1, 3)));
                 RankPerks.Add("Weapon Module");
             }
-            else if (random == 3)
+            else if (random == 2)
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -181,7 +182,7 @@ namespace Outer_Space
                 Rank++;
                 RankUp();
                 Experience.Change(-Experience.MaxValue);
-                Experience.MaxValue = Rank * 50 + 100;
+                Experience.MaxValue = Rank * 40 + 100;
                 overflow = Experience.Change(overflow);
             }
         }
@@ -202,7 +203,7 @@ namespace Outer_Space
             Item temp = Inventory[swapWith.X, swapWith.Y];
             Inventory[swapWith.X, swapWith.Y] = selectedItem;
             Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = temp;
-
+            SoundManager.swapItem.Play();
         }
 
         public bool CanCraft()
@@ -236,10 +237,12 @@ namespace Outer_Space
                 if (craft.Press())
                 {
                     currentlyCrafting = 60;
+                    SoundManager.craft.Play();
                 }
             }
             if (currentlyCrafting == 0)
             {
+                SoundManager.explosion.Play();
                 int itemLevel = (int)((Inventory[0, 6].ItemLevel + Inventory[1, 6].ItemLevel + Inventory[2, 6].ItemLevel) / 3 + MathHelper.Lerp(-0.2f, 0.2f, (float)Globals.Randomizer.NextDouble()));
                 Inventory[0, 6] = new Item(Globals.Nothing);
                 Inventory[1, 6] = new Item(Globals.Nothing);
@@ -310,9 +313,14 @@ namespace Outer_Space
                                 }
                                 else if ((i > 1 && j == 5) || (selectedItemArrayPosition.X > 1 && selectedItemArrayPosition.Y == 5)) // weapons
                                 {
-                                    if (((selectedItem.Type == ItemType.weapon || Inventory[i, j].Type == ItemType.weapon) && (Weapons.Count > 1 || !Weapons.Any(item => item == selectedItem)) || (selectedItem.Type == ItemType.weapon && Inventory[i, j].Type == ItemType.weapon)))
+                                    if ((((selectedItem.Type == ItemType.weapon || Inventory[i, j].Type == ItemType.weapon) && Inventory[i, j].Type == ItemType.nothing) && (Weapons.Count > 1 || !Weapons.Any(item => item == selectedItem)) || (selectedItem.Type == ItemType.weapon && Inventory[i, j].Type == ItemType.weapon)))
                                     {
+                                        int numberOfWeapons = Weapons.Count();
                                         SwapItem(new Point(i, j));
+                                        if (numberOfWeapons > Weapons.Count())
+                                        {
+                                            SelectedWeapon = 0;
+                                        }
                                         break;
                                     }
                                 }
@@ -465,6 +473,7 @@ namespace Outer_Space
                 {
                     Move = true;
                     Dead = true;
+                    SoundManager.die.Play();
                 }
 
                 Position = new Vector2(Position.X, (float)MathHelper.Lerp(Position.Y, Globals.ScreenSize.Y - Texture.Height, 0.1f));
@@ -475,19 +484,24 @@ namespace Outer_Space
                     if (Weapons[i].Pressed())
                     {
                         SelectedWeapon = i;
+                        SoundManager.swapItem.Play();
+                        break;
                     }
                 }
-                if (Globals.KState.IsKeyDown(Keys.D1))
+                if (Globals.KState.IsKeyDown(Keys.D1) && Globals.PrevKState.IsKeyUp(Keys.D1))
                 {
                     SelectedWeapon = 0;
+                    SoundManager.swapItem.Play();
                 }
-                else if (Globals.KState.IsKeyDown(Keys.D2) && Weapons.Count >= 2)
+                else if (Globals.KState.IsKeyDown(Keys.D2) && Globals.PrevKState.IsKeyUp(Keys.D2) && Weapons.Count >= 2)
                 {
                     SelectedWeapon = 1;
+                    SoundManager.swapItem.Play();
                 }
-                else if (Globals.KState.IsKeyDown(Keys.D3) && Weapons.Count >= 3)
+                else if (Globals.KState.IsKeyDown(Keys.D3) && Globals.PrevKState.IsKeyUp(Keys.D3) && Weapons.Count >= 3)
                 {
                     SelectedWeapon = 2;
+                    SoundManager.swapItem.Play();
                 }
 
                 // Right
@@ -496,6 +510,7 @@ namespace Outer_Space
                     MoveRight--;
                     if (Globals.KState.IsKeyDown(Keys.D) && Globals.PrevKState.IsKeyUp(Keys.D) && ShipLocation != Location.right)
                     {
+                        DirectionSpeed = 0.0005f;
                         ShipLocation++;
                         MoveRight = 0;
                         if (level.GameObjects.Any(item => item is Enemy))
@@ -512,6 +527,7 @@ namespace Outer_Space
                     MoveLeft--;
                     if (Globals.KState.IsKeyDown(Keys.A) && Globals.PrevKState.IsKeyUp(Keys.A) && ShipLocation != Location.left)
                     {
+                        DirectionSpeed = -0.0005f;
                         ShipLocation--;
                         MoveLeft = 0;
                         if (level.GameObjects.Any(item => item is Enemy))
@@ -547,9 +563,11 @@ namespace Outer_Space
             if (tileType == TileType.cog)
             {
                 Energy.Change(tilesMatched * 5 + (tilesMatched - 3) * 10);
+                SoundManager.match.Play();
             }
             else if (Energy.Value > 10 || !manuallyMatched)
             {
+                SoundManager.match.Play();
                 if (manuallyMatched)
                 {
                     Energy.Change(-10);  
@@ -564,13 +582,11 @@ namespace Outer_Space
                 if (tileType == TileType.left && ShipLocation != Location.left)
                 {
                     MoveLeft += 20 * tilesMatched;
-                    DirectionSpeed = -0.0005f;
                 }
 
                 if (tileType == TileType.right && ShipLocation != Location.right)
                 {
                     MoveRight += 20 * tilesMatched;
-                    DirectionSpeed = 0.0005f;
                 }
 
                 if (tileType == TileType.shield && ShipShield.Value != ShipShield.Width)
@@ -581,6 +597,7 @@ namespace Outer_Space
             else
             {
                 level.CombatText("NOT ENOUGH ENERGY!");
+                SoundManager.notEnoughEnergy.Play();
             }
         }
     }

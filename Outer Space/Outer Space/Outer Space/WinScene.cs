@@ -55,6 +55,7 @@ namespace Outer_Space
             {
                 timer = 15;
                 fireworksPosition = new Vector2(Globals.Randomizer.Next(100, Globals.ScreenSize.X - 100), Globals.Randomizer.Next(100, Globals.ScreenSize.Y - 100));
+                SoundManager.victory.Play();
             }
 
             timer--;

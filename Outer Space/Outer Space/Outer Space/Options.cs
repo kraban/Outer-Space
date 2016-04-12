@@ -64,10 +64,10 @@ namespace Outer_Space
             }
             else // add default values if file does not exist
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    options.Add(0);
-                }
+                options.Add(5);
+                options.Add(50);
+                options.Add(50);
+                options.Add(1);
             }
             return options;
         }

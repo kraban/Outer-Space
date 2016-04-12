@@ -183,7 +183,7 @@ namespace Outer_Space
                     }
                     else if (random == 1)
                     {
-                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 30), 100, 10, 60 + (int)EnemyDifficulty * 20 + Globals.Randomizer.Next(-5, 15), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)EnemyDifficulty));
+                        Rewards.Add(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + (int)EnemyDifficulty * 20 + Globals.Randomizer.Next(-5, 15), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), (int)EnemyDifficulty));
                     }
                     if (random == 2)
                     {
@@ -350,11 +350,10 @@ namespace Outer_Space
                             }
                         }
 
-                        if (number >= 3)
+                        if (number >= 3) // Match
                         {
                             // Player action
                             Player.Action(number, Tiles[i][j].Type, this, Tiles.Any(item => item.Any(tile => tile.ManuallyMoved > 0 && tile.TilePosition.X == i && tile.TilePosition.Y >= j && tile.TilePosition.Y <= j + number)));
-
                             for (int k = 0; k < number; k++)
                             {
                                 Tiles[i][j + k].Hide();
@@ -627,7 +626,7 @@ namespace Outer_Space
                 {
                     timeSinceLastMatch = 0;
                     List<Tile> possibleMatches = CheckPossibleMatches();
-                    possibleMatches[Globals.Randomizer.Next(0, possibleMatches.Count())].Flash = 120;
+                    possibleMatches[Globals.Randomizer.Next(0, possibleMatches.Count())].Flash = 145;
                 }
 
                 bool canSelect = true;

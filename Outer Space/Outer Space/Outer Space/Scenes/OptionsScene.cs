@@ -33,9 +33,9 @@ namespace Outer_Space
             this.TutorialTips = new Button(new Vector2(600, 500), "Tips: " + TipsEnable.ToString(), TextureManager.SpriteFont20);
             TutorialTips.NormalColor = TipsEnable ? Color.Green : Color.Red;
 
-            this.StarChanceSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(900, 200), 100, Options.GetOptions()[0], TextureManager.SpriteFont20, "Star Chance");
-            this.SoundVolumeSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(900, 300), 100, Options.GetOptions()[1], TextureManager.SpriteFont20, "Sound Volume");
-            this.MusicVolumeSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(900, 400), 100, Options.GetOptions()[2], TextureManager.SpriteFont20, "Music Volume");
+            this.StarChanceSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(900, 200), 100, Options.GetOptions()[0], TextureManager.SpriteFont20, "Star Chance", false);
+            this.SoundVolumeSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(900, 300), 100, Options.GetOptions()[1], TextureManager.SpriteFont20, "Sound Volume", true);
+            this.MusicVolumeSlider = new Slider(TextureManager.slider, TextureManager.slideButton, new Vector2(900, 400), 100, Options.GetOptions()[2], TextureManager.SpriteFont20, "Music Volume", false);
         }
 
         public override void Update()

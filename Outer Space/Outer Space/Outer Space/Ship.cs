@@ -146,6 +146,10 @@ namespace Outer_Space
         {
             if (FromShield)
             {
+                if (damageType != DamageType.damageOverTime)
+                {
+                    SoundManager.explosion.Play();
+                }
                 // Rock resist hull
                 if (damageType == DamageType.rock)
                 {

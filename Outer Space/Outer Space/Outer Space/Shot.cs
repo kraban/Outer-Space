@@ -40,6 +40,7 @@ namespace Outer_Space
             this.Speed = 5;
             this.changeSpeed = 5;
             this.Colour = Color.Red;
+            SoundManager.shoot.Play();
         }
 
         // Method(s)

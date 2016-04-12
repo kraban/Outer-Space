@@ -35,6 +35,7 @@ namespace Outer_Space
             this.Type = type;
             this.Texture = TextureManager.tiles[(int)type];
             this.Depth = 0.8f;
+            this.LargeFlash = true;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -86,6 +87,7 @@ namespace Outer_Space
         public void Hide()
         {
             Hidden = true;
+            Flash = 1;
         }
 
         public void UnHide(Player player)

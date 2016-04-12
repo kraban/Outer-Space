@@ -62,7 +62,7 @@ namespace Outer_Space
             Descriptions.Add("Increase |255, 70, 0|weapon chance|W| by " + WeaponChance + "%");
             Descriptions.Add("Increase the chance of cog tiles appearing by 100%");
             Descriptions.Add("Increase the chance of shield tiles appearing by 100%");
-            Descriptions.Add("Increase the chance of weapon tiles appearing by 100%");
+            Descriptions.Add("Increase the chance of weapon tiles appearing by 75%");
             Descriptions.Add("Flash a random possible tilematch when there has been no match for a few seconds.");
             Descriptions.Add("Increases the accuracy of some weapons.");
 
@@ -113,11 +113,6 @@ namespace Outer_Space
         public static void HullWeaponChance(Ship ship, Hull hull)
         {
             hull.WeaponChance = Globals.Randomizer.Next(10, 21);
-            foreach (Weapon w in ship.Weapons)
-            {
-                w.Chance += hull.WeaponChance;
-                w.LoadDescriptions();
-            }
         }
 
         public static void HullTileCogChance(Ship ship, Hull hull)
@@ -138,7 +133,7 @@ namespace Outer_Space
 
         public static void HullTileShootChance(Ship ship, Hull hull)
         {
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 15; i++)
             {
                 hull.TileChance.Add(TileType.shoot);
             }

@@ -69,6 +69,7 @@ namespace Outer_Space
             else if (damageType == DamageType.laser)
             {
                 dodge = DodgeState.Dodge;
+                SoundManager.bossTeleport.Play();
                 List<int> possibleLocations = new List<int>();
                 for (int i = 0; i < 3; i++)
                 {
@@ -141,10 +142,12 @@ namespace Outer_Space
             }
             if (level.Started)
             {
+                Health.Change(-1);
                 // Die
                 if (Health.Value <= 0 && deathTimer == 0 && dodge == DodgeState.NotDodging && charge == ChargeState.NotCharging)
                 {
                     deathTimer = 180;
+                    SoundManager.die.Play();
                 }
                 if (deathTimer > 0)
                 {
@@ -166,6 +169,7 @@ namespace Outer_Space
                 if (deathTimer == 1)
                 {
                     Dead = true;
+                    SoundManager.explosion.Play();
                     for (int i = 0; i < 100; i++)
                     {
                         level.ToAdd.Add(new Piece(Position, Texture, 60, 3f));
@@ -185,9 +189,11 @@ namespace Outer_Space
                         if (ShipLocation == level.Player.ShipLocation)
                         {
                             charge = ChargeState.Initialize;
+                            SoundManager.bossChargeAttack.Play();
                         }
                         else
                         {
+                            SoundManager.bossTeleport.Play();
                             dodge = DodgeState.Dodge;
                             ShipLocation = level.Player.ShipLocation;
                             possibleAttacks.Add(0);
@@ -197,12 +203,14 @@ namespace Outer_Space
                     {
                         shootTimer = 200;
                         Opacity = 0;
+                        SoundManager.bossChargeShot.Play();
                     }
                     else if (attack == 2)
                     {
                         // Place mine in tiles
                         int random = Globals.Randomizer.Next(0, level.Tiles.Count());
                         level.Tiles[random][Globals.Randomizer.Next(0, level.Tiles[random].Count() - 2)].Mine = true;
+                        SoundManager.bossMine.Play();
                     }
                 }
 

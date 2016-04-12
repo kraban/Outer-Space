@@ -161,7 +161,7 @@ namespace Outer_Space
                 if (Health.Value <= 0)
                 {
                     Dead = true;
-
+                    SoundManager.explosion.Play();
                     // Pieces
                     level.CreatePieces(Position, Texture);
                 } 
