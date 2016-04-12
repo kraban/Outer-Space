@@ -37,7 +37,7 @@ namespace Outer_Space
         {
             this.Texture = TextureManager.boss;
             this.Position = new Vector2(300, Globals.ScreenSize.Y - Texture.Height);
-
+ 
             this.Energy = new Bar(new Vector2(400, Globals.ScreenSize.Y - 35), 100, 20, 100, Color.Orange);
             this.Rank = 1;
             this.Experience = new Bar(new Vector2(Globals.ScreenSize.X / 2 - 330, 50), 300, 25, 100, Color.Green);
@@ -88,41 +88,56 @@ namespace Outer_Space
         public void AddItem(Item item)
         {
             bool done = false;
-            for (int i = 0; i < Inventory.GetLength(1) - 2; i++)
+            if (item.Type == ItemType.misc)
             {
-                for (int j = 0; j < Inventory.GetLength(0); j++)
+                foreach (Item inventoryItem in Inventory)
                 {
-                    if (item.Type != ItemType.misc)
+                    if (item.Name == inventoryItem.Name)
                     {
-                        if (Inventory[j, i].Type == ItemType.nothing)
-                        {
-                            Inventory[j, i] = item;
-                            Inventory[j, i].RecentlyAcquired = true;
-                            done = true;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (Inventory[j, i].Type == ItemType.nothing)
-                        {
-                            Inventory[j, i] = item;
-                            Inventory[j, i].RecentlyAcquired = true;
-                            done = true;
-                            break;
-                        }
-                        else if (Inventory[j, i].Type == item.Type && Inventory[j, i].Name == item.Name)
-                        {
-                            Inventory[j, i].RecentlyAcquired = true;
-                            Inventory[j, i].NumberOfItems++;
-                            done = true;
-                            break;
-                        }
+                        inventoryItem.NumberOfItems += 1;
+                        inventoryItem.RecentlyAcquired = true;
+                        done = true;
                     }
                 }
-                if (done)
+            }
+            if (!done)
+            {
+                for (int i = 0; i < Inventory.GetLength(1) - 2; i++)
                 {
-                    break;
+                    for (int j = 0; j < Inventory.GetLength(0); j++)
+                    {
+                        if (item.Type != ItemType.misc)
+                        {
+                            if (Inventory[j, i].Type == ItemType.nothing)
+                            {
+                                Inventory[j, i] = item;
+                                Inventory[j, i].RecentlyAcquired = true;
+                                done = true;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (Inventory[j, i].Type == ItemType.nothing)
+                            {
+                                Inventory[j, i] = item;
+                                Inventory[j, i].RecentlyAcquired = true;
+                                done = true;
+                                break;
+                            }
+                            else if (Inventory[j, i].Type == item.Type && Inventory[j, i].Name == item.Name)
+                            {
+                                Inventory[j, i].RecentlyAcquired = true;
+                                Inventory[j, i].NumberOfItems++;
+                                done = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (done)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -200,10 +215,18 @@ namespace Outer_Space
 
         public void SwapItem(Point swapWith)
         {
-            Item temp = Inventory[swapWith.X, swapWith.Y];
-            Inventory[swapWith.X, swapWith.Y] = selectedItem;
-            Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = temp;
-            SoundManager.swapItem.Play();
+            if (Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y].Type == ItemType.misc && Inventory[swapWith.X, swapWith.Y].Type == ItemType.misc && Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y].Name == Inventory[swapWith.X, swapWith.Y].Name)
+            {
+                Inventory[swapWith.X, swapWith.Y].NumberOfItems += 1;
+                Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = new Item(Globals.Nothing);
+            }
+            else
+            {
+                Item temp = Inventory[swapWith.X, swapWith.Y];
+                Inventory[swapWith.X, swapWith.Y] = selectedItem;
+                Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = temp;
+                SoundManager.swapItem.Play();
+            }
         }
 
         public bool CanCraft()
