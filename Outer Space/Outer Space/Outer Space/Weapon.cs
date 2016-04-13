@@ -362,6 +362,10 @@ namespace Outer_Space
             {
                 level.ToAdd.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter) * (2 - shooter.Health.Value / shooter.Health.MaxValue), Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.WeaponChance(shooter)));
             }
+            else
+            {
+                weapon.Damage -= 2;
+            }
         }
 
         public static void FireChanceToBreak(Ship shooter, Weapon weapon, int tilesMatched, Level level, bool initialize)

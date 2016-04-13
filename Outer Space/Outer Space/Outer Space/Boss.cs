@@ -64,7 +64,7 @@ namespace Outer_Space
             if (charge != ChargeState.NotCharging)
             {
                 charge = ChargeState.Finished;
-                base.TakeDamage(damage, goThroughShield, damageType, FromShield);
+                base.TakeDamage(damage, goThroughShield, damageType, true);
             }
             else if (damageType == DamageType.laser)
             {
