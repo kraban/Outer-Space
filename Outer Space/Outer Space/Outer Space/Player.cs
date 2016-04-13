@@ -50,7 +50,6 @@ namespace Outer_Space
             for (int i = 0; i < 2; i++)
             {
                 AddItem(new Item(Globals.Flee));
-                AddItem(new Weapon(this, 5, -1));
             }
 
             // Startmodules
@@ -148,22 +147,22 @@ namespace Outer_Space
             SceneManager.mapScene.NewRank.Flash = 10;
             if (random == 0)
             {
-                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + Globals.Randomizer.Next(-10, 20), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Globals.Randomizer.Next(1, 3)));
+                AddItem(new Shield(new Vector2(200, Globals.ScreenSize.Y - 35), 100, 20, 60 + Globals.Randomizer.Next(-10, 20), Globals.Randomizer.Next(0, Shield.ListOfShieldMethods().Count()), Rank - 1));
                 RankPerks.Add("Shield Module");
             }
             else if (random == 1)
             {
-                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Globals.Randomizer.Next(1, 3)));
+                AddItem(new Hull(this, Globals.Randomizer.Next(0, Hull.ListOfHullMethods().Count()), Rank - 1));
                 RankPerks.Add("Hull Module");
             }
             else if (random == 2)
             {
-                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Globals.Randomizer.Next(1, 3)));
+                AddItem(new Weapon(this, Globals.Randomizer.Next(0, Weapon.ListOfMethods().Count()), Rank - 1));
                 RankPerks.Add("Weapon Module");
             }
-            else if (random == 2)
+            else if (random == 3)
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     AddItem(new Item(Globals.Heal));
                     AddItem(new Item(Globals.Flee));

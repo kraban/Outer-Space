@@ -160,6 +160,14 @@ namespace Outer_Space
 
         public void Initialize(Player player)
         {
+            if (EnemyDifficulty != Difficulty.Boss)
+            {
+                SoundManager.ChangeMusic(SoundManager.combat);
+            }
+            else
+            {
+                SoundManager.ChangeMusic(SoundManager.boss);
+            }
             Started = false;
             if (!Initialized)
             {
@@ -223,6 +231,7 @@ namespace Outer_Space
 
         public void LeaveLevel(bool flee)
         {
+            SoundManager.ChangeMusic(SoundManager.menu);
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
             Complete = !flee;

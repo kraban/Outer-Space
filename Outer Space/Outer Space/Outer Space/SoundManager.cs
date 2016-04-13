@@ -13,6 +13,10 @@ namespace Outer_Space
 {
     class SoundManager
     {
+        private static bool fadeMusic;
+        private static bool flipFade;
+        private static Song changeTo;
+
         public static SoundEffect
             click,
             explosion,
@@ -27,6 +31,11 @@ namespace Outer_Space
             bossMine,
             bossChargeAttack,
             bossTeleport;
+
+        public static Song
+            menu,
+            combat,
+            boss;
 
         public static void Initialize(ContentManager content)
         {
@@ -43,12 +52,49 @@ namespace Outer_Space
             bossMine = content.Load<SoundEffect>("SoundEffects/BossMine");
             bossChargeAttack = content.Load<SoundEffect>("SoundEffects/BossChargeAttack");
             bossTeleport = content.Load<SoundEffect>("SoundEffects/BossTeleport");
+
+            menu = content.Load<Song>("Music/Dying Star meny");
+            combat = content.Load<Song>("Music/Chasing_Stars");
+            boss = content.Load<Song>("Music/Fly");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(menu);
         }
 
         public static void Update()
         {
             SoundEffect.MasterVolume = Options.SoundVolume / 100f;
-            MediaPlayer.Volume = Options.MusicVolume / 100f;
+            if (fadeMusic == false)
+            {
+                MediaPlayer.Volume = Options.MusicVolume / 100f;
+            }
+
+            if (fadeMusic)
+            {
+                if (flipFade == false)
+                {
+                    MediaPlayer.Volume = MathHelper.Lerp(MediaPlayer.Volume, 0f, 0.03f);
+                    if (MediaPlayer.Volume < 0.05)
+                    {
+                        flipFade = true;
+                        MediaPlayer.Play(changeTo);
+                    }
+                }
+                else
+                {
+                    MediaPlayer.Volume = MathHelper.Lerp(MediaPlayer.Volume, Options.SoundVolume / 100f, 0.03f);
+                    if (Options.SoundVolume / 100f - MediaPlayer.Volume < 0.05)
+                    {
+                        fadeMusic = false;
+                    }
+                }
+            }
+        }
+
+        public static void ChangeMusic(Song song)
+        {
+            fadeMusic = true;
+            changeTo = song;
+            flipFade = false;
         }
     }
 }

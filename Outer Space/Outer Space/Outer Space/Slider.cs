@@ -23,7 +23,7 @@ namespace Outer_Space
         public string Name { get; set; }
 
         private SpriteFont spriteFont;
-        private bool active;
+        public bool Active { get; set; }
         private bool playSound;
 
         public Slider(Texture2D texture, Texture2D slideTexture, Vector2 position, float maxValue, float value, SpriteFont spriteFont, string name, bool playSound)
@@ -53,20 +53,20 @@ namespace Outer_Space
 
             if (Globals.MRectangle.Intersects(SlideBox) && Globals.PrevMState.LeftButton == ButtonState.Released && Camera.ChangeSceneDelay < -10)
             {
-                active = true;
+                Active = true;
                 if (playSound && Globals.MState.LeftButton == ButtonState.Pressed)
                 {
                     SoundManager.click.Play();
                 }
             }
 
-            if (Globals.MState.LeftButton == ButtonState.Pressed && active)
+            if (Globals.MState.LeftButton == ButtonState.Pressed && Active)
             {
                 SlidePosition = new Vector2(MathHelper.Clamp(Globals.MState.X, Position.X - Texture.Width / 2, Position.X + Texture.Width / 2), Position.Y);
             }
             else
             {
-                active = false;
+                Active = false;
             }
         }
     }
