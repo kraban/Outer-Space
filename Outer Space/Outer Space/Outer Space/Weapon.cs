@@ -37,7 +37,7 @@ namespace Outer_Space
             if (itemLevel != -1)
             {
                 this.Damage = Globals.Randomizer.Next(10 + itemLevel * 5, 20 + itemLevel * 5);
-                this.ShieldPiercing = (float)Math.Round(MathHelper.Lerp(0, 0.2f, (float)Globals.Randomizer.NextDouble()), 2);
+                this.ShieldPiercing = (float)Math.Round(MathHelper.Lerp(0, 0.15f, (float)Globals.Randomizer.NextDouble()), 2);
                 this.Chance = Globals.Randomizer.Next(20 + itemLevel * 2, 30 + itemLevel * 2);
             }
             else
@@ -404,7 +404,7 @@ namespace Outer_Space
             else
             {
                 weapon.Chance = 0;
-                weapon.Damage = weapon.Damage * 2 + weapon.Damage / 2;
+                weapon.Damage = weapon.Damage * 2 + weapon.Damage / 4;
             }
         }
 

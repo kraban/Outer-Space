@@ -17,6 +17,7 @@ namespace Outer_Space
         // Public properties
         public int ShootTimer { get; set; }
         public Difficulty EnemyDifficulty { get; set; }
+        public int MoveTimer { get; set; }
 
         private int dodgeCooldown;
 
@@ -37,7 +38,7 @@ namespace Outer_Space
 
             this.Health = new Bar(new Vector2(70, 10), 100, 20, 15 * (int)EnemyDifficulty + 50 + Globals.Randomizer.Next(5, 10), Color.Red);
             this.ShipShield = new Shield(new Vector2(270, 10), 100, 20, 20 + Globals.Randomizer.Next(5, 10) + (int)difficulty * 5, Globals.EnemyShields[Globals.Randomizer.Next(0, Globals.EnemyShields.Count())], (int)difficulty);
-            this.shieldRegeneration = 0.007f * (float)EnemyDifficulty;
+            this.shieldRegeneration = 0.005f * (float)EnemyDifficulty;
 
             // Difficulty
             Inventory[2, 5] = new Weapon(this, Globals.EnemyWeapons[Globals.Randomizer.Next(0, Globals.EnemyWeapons.Count())], (int)difficulty);
@@ -141,7 +142,8 @@ namespace Outer_Space
                 }
 
                 // Move
-                if (Globals.Randomizer.Next(0, 1001) < 3 + (Health.Value / Health.MaxValue) * 5)
+                MoveTimer -= 1;
+                if (Globals.Randomizer.Next(0, 1001) < 3 + (Health.Value / Health.MaxValue) * 5 && MoveTimer < 0)
                 {
                     if (ShipLocation < level.Player.ShipLocation)
                     {

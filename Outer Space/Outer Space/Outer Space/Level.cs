@@ -745,7 +745,7 @@ namespace Outer_Space
                     {
                         modifierTimer = 120;
                         CombatText("The sun is heating up!");
-                        Player.SetDamageOverTime(4, 6, 0);
+                        Player.SetDamageOverTime(3, 6, 0);
                         if (GameObjects.Any(item => item is Enemy))
                         {
                             Enemy enemy = (Enemy)GameObjects.First(item => item is Enemy);

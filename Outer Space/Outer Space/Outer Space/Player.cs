@@ -214,17 +214,20 @@ namespace Outer_Space
 
         public void SwapItem(Point swapWith)
         {
-            if (Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y].Type == ItemType.misc && Inventory[swapWith.X, swapWith.Y].Type == ItemType.misc && Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y].Name == Inventory[swapWith.X, swapWith.Y].Name)
+            if (selectedItemArrayPosition != swapWith)
             {
-                Inventory[swapWith.X, swapWith.Y].NumberOfItems += 1;
-                Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = new Item(Globals.Nothing);
-            }
-            else
-            {
-                Item temp = Inventory[swapWith.X, swapWith.Y];
-                Inventory[swapWith.X, swapWith.Y] = selectedItem;
-                Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = temp;
-                SoundManager.swapItem.Play();
+                if (Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y].Type == ItemType.misc && Inventory[swapWith.X, swapWith.Y].Type == ItemType.misc && Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y].Name == Inventory[swapWith.X, swapWith.Y].Name)
+                {
+                    Inventory[swapWith.X, swapWith.Y].NumberOfItems += 1;
+                    Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = new Item(Globals.Nothing);
+                }
+                else
+                {
+                    Item temp = Inventory[swapWith.X, swapWith.Y];
+                    Inventory[swapWith.X, swapWith.Y] = selectedItem;
+                    Inventory[selectedItemArrayPosition.X, selectedItemArrayPosition.Y] = temp;
+                    SoundManager.swapItem.Play();
+                }
             }
         }
 
@@ -539,6 +542,7 @@ namespace Outer_Space
                         {
                             Enemy enemy = (Enemy)level.GameObjects.First(item => item is Enemy);
                             enemy.ShootTimer = 90;
+                            enemy.MoveTimer = 30;
                         }
                     }
                 }
@@ -556,6 +560,7 @@ namespace Outer_Space
                         {
                             Enemy enemy = (Enemy)level.GameObjects.First(item => item is Enemy);
                             enemy.ShootTimer = 90;
+                            enemy.MoveTimer = 30;
                         }
                     }
                 }
