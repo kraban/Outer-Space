@@ -206,6 +206,10 @@ namespace Outer_Space
             {
                 ShipShield.Draw(spriteBatch);
             }
+            else
+            {
+                ShipShield.DrawBoss(spriteBatch);
+            }
             ShipHull.Draw(spriteBatch);
         }
 

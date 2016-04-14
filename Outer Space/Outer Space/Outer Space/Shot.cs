@@ -23,6 +23,7 @@ namespace Outer_Space
 
         private int timer;
         private float changeSpeed;
+        private bool firstFrame;
 
         // Constructor(s)
         public Shot(Vector2 position, float direction, float damage, Hit hit, List<string> targets, float shieldPiercing, int chance)
@@ -40,7 +41,7 @@ namespace Outer_Space
             this.Speed = 5;
             this.changeSpeed = 5;
             this.Colour = Color.Red;
-            SoundManager.shoot.Play();
+            this.firstFrame = true;
         }
 
         // Method(s)
@@ -50,6 +51,12 @@ namespace Outer_Space
             base.UpdateLevel(level);
 
             timer--;
+
+            if (firstFrame)
+            {
+                SoundManager.shoot.Play();
+                firstFrame = false;
+            }
 
             // Move
             if (changeSpeed != Speed)

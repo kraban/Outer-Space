@@ -231,7 +231,7 @@ namespace Outer_Space
 
         public void LeaveLevel(bool flee)
         {
-            SoundManager.ChangeMusic(SoundManager.menu);
+            SoundManager.ChangeMusic(SoundManager.map);
             SceneManager.mapScene.ThePlayer = Player;
             SceneManager.mapScene.SelectedLevel = -1;
             Complete = !flee;

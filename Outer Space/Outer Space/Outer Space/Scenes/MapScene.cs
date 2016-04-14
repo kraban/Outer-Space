@@ -360,6 +360,7 @@ namespace Outer_Space
                     if (Menu.Press())
                     {
                         SceneManager.ChangeScene(SceneManager.menuScene);
+                        SoundManager.ChangeMusic(SoundManager.menu);
                     }
 
                     Rank.Update();

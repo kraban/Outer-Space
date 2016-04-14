@@ -132,7 +132,6 @@ namespace Outer_Space
 	            {
 		            shotsToShootTimer = 0;
                     level.ToAdd.Add(ShotsToShoot[0]);
-                    SoundManager.click.Play();
                     ShotsToShoot.RemoveAt(0); 
 	            }
             }
@@ -280,7 +279,6 @@ namespace Outer_Space
                 {
                     weapon.ShotsToShoot.Add(new Shot(shooter.Position, shooter.Direction, weapon.ShotDamage(tilesMatched, shooter) / 3, Shot.HitBasic, shooter.Targets, weapon.ShieldPiercing, weapon.WeaponChance(shooter)));
                 }
-                SoundManager.click.Play();
             }
         }
 

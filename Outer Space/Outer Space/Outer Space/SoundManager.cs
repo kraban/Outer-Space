@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.Diagnostics;
 
 namespace Outer_Space
 {
@@ -35,7 +36,8 @@ namespace Outer_Space
         public static Song
             menu,
             combat,
-            boss;
+            boss,
+            map;
 
         public static void Initialize(ContentManager content)
         {
@@ -53,9 +55,10 @@ namespace Outer_Space
             bossChargeAttack = content.Load<SoundEffect>("SoundEffects/BossChargeAttack");
             bossTeleport = content.Load<SoundEffect>("SoundEffects/BossTeleport");
 
-            menu = content.Load<Song>("Music/Dying Star meny");
-            combat = content.Load<Song>("Music/Chasing_Stars");
+            menu = content.Load<Song>("Music/Corrupted");
+            combat = content.Load<Song>("Music/Combat");
             boss = content.Load<Song>("Music/Fly");
+            map = content.Load<Song>("Music/Map");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(menu);
         }
@@ -73,7 +76,7 @@ namespace Outer_Space
                 if (flipFade == false)
                 {
                     MediaPlayer.Volume = MathHelper.Lerp(MediaPlayer.Volume, 0f, 0.03f);
-                    if (MediaPlayer.Volume < 0.05)
+                    if (MediaPlayer.Volume < 0.001)
                     {
                         flipFade = true;
                         MediaPlayer.Play(changeTo);
@@ -81,8 +84,8 @@ namespace Outer_Space
                 }
                 else
                 {
-                    MediaPlayer.Volume = MathHelper.Lerp(MediaPlayer.Volume, Options.SoundVolume / 100f, 0.03f);
-                    if (Options.SoundVolume / 100f - MediaPlayer.Volume < 0.05)
+                    MediaPlayer.Volume = MathHelper.Lerp(MediaPlayer.Volume, Options.MusicVolume / 100f, 0.02f);
+                    if (Options.SoundVolume / 100f - MediaPlayer.Volume < 0.001)
                     {
                         fadeMusic = false;
                     }

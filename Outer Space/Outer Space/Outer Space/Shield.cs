@@ -85,8 +85,19 @@ namespace Outer_Space
 
             if (SceneManager.CurrentScene == SceneManager.mapScene)
             {
-                ShieldBar.Draw(spriteBatch); 
+                ShieldBar.Draw(spriteBatch);
             }
+
+            // Description
+            if (Globals.MRectangle.Intersects(Box) && SceneManager.CurrentScene == SceneManager.mapScene)
+            {
+                Text.TextDifferentColor(spriteBatch, Description, new Vector2(Position.X + Texture.Width / 2 + 84, Position.Y - Texture.Height / 2), 1f, TextureManager.SpriteFont15, false);
+            }
+        }
+
+        public void DrawBoss(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
 
             // Description
             if (Globals.MRectangle.Intersects(Box) && SceneManager.CurrentScene == SceneManager.mapScene)

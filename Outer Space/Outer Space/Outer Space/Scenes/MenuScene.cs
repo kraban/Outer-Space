@@ -77,6 +77,7 @@ namespace Outer_Space
                 SceneManager.ChangeScene(SceneManager.shipSelectScene);
                 SceneManager.mapScene.NewItems.Flash = -1;
                 SceneManager.mapScene.NewRank.Flash = -1;
+                SoundManager.ChangeMusic(SoundManager.map);
             }
 
             if (SceneManager.started)
@@ -85,6 +86,7 @@ namespace Outer_Space
                 if (Continue.Press())
                 {
                     SceneManager.ChangeScene(SceneManager.mapScene);
+                    SoundManager.ChangeMusic(SoundManager.map);
                 }
             }
 
